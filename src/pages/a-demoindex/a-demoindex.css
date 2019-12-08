@@ -1,0 +1,24 @@
+.user-links {
+    padding: 15px 0;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+  }
+  
+  /*设置这个 就是设置其的背景颜色*/
+  .dark {
+    text-align: center;
+    margin: 45px 10px 20px 10px;
+  }
+  
+  .demoindex{
+    text-align: center;
+    margin: 15px;
+  }
+  .demoindex h1{
+    margin: 20px;;
+  }
+
+ .home{
+    font-size: 18px;
+  }

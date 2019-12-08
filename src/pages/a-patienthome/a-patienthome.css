@@ -1,0 +1,51 @@
+.scanBtn{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.confirmBooking{
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.content{
+    font-size: 14px;
+    margin: 10px;
+
+}
+
+.editmyprofile{
+    margin: 5px 15px 15px 15px;
+}
+
+.myphoto img{
+    width: 140px !important;
+    height: 140px !important;
+    border-radius:50%
+}
+
+.price-class{
+    color: grey !important;
+    font-weight: normal !important;
+}
+
+.van-card__price {
+    font-weight: normal !important;
+    color: grey !important;
+}
+
+image {
+    width: 140px !important;
+    height: 140px !important;
+    display: inline-block !important;
+    overflow: hidden !important;
+    
+    }
+    .van-image__img {
+    width: 140px !important;
+    height: 140px !important;
+    display: inline-block !important;
+    overflow: hidden !important;
+    
+    }

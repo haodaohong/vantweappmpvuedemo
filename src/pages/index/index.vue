@@ -144,6 +144,10 @@
 
         jichulist : [
           {
+            txt : 'DTO 产品管理' ,
+            pageurl : 'dtohome'
+          } ,
+           {
             txt : '按钮' ,
             pageurl : 'button'
           } ,
