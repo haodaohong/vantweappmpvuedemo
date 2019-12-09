@@ -11,7 +11,7 @@
     "van-loading": "/static/vant/loading/index",
     "van-field": "/static/vant/field/index"
   },
-  "navigationBarTitleText": "器材租赁"
+  "navigationBarTitleText": "预约租赁"
 }
 
 

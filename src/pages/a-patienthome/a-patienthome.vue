@@ -18,7 +18,7 @@
       <div class="myphoto">
         <img src="/static/img/touxiang.jpg">
         </div>
-          <h5>齐德龙</h5>
+          <h5>李斌</h5>
           <div class="editmyprofile">
             <van-button type="default" size="small">更新资料</van-button>
           </div>
@@ -29,7 +29,7 @@
               @change="onChange1">
       <van-tab title="最近预约">
         
-        <van-panel title="齐德龙"
+        <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="待确认"
                   use-footer-slot>
@@ -43,15 +43,6 @@
                 </tr>
             </table>
           </div>
-          <!--
-          加个样式把按钮搞右边去
-          -->
-          <view style="text-align: right;"
-                slot="footer">
-            <van-button class="confirmBooking" @click="onConfirmBooking"
-                        size="small" type="primary">确认预约
-            </van-button>
-          </view>
         </van-panel>
 
         <van-panel title="刘凯"
@@ -70,7 +61,7 @@
           </div>
         </van-panel>
 
-        <van-panel title="齐德龙"
+        <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="已签约"
                   use-footer-slot>

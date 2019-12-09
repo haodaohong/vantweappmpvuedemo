@@ -48,10 +48,6 @@
             <van-button class="confirmBooking" @click="onConfirmBooking"
                         size="small" type="primary">确认预约
             </van-button>
-            <van-button disabled
-                        size="small"
-                        type="info">提交租赁签约
-            </van-button>
           </view>
         </van-panel>
 
@@ -74,9 +70,6 @@
           -->
           <view style="text-align: right;"
                 slot="footer">
-            <van-button disabled class="confirmBooking"
-                        size="small" type="primary">确认预约
-            </van-button>
             <van-button @click="onConfirmSign"
                         size="small"
                         type="info">提交租赁签约
@@ -87,7 +80,7 @@
       </van-tab>
       <van-tab title="最近签约">
         
-       <van-panel title="赵四"
+       <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="已签约"
                   use-footer-slot>
@@ -116,7 +109,7 @@
           </view>
         </van-panel>
 
-        <van-panel title="刘能"
+        <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="已取消"
                   use-footer-slot>
