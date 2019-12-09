@@ -20,11 +20,21 @@
           />
           <h5>扫描入库</h5>
     </div>
-
+    <div class="searchbar" style="display:none;">
+          <van-search :value="value2"
+                    placeholder="请输入用户姓名、手机号进行搜索"
+                    use-action-slot
+                    @change="onchange2"
+                    @search="onSearch2">
+          <view slot="action"
+                @tap="userSearch">搜索
+          </view>
+        </van-search>
+    </div>
 
     <van-tabs :active="active1"
               @change="onChange1">
-      <van-tab title="最近预约">
+      <van-tab title="预约申请">
         
         <van-panel title="李斌"
                   desc="确诊自华山医院"
@@ -32,11 +42,14 @@
                   use-footer-slot>
           <div>
             <table class="content">
+             <tr>
+                <td>预约类型：设备预约</td><td></td>
+              </tr>
               <tr>
                 <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
                 </tr>
               <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
+                <td>预约数量：1</td><td>预约日期：2019年12月20日</td>
                 </tr>
             </table>
           </div>
@@ -48,18 +61,57 @@
             <van-button class="confirmBooking" @click="onConfirmBooking"
                         size="small" type="primary">确认预约
             </van-button>
+            <van-button class="confirmBooking" @click="onCancelBooking"
+                        size="small" type="default">取消预约
+            </van-button>
           </view>
         </van-panel>
 
-        <van-panel title="刘凯"
+
+
+       <van-panel title="王武"
                   desc="确诊自华山医院"
-                  status="已确认，待签约"
+                  status="待确认"
                   use-footer-slot>
           <div>
             <table class="content">
               <tr>
+                <td>预约类型：DTP变更</td><td></td>
+              </tr>
+              <tr>
                 <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
                 </tr>
+              <tr>
+                <td>预约数量：1</td><td>预约日期：2019年12月30日</td>
+                </tr>
+            </table>
+          </div>
+          <!--
+          加个样式把按钮搞右边去
+          -->
+          <view style="text-align: right;"
+                slot="footer">
+            <van-button class="confirmBooking" @click="onConfirmChangeDTP"
+                        size="small" type="primary">确认申请
+            </van-button>
+            <van-button class="confirmBooking" @click="onCancelChangeDTP"
+                        size="small"
+                        type="default">取消申请
+            </van-button>
+          </view>
+        </van-panel>
+      </van-tab>
+      <van-tab title="签约绑定">
+        <van-panel title="李斌"
+                  desc="确诊自华山医院"
+                  status="待签约"
+                  use-footer-slot>
+          <div>
+            <table class="content">
+
+              <tr>
+                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
+              </tr>
               <tr>
                 <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
                 </tr>
@@ -77,9 +129,7 @@
           </view>
         </van-panel>
 
-      </van-tab>
-      <van-tab title="最近签约">
-        
+
        <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="已签约"
@@ -94,19 +144,6 @@
                 </tr>
             </table>
           </div>
-          <!--
-          加个样式把按钮搞右边去
-          -->
-          <view style="text-align: right;"
-                slot="footer">
-            <van-button class="confirmBooking" @click="onChangeSign"
-                        size="small" type="primary">变更合约
-            </van-button>
-            <van-button @click="onCancelSign"
-                        size="small"
-                        type="danger">取消合约
-            </van-button>
-          </view>
         </van-panel>
 
         <van-panel title="李斌"
@@ -139,8 +176,8 @@
         </van-panel>
 
       </van-tab>
-      <van-tab title="最近出入库">暂未完成此功能【最近出入库】设计</van-tab>
-      <van-tab title="最近维修">暂未完成此功能【最近维修】设计</van-tab>
+      <van-tab title="出入库管理">暂未完成此功能【最近出入库】设计</van-tab>
+      <van-tab title="维修管理">暂未完成此功能【最近维修】设计</van-tab>
     </van-tabs>
     <mybr/>
     <mybr/>
@@ -178,7 +215,32 @@
     //方法
     methods : {
       scanProduct(event){
-            const message = '暂未完成此功能设计；预期结果是识别产品条形码并跳转至入库界面';
+          const message = '暂未完成此功能设计；预期结果是识别产品条形码并跳转至入库界面';
+
+          Dialog.alert( {
+            title : '信息提示' ,
+            message
+          } );
+      }
+      ,
+      onCancelBooking(event){
+          const message = '已取消此预约申请，并通知相关人员！';
+
+          Dialog.alert( {
+            title : '信息提示' ,
+            message
+          } );
+      }
+      ,onConfirmChangeDTP(event){
+          const message = '已确认此DTP变更预约申请，并通知相关人员！';
+
+          Dialog.alert( {
+            title : '信息提示' ,
+            message
+          } );
+      }
+      ,onCancelChangeDTP(event){
+          const message = '已取消此DTP变更申请，并通知相关人员！';
 
           Dialog.alert( {
             title : '信息提示' ,
