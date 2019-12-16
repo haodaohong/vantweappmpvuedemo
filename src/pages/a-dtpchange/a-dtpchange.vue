@@ -20,24 +20,20 @@
       -->
       <div class="basicinfo">
         <van-row>
-          <van-col span="12">租赁药房：国药DTP</van-col>
-          <van-col span="12">租赁用户：李斌</van-col>
+          <van-col span="12">产品名称：XXX仪器</van-col>
+          <van-col span="12">租赁数量：2</van-col>
         </van-row>
         <van-row>
-          <van-col span="12">产品名称：XXX仪器</van-col>
-          <van-col span="12">
-            <div class="flex-container-no-margin">
-              <p>租赁数量：</p>
-              <van-stepper :value="1" integer />
-            </div>
-          </van-col>
+          <van-col span="12">租赁用户：李斌</van-col>
         </van-row>
       </div>
+    </van-panel>
+    <mybr />
+    <van-panel title="变更协议信息">
+      <van-field :value="username" label="原租赁药房" placeholder="请输入原租赁药房" clearable required />
+      <van-field :value="username" label="现租赁药房" placeholder="请输入现租赁药房" clearable required />
+      <van-field :value="username" label="新协议编号" placeholder="请输入协议编号" clearable required />
       <div>
-        <!--
-      每次加减为1，可以对组件设置step、min、max属性
-        -->
-
         <van-popup :show="isshowdatetimepicker" position="bottom">
           <van-datetime-picker
             type="date"
@@ -47,14 +43,6 @@
             @cancel="usercancel"
           />
         </van-popup>
-        <!-- <van-field
-          :value="selectedCount"
-          label="租赁数量"
-          type="number"
-          placeholder
-          clearable
-          required
-        />-->
         <van-field
           :value="selectedDate"
           label="提交日期"
@@ -64,43 +52,15 @@
           @clickicon="showdatetimepicker"
         />
       </div>
-    </van-panel>
-    <mybr />
-    <van-panel title="使用协议信息">
-      <van-field :value="username" label="协议编号" placeholder="请输入协议编号" clearable required />
-      <van-cell title="上传协议"></van-cell>
+      <van-cell title="上传新协议"></van-cell>
 
       <div style="margin:10px;">
         <van-uploader v-model="fileList" multiple :max-count="1" required />
       </div>
     </van-panel>
-
-    <!-- <van-panel title="合约注意事项" desc="请仔细阅读条款内容">
-      <div class="privacy">
-        对于用户信息的收集、使用和保护措施，请务必仔细阅读:
-        <br />一、用户个人信息
-        <br />1、当您在使用XXX应用时，大部分应用部不需要您提供任何个人信息。
-        <br />二、用户行为信息
-        <br />2.1、当您在应用时，应用将会收集用户的行为信息，如操作时长、使用频率、常用功能等。这些数据用于我们收集用户的使用习惯及受欢迎的功能，以帮助我们持续改进产品和服务。
-        <br />2.2、用户行为信息将作为用户群体的整体概况数据存在和使用，不会存在行为信息与特定用户之间的关联。
-        <br />三、用户设备信息
-        <br />3.1、为持续优化产品在您的设备上的体验，我们的应用会收集如下非个人化信息：
-        <br />操作系统及版本
-        <br />设备型号及版本
-        <br />屏幕分辨率
-        <br />若您对我们的隐私条款有任何疑问，请联系我们。
-        <br />联系邮箱：kefu@zailab.com
-        <br />客服电话：40088888888
-        <br />
-        <br />
-        <br />
-        <br />
-      </div>
-      <mybr />
-    </van-panel>-->
     <mybr />
     <div class="confirmsignbtn">
-      <van-button square size="normal" type="info" @click="onConfirmSign">同意并确认提交</van-button>
+      <van-button square size="normal" type="info" @click="onConfirmSign">确认提交</van-button>
     </div>
     <mybr />
     <!--
@@ -136,7 +96,7 @@ export default {
   //方法
   methods: {
     onConfirmSign(event) {
-      const message = "已成功签约，并已通知相关用户！";
+      const message = "协议变更成功！";
 
       Dialog.alert({
         title: "信息提示",
@@ -145,6 +105,9 @@ export default {
         const url = "../a-dtphome/main";
         wx.navigateBack({ url: url });
       });
+    },
+    testclick(event) {
+      console.log("111test");
     },
     showdatetimepicker(event) {
       console.log("showdatetimepicker event", event);
@@ -197,5 +160,5 @@ export default {
 
 <!-- 样式代码片段  scoped -->
 <style scoped
-       src="./a-dtpsign.css">
+       src="./a-dtpchange.css">
 </style>

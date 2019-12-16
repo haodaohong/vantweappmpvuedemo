@@ -13,442 +13,407 @@
   collapse也有类似情况
   -->
 
-  <div>  
-    <div class="scanBtn">
-        <van-icon size="80px"
-          name="scan" @click="scanProduct"
-          />
-          <h5>扫描入库</h5>
+  <div>
+    <div class="flex-container">
+      <div>
+        <van-icon size="80px" name="qr" @click="scanProduct" />
+        <div>
+          <div class="divInlineBlock">
+            <van-icon size="17px" name="down" />
+          </div>
+          <div class="divInlineBlock">
+            <h5>扫码入库</h5>
+          </div>
+        </div>
+      </div>
+      <div>
+        <van-icon size="80px" name="qr" @click="scanProduct2" />
+        <div>
+          <div class="divInlineBlock">
+            <van-icon size="17px" name="search" />
+          </div>
+          <div class="divInlineBlock">
+            <h5>扫码查询</h5>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="searchbar" style="display:none;">
-          <van-search :value="value2"
-                    placeholder="请输入用户姓名、手机号进行搜索"
-                    use-action-slot
-                    @change="onchange2"
-                    @search="onSearch2">
-          <view slot="action"
-                @tap="userSearch">搜索
-          </view>
-        </van-search>
+      <van-search
+        :value="value2"
+        placeholder="请输入用户姓名、手机号进行搜索"
+        use-action-slot
+        @change="onchange2"
+        @search="onSearch2"
+      >
+        <view slot="action" @tap="userSearch">搜索</view>
+      </van-search>
     </div>
 
-    <van-tabs :active="active1"
-              @change="onChange1">
+    <van-tabs :active="active1" @change="onChange1">
       <van-tab title="预约申请">
-        <div class="filterBookCategory">
-   
-          <van-button type="default"  @click="onShowBookCategory">过滤：{{selectedBookCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
-          
-        </div>
-        <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="待确认"
-                  use-footer-slot>
+        <div>
           <div>
-       
+            <van-dropdown-menu>
+              <van-dropdown-item :value="value1" :options="option1" />
+            </van-dropdown-menu>
+          </div>
+        </div>
+        <van-panel title="李斌" desc="确诊自华山医院" status="待确认" use-footer-slot>
+          <div>
             <table class="content">
               <tr>
-                <td>预约类型：设备预约</td><td></td>
+                <td>预约类型：首次购买</td>
+                <td>性别：男</td>
+                <td>出生日期：1960年12月9日</td>
+                <td>手机号码：199xxxxxxxx</td>
+                <td>产品名称：XXX仪器</td>
+                <td>预约数量：1</td>
+                <td>预约日期：2019年12月30日 10:00-11:00</td>
               </tr>
-               <tr>
-                <td>用户性别：男</td><td></td>
-              </tr>
-               <tr>
-                <td>出生日期：1969年12月9日</td><td></td>
-              </tr>
-               <tr>
-                <td>手机号码：18878999888</td><td></td>
-              </tr>
-         
-              <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月20日</td>
-                </tr>
             </table>
           </div>
           <!--
           加个样式把按钮搞右边去
           -->
-          <view style="text-align: right;"
-                slot="footer">
-            <van-button class="confirmBooking" @click="onConfirmBooking"
-                        size="small" type="primary">确认预约
-            </van-button>
-            <van-button class="confirmBooking" @click="onCancelBooking"
-                        size="small" type="default">取消预约
-            </van-button>
+          <view style="text-align: right;" slot="footer">
+            <van-button
+              class="confirmRental"
+              @click="confirmRental"
+              size="small"
+              type="info"
+            >已与租赁商签约</van-button>
+            <van-button
+              class="confirmBooking"
+              @click="onConfirmBooking"
+              size="small"
+              type="primary"
+            >确认预约</van-button>
+            <van-button
+              class="confirmBooking"
+              @click="onCancelBooking"
+              size="small"
+              type="default"
+            >取消预约</van-button>
           </view>
         </van-panel>
 
-       <van-panel title="王武"
-                  desc="确诊自华山医院"
-                  status="待确认"
-                  use-footer-slot>
+        <van-panel title="王武" desc="确诊自华山医院" status="确认" use-footer-slot>
           <div>
             <table class="content">
-
               <tr>
-                <td>预约类型：DTP变更</td><td></td>
+                <td>预约类型：首次购买</td>
+                <td>性别：男</td>
+                <td>出生日期：1960年12月9日</td>
+                <td>手机号码：199xxxxxxxx</td>
+                <td>产品名称：XXX仪器</td>
+                <td>预约数量：1</td>
+                <td>预约日期：2019年12月30日 10:00-11:00</td>
               </tr>
-              <tr>
-                <td>用户性别：男</td><td></td>
-              </tr>
-               <tr>
-                <td>出生日期：1969年12月9日</td><td></td>
-              </tr>
-               <tr>
-                <td>手机号码：18878999888</td><td></td>
-              </tr>
-
-              <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月30日</td>
-                </tr>
             </table>
           </div>
-          <!--
-          加个样式把按钮搞右边去
-          -->
-          <view style="text-align: right;"
-                slot="footer">
-            <van-button class="confirmBooking" @click="onConfirmChangeDTP"
-                        size="small" type="primary">确认申请
-            </van-button>
-            <van-button class="confirmBooking" @click="onCancelChangeDTP"
-                        size="small"
-                        type="default">取消申请
-            </van-button>
+          <view style="text-align: right;" slot="footer">
+            <van-button
+              class="confirmRental"
+              @click="confirmRental"
+              size="small"
+              type="info"
+            >已与租赁商签约</van-button>
           </view>
         </van-panel>
       </van-tab>
       <van-tab title="签约绑定">
-        <div class="filterBookCategory">
-          <van-button type="default"  @click="onShowSignCategory">过滤：{{selectedSignCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
+        <div>
+          <div>
+            <van-dropdown-menu>
+              <van-dropdown-item :value="value2" :options="option2" />
+            </van-dropdown-menu>
+          </div>
         </div>
-
-
-        <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="待签约"
-                  use-footer-slot>
+        <van-panel title="李斌" desc="确诊自华山医院" status="待签约" use-footer-slot>
           <div>
             <table class="content">
               <tr>
-                <td>签约类型：设备预约</td><td></td>
+                <td>预约类型：首次购买</td>
+                <td>性别：男</td>
+                <td>出生日期：1960年12月9日</td>
+                <td>手机号码：199xxxxxxxx</td>
+                <td>产品名称：XXX仪器</td>
+                <td>预约数量：1</td>
+                <td>预约日期：2019年12月30日 10:00-11:00</td>
               </tr>
-               <tr>
-                <td>用户性别：男</td><td></td>
-              </tr>
-               <tr>
-                <td>出生日期：1969年12月9日</td><td></td>
-              </tr>
-               <tr>
-                <td>手机号码：18878999888</td><td></td>
-              </tr>
-              <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-              </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
-                </tr>
             </table>
           </div>
           <!--
           加个样式把按钮搞右边去
           -->
-          <view style="text-align: right;"
-                slot="footer">
-            <van-button @click="onConfirmSign"
-                        size="small"
-                        type="info">提交租赁签约
-            </van-button>
+          <view style="text-align: right;" slot="footer">
+            <van-button @click="onConfirmSign" size="small" type="primary">提交使用协议</van-button>
           </view>
         </van-panel>
 
-        <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="已取消"
-                  use-footer-slot>
+        <van-panel title="王武" desc="确诊自华山医院" status="已签约" use-footer-slot>
           <div>
             <table class="content">
               <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
-                </tr>
+                <td>预约类型：首次购买</td>
+                <td>性别：男</td>
+                <td>出生日期：1960年12月9日</td>
+                <td>手机号码：199xxxxxxxx</td>
+                <td>产品名称：XXX仪器</td>
+                <td>预约数量：1</td>
+                <td>预约日期：2019年12月30日 10:00-11:00</td>
+              </tr>
             </table>
           </div>
-        </van-panel>
-
-      </van-tab>
-      <van-tab title="产品出入库">
-          <div class="filterBookCategory">
-            <van-button type="default"  @click="onShowBookCategory">过滤：{{selectedBookCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
-          </div>
-
-
-       <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="已签约，待出库"
-                  use-footer-slot>
-          <div>
-            <table class="content">
-              <tr>
-                <td>预约类型：设备预约</td><td></td>
-              </tr>
-               <tr>
-                <td>用户性别：男</td><td></td>
-              </tr>
-               <tr>
-                <td>出生日期：1969年12月9日</td><td></td>
-              </tr>
-               <tr>
-                <td>手机号码：18878999888</td><td></td>
-              </tr>
-              <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
-                </tr>
-            </table>
-          </div>
-           <view style="text-align: right;"
-                slot="footer">
-            <van-button @click="onCheckoutProduct"
-                        size="small"
-                        type="danger">产品出库
-            </van-button>
+          <view style="text-align: right;" slot="footer">
+            <van-button @click="onRentOut" size="small" type="primary">销售出库</van-button>
           </view>
         </van-panel>
 
-        <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="已出库"
-                  use-footer-slot>
+        <van-panel title="李斌" desc="确诊自华山医院" status="待变更" use-footer-slot>
           <div>
             <table class="content">
               <tr>
-                <td>预约类型：设备预约</td><td></td>
-              </tr>
-               <tr>
-                <td>用户性别：男</td><td></td>
-              </tr>
-               <tr>
-                <td>出生日期：1969年12月9日</td><td></td>
-              </tr>
-               <tr>
-                <td>手机号码：18878999888</td><td></td>
+                <td>产品名称：XXX仪器</td>
+                <td>产品类别：产品主机</td>
               </tr>
               <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
-                </tr>
+                <td>预约数量：1</td>
+                <td>预约日期：2019年12月8日</td>
+              </tr>
             </table>
           </div>
+          <!--
+          加个样式把按钮搞右边去
+          -->
+          <view style="text-align: right;" slot="footer">
+            <van-button @click="onDtpChange" size="small" type="primary">DTP变更</van-button>
+          </view>
         </van-panel>
-
       </van-tab>
-      <van-tab title="维修管理">暂未完成此功能【最近维修】设计</van-tab>
+      <van-tab title="出入库管理">
+        <van-panel title="产品编号" desc="SNXXXXXXXXXXXXX" status="已入库" use-footer-slot>
+          <div>
+            <table class="content">
+              <tr>
+                <td>名称：xxx仪器</td>
+                <td>类别：产品主机</td>
+                <td>规格：20*30</td>
+                <td>单位：台</td>
+                <td>数量：1</td>
+                <td>生产日期：2019年01月01日</td>
+                <td>入库日期：2019年12月30日</td>
+              </tr>
+            </table>
+          </div>
+          <!--
+          加个样式把按钮搞右边去
+          -->
+          <view style="text-align: right;" slot="footer">
+            <van-button class="confirmBooking" @click="onCocOut" size="small" type="primary">产品返厂</van-button>
+          </view>
+        </van-panel>
+      </van-tab>
+      <van-tab title="维修管理">
+        <van-panel title="产品编号" desc="SNXXXXXXXXXXXXX" status="待更换" use-footer-slot>
+          <div>
+            <table class="content">
+              <tr>
+                <td>名称：xxx仪器</td>
+                <td>类别：产品主机</td>
+                <td>规格：20*30</td>
+                <td>单位：台</td>
+                <td>数量：1</td>
+                <td>生产日期：2019年01月01日</td>
+                <td>绑定用户：李斌</td>
+                <td>维修单号：R1XXXXX</td>
+              </tr>
+            </table>
+          </div>
+          <!--
+          加个样式把按钮搞右边去
+          -->
+          <view style="text-align: right;" slot="footer">
+            <van-button
+              class="confirmBooking"
+              @click="onProductChange"
+              size="small"
+              type="primary"
+            >产品更换</van-button>
+          </view>
+        </van-panel>
+        <van-panel title="产品编号" desc="SNXXXXXXXXXXXXX" status="已更换" use-footer-slot>
+          <div>
+            <table class="content">
+              <tr>
+                <td>名称：xxx仪器</td>
+                <td>类别：产品主机</td>
+                <td>规格：20*30</td>
+                <td>单位：台</td>
+                <td>数量：1</td>
+                <td>生产日期：2019年01月01日</td>
+                <td>绑定用户：李斌</td>
+                <td>维修单号：R1XXXXX</td>
+              </tr>
+            </table>
+          </div>
+          <!--
+          加个样式把按钮搞右边去
+          -->
+          <view style="text-align: right;" slot="footer">
+            <van-button class="confirmBooking" @click="onCocOut" size="small" type="primary">维修出库</van-button>
+          </view>
+        </van-panel>
+      </van-tab>
     </van-tabs>
-    <mybr/>
-    <mybr/>
-        <!--
+    <mybr />
+    <mybr />
+    <!--
     注意要配一个van-dialog,才会显示提示 ,默认id van-dialog
     -->
-    <van-dialog id="van-dialog"/>
-    <van-action-sheet
-      :show="isShowBookCategory"
-      :actions="BookCategories"
-      title="选择预约类型"
-      @close="onCloseBookCategory"
-      @select="onSelectBookCategory"
-    />
-    <van-action-sheet
-      :show="isShowSignCategory"
-      :actions="SignCategories"
-      title="选择签约类型"
-      @close="onCloseSignCategory"
-      @select="onSelectSignCategory"
-    />
+    <van-dialog id="van-dialog" />
   </div>
-
 </template>
 
 <!-- js脚本代码片段 -->
 <script>
-  import Dialog from '../../../static/vant/dialog/dialog';
-  import mybr from '@/components/mybr/mybr.vue'
+import Dialog from "../../../static/vant/dialog/dialog";
+import mybr from "@/components/mybr/mybr.vue";
 
-  export default {
-    name : "tab" ,
-    components : {
-      mybr
-    } ,
-    //数据模型
-    data () {
-      return {
-        //从0开始的
-        isShowBookCategory : false ,
-        isShowSignCategory : false,
-        selectedSignCategory : '所有类别' ,
-        selectedBookCategory : '所有类别' ,
-        BookCategories : 
-        [
-          {
-            name : '所有类别'
-          } ,
-           {
-            name : '设备预约'
-          } ,
-          {
-            name : '变更申请' 
-          } ,
-          {
-            name : '维修预约',
-          }
-        ],
-        SignCategories : 
-        [
-          {
-            name : '所有类别'
-          } ,
-           {
-            name : '已签约'
-          } ,
-          {
-            name : 'DTP变更' 
-          }
-        ] 
-      }
-    } ,
-    //方法
-    methods : {
-      scanProduct(event){
-          const message = '暂未完成此功能设计；预期结果是识别产品条形码并跳转至入库界面';
+export default {
+  name: "tab",
+  components: {
+    mybr
+  },
+  //数据模型
+  data() {
+    return {
+      //从0开始的
+      active1: 0,
 
-          Dialog.alert( {
-            title : '信息提示' ,
-            message
-          } );
-      }
-      ,
-      onShowBookCategory(event){
-        this.isShowBookCategory = true;
-      }
-      ,
-      onCloseBookCategory(event){
-         this.isShowBookCategory = false;
-      }
-      ,
-      onSelectBookCategory(event){
-        let obj = event.mp.detail;
-          //取到选择的值
-        let name = obj.name;
-        this.selectedBookCategory = name;
-        this.isShowBookCategory = false;
-        console.log("this.selectedBookCategory",this.selectedBookCategory);
-        console.log("this.isShowBookCategory",this.isShowBookCategory);
-      }
-      ,
-      onShowSignCategory(event){
-        this.isShowSignCategory = true;
-      }
-      ,
-      onCloseSignCategory(event){
-         this.isShowSignCategory = false;
-      }
-      ,
-      onSelectSignCategory(event){
-        let obj = event.mp.detail;
-          //取到选择的值
-        let name = obj.name;
-        this.selectedSignCategory = name;
-        this.isShowSignCategory = false;
-        console.log("this.selectedSignCategory",this.selectedSignCategory);
-        console.log("this.isShowSignCategory",this.isShowSignCategory);
-      }
-      ,
-      onCancelBooking(event){
-          const message = '已取消此预约申请，并通知相关人员！';
+      active2: 0,
 
-          Dialog.alert( {
-            title : '信息提示' ,
-            message
-          } );
-      }
-      ,onConfirmChangeDTP(event){
-          const message = '已确认此DTP变更预约申请，并通知相关人员！';
+      active3: 0,
 
-          Dialog.alert( {
-            title : '信息提示' ,
-            message
-          } );
-      }
-      ,onCancelChangeDTP(event){
-          const message = '已取消此DTP变更申请，并通知相关人员！';
+      active4: 1,
 
-          Dialog.alert( {
-            title : '信息提示' ,
-            message
-          } );
-      }
-      ,
-      onChangeSign(event){
-        const message = '暂未完成此功能设计；预期结果是跳转至合约变更界面';
+      option1: [
+        { text: "所有申请", value: 0 },
+        { text: "首次购买", value: 1 },
+        { text: "更换DTP购买贴片", value: 2 },
+        { text: "产品维修", value: 3 }
+      ],
 
-        Dialog.alert( {
-          title : '信息提示' ,
-          message
-        } );
-      }
-      ,
-      onCancelSign(event){
-        const message = '已取消此合约，并已通知相关用户！';
+      value1: 0,
 
-        Dialog.alert( {
-          title : '信息提示' ,
-          message
-        } );
-      }
-      ,
-      onConfirmSign(event){
-            const url = "../a-dtpsign/main"
-            wx.navigateTo( { url : url } )
-      },
-      onConfirmBooking(event) {
-        const message = '预约已确认，并已通知相关用户！';
+      option2: [
+        { text: "所有类型", value: 0 },
+        { text: "已签约", value: 1 },
+        { text: "待签约", value: 2 },
+        { text: "待变更", value: 3 }
+      ],
 
-        Dialog.alert( {
-          title : '信息提示' ,
-          message
-        } );
-      },
-      
-    } ,
-    //计算属性
-    computed : {
-      //name() {
-      //代码搞这里
-      //return this.data;
-      //}
-    } ,
-    //生命周期(mounted)
-    mounted () {
+      value2: 0
+    };
+  },
+  //方法
+  methods: {
+    scanProduct(event) {
+      const url = "../a-dtpproductin/main";
+      wx.navigateTo({ url: url });
+    },
+    scanProduct2(event) {
+      const message =
+        "暂未完成此功能设计；预期结果是识别产品条形码并跳转至入库界面";
 
-    } ,
-  }
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onCancelBooking(event) {
+      const message = "已取消此预约申请，并通知相关人员！";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onConfirmChangeDTP(event) {
+      const message = "已确认此DTP变更预约申请，并通知相关人员！";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onCancelChangeDTP(event) {
+      const message = "已取消此DTP变更申请，并通知相关人员！";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onChangeSign(event) {
+      const message = "暂未完成此功能设计；预期结果是跳转至合约变更界面";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onCancelSign(event) {
+      const message = "已取消此合约，并已通知相关用户！";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onConfirmSign(event) {
+      const url = "../a-dtpsign/main";
+      wx.navigateTo({ url: url });
+    },
+    onRentOut(event) {
+      const url = "../a-dtprentout/main";
+      wx.navigateTo({ url: url });
+    },
+    onCocOut(event) {
+      const url = "../a-dtpcocout/main";
+      wx.navigateTo({ url: url });
+    },
+    onProductChange(event) {
+      const url = "../a-dtpproductchange/main";
+      wx.navigateTo({ url: url });
+    },
+    onConfirmBooking(event) {
+      const message = "预约已确认，并已通知相关用户！";
+
+      Dialog.alert({
+        title: "信息提示",
+        message
+      });
+    },
+    onDtpChange(event) {
+      const url = "../a-dtpchange/main";
+      wx.navigateTo({ url: url });
+    }
+  },
+  //计算属性
+  computed: {
+    //name() {
+    //代码搞这里
+    //return this.data;
+    //}
+  },
+  //生命周期(mounted)
+  mounted() {}
+};
 </script>
 
 <!-- 样式代码片段  scoped -->
 <style scoped
        src="./a-dtphome.css">
-
 </style>

@@ -10,24 +10,22 @@
 }
 
 .content{
-    font-size: 13px;
+    font-size: 14px;
     margin: 10px;
 }
 
-.content td{
-    margin: 10px;
+.divInlineBlock{
+    display: inline-block;
 }
 
-.userrow,.usercol{
-    width: 100%;
+.flex-container {
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    justify-content: space-around;
 }
 
-.filterBookCategory{
-    margin: 10px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.middle{
-    vertical-align: middle;
+.flex-container-no-margin{
+    display: flex;
+    justify-content: space-around;
 }
