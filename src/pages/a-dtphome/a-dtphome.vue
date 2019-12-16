@@ -35,16 +35,31 @@
     <van-tabs :active="active1"
               @change="onChange1">
       <van-tab title="预约申请">
-        
+        <div class="filterBookCategory">
+   
+          <van-button type="default"  @click="onShowBookCategory">过滤：{{selectedBookCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
+          
+        </div>
         <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="待确认"
                   use-footer-slot>
           <div>
+       
             <table class="content">
-             <tr>
+              <tr>
                 <td>预约类型：设备预约</td><td></td>
               </tr>
+               <tr>
+                <td>用户性别：男</td><td></td>
+              </tr>
+               <tr>
+                <td>出生日期：1969年12月9日</td><td></td>
+              </tr>
+               <tr>
+                <td>手机号码：18878999888</td><td></td>
+              </tr>
+         
               <tr>
                 <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
                 </tr>
@@ -67,17 +82,26 @@
           </view>
         </van-panel>
 
-
-
        <van-panel title="王武"
                   desc="确诊自华山医院"
                   status="待确认"
                   use-footer-slot>
           <div>
             <table class="content">
+
               <tr>
                 <td>预约类型：DTP变更</td><td></td>
               </tr>
+              <tr>
+                <td>用户性别：男</td><td></td>
+              </tr>
+               <tr>
+                <td>出生日期：1969年12月9日</td><td></td>
+              </tr>
+               <tr>
+                <td>手机号码：18878999888</td><td></td>
+              </tr>
+
               <tr>
                 <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
                 </tr>
@@ -102,13 +126,29 @@
         </van-panel>
       </van-tab>
       <van-tab title="签约绑定">
+        <div class="filterBookCategory">
+          <van-button type="default"  @click="onShowSignCategory">过滤：{{selectedSignCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
+        </div>
+
+
         <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="待签约"
                   use-footer-slot>
           <div>
             <table class="content">
-
+              <tr>
+                <td>签约类型：设备预约</td><td></td>
+              </tr>
+               <tr>
+                <td>用户性别：男</td><td></td>
+              </tr>
+               <tr>
+                <td>出生日期：1969年12月9日</td><td></td>
+              </tr>
+               <tr>
+                <td>手机号码：18878999888</td><td></td>
+              </tr>
               <tr>
                 <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
               </tr>
@@ -129,23 +169,6 @@
           </view>
         </van-panel>
 
-
-       <van-panel title="李斌"
-                  desc="确诊自华山医院"
-                  status="已签约"
-                  use-footer-slot>
-          <div>
-            <table class="content">
-              <tr>
-                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
-                </tr>
-              <tr>
-                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
-                </tr>
-            </table>
-          </div>
-        </van-panel>
-
         <van-panel title="李斌"
                   desc="确诊自华山医院"
                   status="已取消"
@@ -160,23 +183,79 @@
                 </tr>
             </table>
           </div>
-          <!--
-          加个样式把按钮搞右边去
-          -->
-          <view style="text-align: right;"
+        </van-panel>
+
+      </van-tab>
+      <van-tab title="产品出入库">
+          <div class="filterBookCategory">
+            <van-button type="default"  @click="onShowBookCategory">过滤：{{selectedBookCategory}}<van-icon custom-class="middle" name="arrow-down" /></van-button>
+          </div>
+
+
+       <van-panel title="李斌"
+                  desc="确诊自华山医院"
+                  status="已签约，待出库"
+                  use-footer-slot>
+          <div>
+            <table class="content">
+              <tr>
+                <td>预约类型：设备预约</td><td></td>
+              </tr>
+               <tr>
+                <td>用户性别：男</td><td></td>
+              </tr>
+               <tr>
+                <td>出生日期：1969年12月9日</td><td></td>
+              </tr>
+               <tr>
+                <td>手机号码：18878999888</td><td></td>
+              </tr>
+              <tr>
+                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
+                </tr>
+              <tr>
+                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
+                </tr>
+            </table>
+          </div>
+           <view style="text-align: right;"
                 slot="footer">
-            <van-button disabled class="confirmBooking"
-                        size="small" type="primary">变更合约
-            </van-button>
-            <van-button disabled
+            <van-button @click="onCheckoutProduct"
                         size="small"
-                        type="danger">取消合约
+                        type="danger">产品出库
             </van-button>
           </view>
         </van-panel>
 
+        <van-panel title="李斌"
+                  desc="确诊自华山医院"
+                  status="已出库"
+                  use-footer-slot>
+          <div>
+            <table class="content">
+              <tr>
+                <td>预约类型：设备预约</td><td></td>
+              </tr>
+               <tr>
+                <td>用户性别：男</td><td></td>
+              </tr>
+               <tr>
+                <td>出生日期：1969年12月9日</td><td></td>
+              </tr>
+               <tr>
+                <td>手机号码：18878999888</td><td></td>
+              </tr>
+              <tr>
+                <td>产品名称：XXX仪器</td><td>产品类别：产品主机</td>
+                </tr>
+              <tr>
+                <td>预约数量：1</td><td>预约日期：2019年12月8日</td>
+                </tr>
+            </table>
+          </div>
+        </van-panel>
+
       </van-tab>
-      <van-tab title="出入库管理">暂未完成此功能【最近出入库】设计</van-tab>
       <van-tab title="维修管理">暂未完成此功能【最近维修】设计</van-tab>
     </van-tabs>
     <mybr/>
@@ -185,6 +264,20 @@
     注意要配一个van-dialog,才会显示提示 ,默认id van-dialog
     -->
     <van-dialog id="van-dialog"/>
+    <van-action-sheet
+      :show="isShowBookCategory"
+      :actions="BookCategories"
+      title="选择预约类型"
+      @close="onCloseBookCategory"
+      @select="onSelectBookCategory"
+    />
+    <van-action-sheet
+      :show="isShowSignCategory"
+      :actions="SignCategories"
+      title="选择签约类型"
+      @close="onCloseSignCategory"
+      @select="onSelectSignCategory"
+    />
   </div>
 
 </template>
@@ -203,13 +296,37 @@
     data () {
       return {
         //从0开始的
-        active1 : 0 ,
-
-        active2 : 0 ,
-
-        active3 : 0 ,
-
-        active4 : 1
+        isShowBookCategory : false ,
+        isShowSignCategory : false,
+        selectedSignCategory : '所有类别' ,
+        selectedBookCategory : '所有类别' ,
+        BookCategories : 
+        [
+          {
+            name : '所有类别'
+          } ,
+           {
+            name : '设备预约'
+          } ,
+          {
+            name : '变更申请' 
+          } ,
+          {
+            name : '维修预约',
+          }
+        ],
+        SignCategories : 
+        [
+          {
+            name : '所有类别'
+          } ,
+           {
+            name : '已签约'
+          } ,
+          {
+            name : 'DTP变更' 
+          }
+        ] 
       }
     } ,
     //方法
@@ -221,6 +338,42 @@
             title : '信息提示' ,
             message
           } );
+      }
+      ,
+      onShowBookCategory(event){
+        this.isShowBookCategory = true;
+      }
+      ,
+      onCloseBookCategory(event){
+         this.isShowBookCategory = false;
+      }
+      ,
+      onSelectBookCategory(event){
+        let obj = event.mp.detail;
+          //取到选择的值
+        let name = obj.name;
+        this.selectedBookCategory = name;
+        this.isShowBookCategory = false;
+        console.log("this.selectedBookCategory",this.selectedBookCategory);
+        console.log("this.isShowBookCategory",this.isShowBookCategory);
+      }
+      ,
+      onShowSignCategory(event){
+        this.isShowSignCategory = true;
+      }
+      ,
+      onCloseSignCategory(event){
+         this.isShowSignCategory = false;
+      }
+      ,
+      onSelectSignCategory(event){
+        let obj = event.mp.detail;
+          //取到选择的值
+        let name = obj.name;
+        this.selectedSignCategory = name;
+        this.isShowSignCategory = false;
+        console.log("this.selectedSignCategory",this.selectedSignCategory);
+        console.log("this.isShowSignCategory",this.isShowSignCategory);
       }
       ,
       onCancelBooking(event){

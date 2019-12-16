@@ -10,24 +10,25 @@
 }
 
 .content{
+    font-size: 14px;
+    margin: 10px;
+
+}
+
+.basicinfo{
+    font-size: 15px;
+    margin: 10px;
+    color: dimgray;
+}
+
+.privacy{
     font-size: 13px;
-    margin: 10px;
+    margin: 15px;
+    color: dimgray;
+    margin-bottom: 30px;
 }
 
-.content td{
-    margin: 10px;
-}
-
-.userrow,.usercol{
-    width: 100%;
-}
-
-.filterBookCategory{
-    margin: 10px;
+.confirmsignbtn{
+    margin-bottom: 15px 20px 30px 20px;
     text-align: center;
-    vertical-align: middle;
-}
-
-.middle{
-    vertical-align: middle;
 }

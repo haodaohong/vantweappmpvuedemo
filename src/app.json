@@ -3,6 +3,7 @@
     "pages/a-demoindex/main",
     "pages/index/main",
     "pages/a-dtphome/main",
+    "pages/a-dtpcheckout/main",
     "pages/a-patienthome/main",
     "pages/a-dtpsign/main",
     "pages/button/main",

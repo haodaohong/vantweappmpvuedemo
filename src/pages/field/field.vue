@@ -75,6 +75,8 @@
     components : {
       mybr
     } ,
+
+    
     //数据模型
     data () {
       return {

@@ -7,7 +7,12 @@
     "van-dialog": "/static/vant/dialog/index",
     "van-icon": "/static/vant/icon/index",
     "van-search": "/static/vant/search/index",
-    "van-field": "/static/vant/field/index"
+    "van-field": "/static/vant/field/index",
+    "van-radio": "/static/vant/radio/index",
+    "van-radio-group": "/static/vant/radio-group/index",
+    "van-cell": "/static/vant/cell/index",
+    "van-action-sheet":"/static/vant/action-sheet/index",
+    "van-cell-group": "/static/vant/cell-group/index"
   },
   "navigationBarTitleText": "DTP 产品管理"
 }
