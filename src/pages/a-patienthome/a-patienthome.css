@@ -49,3 +49,8 @@ image {
     overflow: hidden !important;
     
     }
+
+    .gosubmit{
+        margin-top: -67px;
+        margin-bottom: 20px;
+    }

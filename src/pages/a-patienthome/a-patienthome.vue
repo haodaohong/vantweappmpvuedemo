@@ -25,9 +25,61 @@
     </div>
 
 
-    <van-tabs :active="active1"
+    <van-tabs :active="active"
               @change="onChange1">
-      <van-tab title="最近预约">
+      
+      <van-tab title="预约服务">
+        <van-card
+          price="1.8公里"
+          desc="地址：上海市XXX路888号"
+          title="XXX大药房"
+          currency="距离："
+          price-class="price-class"
+          :thumb="imageURL"
+        >
+          <view class="gosubmit" slot="footer">
+            <van-button size="small" type="primary">立即预约</van-button>
+          </view>
+        </van-card>
+        <van-card
+          price="2.8公里"
+          desc="地址：上海市XXX路888号"
+          title="XXX大药房"
+          currency="距离："
+          price-class="price-class"
+          :thumb="imageURL"
+        >
+          <view class="gosubmit" slot="footer">
+            <van-button size="small" type="primary">立即预约</van-button>
+          </view>
+        </van-card>
+        <van-card
+          price="3.8公里"
+          desc="地址：上海市XXX路888号"
+          title="XXX大药房"
+          currency="距离："
+          price-class="price-class"
+          :thumb="imageURL"
+        >
+          <view class="gosubmit" slot="footer">
+            <van-button size="small" type="primary">立即预约</van-button>
+          </view>
+        </van-card>
+        <van-card
+          price="11.8公里"
+          desc="地址：上海市XXX路888号"
+          title="XXX大药房"
+          currency="距离："
+          price-class="price-class"
+          :thumb="imageURL"
+        >
+          <view class="gosubmit" slot="footer">
+            <van-button size="small" type="primary">立即预约</van-button>
+          </view>
+        </van-card>
+
+      </van-tab>
+      <van-tab title="历史记录">
         
         <van-panel title="李斌"
                   desc="确诊自华山医院"
@@ -88,58 +140,7 @@
         </van-panel>
 
       </van-tab>
-      <van-tab title="预约DTP药房">
-        <van-card
-          price="1.8公里"
-          desc="地址：上海市XXX路888号"
-          title="XXX大药房"
-          currency="距离："
-          price-class="price-class"
-          :thumb="imageURL"
-        >
-          <view slot="footer">
-            <van-button size="small" type="primary">立即预约</van-button>
-          </view>
-        </van-card>
-        <van-card
-          price="2.8公里"
-          desc="地址：上海市XXX路888号"
-          title="XXX大药房"
-          currency="距离："
-          price-class="price-class"
-          :thumb="imageURL"
-        >
-          <view slot="footer">
-            <van-button size="small" type="primary">立即预约</van-button>
-          </view>
-        </van-card>
-        <van-card
-          price="3.8公里"
-          desc="地址：上海市XXX路888号"
-          title="XXX大药房"
-          currency="距离："
-          price-class="price-class"
-          :thumb="imageURL"
-        >
-          <view slot="footer">
-            <van-button size="small" type="primary">立即预约</van-button>
-          </view>
-        </van-card>
-        <van-card
-          price="11.8公里"
-          desc="地址：上海市XXX路888号"
-          title="XXX大药房"
-          currency="距离："
-          price-class="price-class"
-          :thumb="imageURL"
-        >
-          <view slot="footer">
-            <van-button size="small" type="primary">立即预约</van-button>
-          </view>
-        </van-card>
-
-      </van-tab>
-      <van-tab title="问题反馈">暂未完成此功能【问题反馈】设计</van-tab>
+      <van-tab title="个人中心">暂未完成此功能【】设计</van-tab>
     </van-tabs>
     <mybr/>
     <mybr/>
@@ -166,7 +167,8 @@
       return {
         //从0开始的
         imageURL: "/static/img/yaodian.png",
-        touxiang: "/static/img/touxiang.jpg"
+        touxiang: "/static/img/touxiang.jpg",
+        active: 0
       }
     } ,
     //方法
