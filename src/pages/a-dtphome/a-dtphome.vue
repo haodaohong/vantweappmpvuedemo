@@ -408,6 +408,27 @@ export default {
     //return this.data;
     //}
   },
+  onLoad: function (options) {
+        wx.login({
+            success:res=> {
+                // 调用接口获取openid
+                console.log('res:',res);
+                this.$http.post({
+                url: '/mms/country/queryValidZoneListForMallHome',
+                data: {
+                  'categoryType': 'SaleGoodsType@sim',
+                  'streamNo': 'web_bss153570682909641893',
+                  'reqSource': 'MALL_H5',
+                  'appid': 'string',
+                  'timestamp': 1535706829096,
+                  'sign': 'string'
+                }
+                }).then(res => {
+                      console.log(res)
+                });
+            }
+        })
+    },
   //生命周期(mounted)
   mounted() {}
 };
