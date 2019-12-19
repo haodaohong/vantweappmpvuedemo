@@ -1,20 +1,19 @@
-.scanBtn{
+.scanBtn {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.confirmBooking{
-    margin-right: 10px;
+.confirmBooking {
     margin-left: 5px;
 }
 
-.content{
+.content {
     font-size: 14px;
     margin: 10px;
 }
 
-.divInlineBlock{
+.divInlineBlock {
     display: inline-block;
 }
 
@@ -25,7 +24,7 @@
     justify-content: space-around;
 }
 
-.flex-container-no-margin{
+.flex-container-no-margin {
     display: flex;
     justify-content: space-around;
 }

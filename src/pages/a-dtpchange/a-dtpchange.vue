@@ -1,4 +1,3 @@
-
 <!-- html代码片段 -->
 <template>
   <!--
@@ -30,9 +29,27 @@
     </van-panel>
     <mybr />
     <van-panel title="变更协议信息">
-      <van-field :value="username" label="原租赁药房" placeholder="请输入原租赁药房" clearable required />
-      <van-field :value="username" label="现租赁药房" placeholder="请输入现租赁药房" clearable required />
-      <van-field :value="username" label="新协议编号" placeholder="请输入协议编号" clearable required />
+      <van-field
+        :value="username"
+        label="原租赁药房"
+        placeholder="请输入原租赁药房"
+        clearable
+        required
+      />
+      <van-field
+        :value="username"
+        label="现租赁药房"
+        placeholder="请输入现租赁药房"
+        clearable
+        required
+      />
+      <van-field
+        :value="username"
+        label="新协议编号"
+        placeholder="请输入协议编号"
+        clearable
+        required
+      />
       <div>
         <van-popup :show="isshowdatetimepicker" position="bottom">
           <van-datetime-picker
@@ -60,7 +77,9 @@
     </van-panel>
     <mybr />
     <div class="confirmsignbtn">
-      <van-button square size="normal" type="info" @click="onConfirmSign">确认提交</van-button>
+      <van-button square size="normal" type="info" @click="onConfirmSign"
+        >确认提交</van-button
+      >
     </div>
     <mybr />
     <!--
@@ -159,6 +178,4 @@ export default {
 </script>
 
 <!-- 样式代码片段  scoped -->
-<style scoped
-       src="./a-dtpchange.css">
-</style>
+<style scoped src="./a-dtpchange.css"></style>

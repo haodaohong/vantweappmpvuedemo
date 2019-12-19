@@ -1,31 +1,30 @@
-.scanBtn{
+.scanBtn {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.confirmBooking{
+.confirmBooking {
     margin-right: 10px;
     margin-left: 5px;
 }
 
-.content{
+.content {
     font-size: 14px;
     margin: 10px;
-
 }
 
-.editmyprofile{
+.editmyprofile {
     margin: 5px 15px 15px 15px;
 }
 
-.myphoto img{
+.myphoto img {
     width: 140px !important;
     height: 140px !important;
-    border-radius:50%
+    border-radius: 50%;
 }
 
-.price-class{
+.price-class {
     color: grey !important;
     font-weight: normal !important;
 }
@@ -40,17 +39,21 @@ image {
     height: 140px !important;
     display: inline-block !important;
     overflow: hidden !important;
-    
-    }
-    .van-image__img {
+}
+.van-image__img {
     width: 140px !important;
     height: 140px !important;
     display: inline-block !important;
     overflow: hidden !important;
-    
-    }
+}
 
-    .gosubmit{
-        margin-top: -67px;
-        margin-bottom: 20px;
-    }
+.gosubmit {
+    margin-top: -67px;
+    margin-bottom: 20px;
+}
+
+.divLine {
+    background: #e0e3da;
+    width: 100%;
+    height: 5rpx;
+}

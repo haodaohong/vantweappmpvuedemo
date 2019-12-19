@@ -1,39 +1,38 @@
-.scanBtn{
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 20px;
+.scanBtn {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
-.confirmBooking{
-    margin-right: 10px;
-    margin-left: 5px;
+.confirmBooking {
+  margin-right: 10px;
+  margin-left: 5px;
 }
 
-.content{
-    font-size: 14px;
-    margin: 10px;
-
+.content {
+  font-size: 14px;
+  margin: 10px;
 }
 
-.basicinfo{
-    font-size: 15px;
-    margin: 10px;
-    color: dimgray;
+.basicinfo {
+  font-size: 15px;
+  margin: 10px;
+  color: dimgray;
 }
 
-.privacy{
-    font-size: 13px;
-    margin: 15px;
-    color: dimgray;
-    margin-bottom: 30px;
+.privacy {
+  font-size: 13px;
+  margin: 15px;
+  color: dimgray;
+  margin-bottom: 30px;
 }
 
-.confirmsignbtn{
-    margin-bottom: 15px 20px 30px 20px;
-    text-align: center;
+.confirmsignbtn {
+  margin-bottom: 15px 20px 30px 20px;
+  text-align: center;
 }
 
-.flex-container-no-margin{
-    display: flex;
-    justify-content: flex-start;
+.flex-container-no-margin {
+  display: flex;
+  justify-content: flex-start;
 }

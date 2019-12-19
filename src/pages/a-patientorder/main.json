@@ -10,8 +10,11 @@
         "van-image": "/static/vant/image/index",
         "van-loading": "/static/vant/loading/index",
         "van-field": "/static/vant/field/index",
+        "van-stepper": "/static/vant/stepper/index",
+        "van-popup": "/static/vant/popup/index",
+        "van-datetime-picker": "/static/vant/datetime-picker/index",
         "van-dropdown-menu": "/static/vant/dropdown-menu/index",
         "van-dropdown-item": "/static/vant/dropdown-item/index"
     },
-    "navigationBarTitleText": "预约租赁"
+    "navigationBarTitleText": "预约申请"
 }
