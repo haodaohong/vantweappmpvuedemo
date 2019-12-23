@@ -39,10 +39,13 @@
             </div>
         </div>
 
-        <van-tabs :active="active1" @change="onChange1">
-            <van-tab title="设备管理">
-                <div>
-                    <div>
+        <div>
+            <div>
+                <div class="flex-width">
+                    <div class=".white-padding">
+                        <span>库存操作:</span>
+                    </div>
+                    <div class="flex-1">
                         <van-dropdown-menu>
                             <van-dropdown-item
                                 :value="value1"
@@ -51,8 +54,13 @@
                         </van-dropdown-menu>
                     </div>
                 </div>
-                <div>
-                    <div>
+            </div>
+            <div>
+                <div class="flex-width">
+                    <div class=".white-padding">
+                        <span>操作日期:</span>
+                    </div>
+                    <div class="flex-1">
                         <van-dropdown-menu>
                             <van-dropdown-item
                                 :value="value2"
@@ -61,69 +69,76 @@
                         </van-dropdown-menu>
                     </div>
                 </div>
-                <van-panel
-                    title="产品编号"
-                    desc="SNXXXXXXXXXXXXX"
-                    status="已入库"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>名称：xxx仪器</td>
-                                <td>类别：产品主机</td>
-                                <td>规格：20*30</td>
-                                <td>单位：台</td>
-                                <td>数量：1</td>
-                                <td>生产日期：2019年01月01日</td>
-                                <td>入库日期：2019年12月30日</td>
-                                <td>入库类型：维修入库</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            class="confirmBooking"
-                            size="small"
-                            type="primary"
-                            >已清洗</van-button
-                        >
-                    </view>
-                </van-panel>
-                <van-panel
-                    title="产品编号"
-                    desc="SNXXXXXXXXXXXXX"
-                    status="已质检"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>名称：xxx仪器</td>
-                                <td>类别：产品主机</td>
-                                <td>规格：20*30</td>
-                                <td>单位：台</td>
-                                <td>数量：1</td>
-                                <td>生产日期：2019年01月01日</td>
-                                <td>入库日期：2019年12月30日</td>
-                                <td>入库类型：维修入库</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            class="confirmBooking"
-                            @click="onCocOut"
-                            size="small"
-                            type="primary"
-                            >产品出库</van-button
-                        >
-                    </view>
-                </van-panel>
-            </van-tab>
-        </van-tabs>
+            </div>
+            <van-panel
+                title="产品编号"
+                desc="SNXXXXXXXXXXXXX"
+                status="已入库"
+                use-footer-slot
+            >
+                <div>
+                    <table class="content">
+                        <tr>
+                            <td>名称：xxx仪器</td>
+                            <td>类别：产品主机</td>
+                            <td>规格：20*30</td>
+                            <td>单位：台</td>
+                            <td>数量：1</td>
+                            <td>生产日期：2019年01月01日</td>
+                            <td>入库日期：2019年12月30日</td>
+                            <td>入库类型：维修入库</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--加个样式把按钮搞右边去-->
+                <view style="text-align: right;" slot="footer">
+                    <van-button
+                        class="confirmBooking"
+                        @click="onCocOut"
+                        size="small"
+                        type="info"
+                        >产品出库</van-button
+                    >
+                    <van-button
+                        class="confirmBooking"
+                        size="small"
+                        type="primary"
+                        >已清洗</van-button
+                    >
+                </view>
+            </van-panel>
+            <van-panel
+                title="产品编号"
+                desc="SNXXXXXXXXXXXXX"
+                status="已质检"
+                use-footer-slot
+            >
+                <div>
+                    <table class="content">
+                        <tr>
+                            <td>名称：xxx仪器</td>
+                            <td>类别：产品主机</td>
+                            <td>规格：20*30</td>
+                            <td>单位：台</td>
+                            <td>数量：1</td>
+                            <td>生产日期：2019年01月01日</td>
+                            <td>入库日期：2019年12月30日</td>
+                            <td>入库类型：维修入库</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--加个样式把按钮搞右边去-->
+                <view style="text-align: right;" slot="footer">
+                    <van-button
+                        class="confirmBooking"
+                        @click="onCocOut"
+                        size="small"
+                        type="info"
+                        >产品出库</van-button
+                    >
+                </view>
+            </van-panel>
+        </div>
         <mybr />
         <mybr />
         <van-dialog id="van-dialog" />

@@ -29,13 +29,18 @@
         <van-tabs :active="active" @change="onChange1">
             <van-tab title="预约服务">
                 <div>
-                    <div>
-                        <van-dropdown-menu>
-                            <van-dropdown-item
-                                :value="value1"
-                                :options="option1"
-                            />
-                        </van-dropdown-menu>
+                    <div class="flex-width">
+                        <div class=".white-padding">
+                            <span>选择城市:</span>
+                        </div>
+                        <div class="flex-1">
+                            <van-dropdown-menu>
+                                <van-dropdown-item
+                                    :value="value1"
+                                    :options="option1"
+                                />
+                            </van-dropdown-menu>
+                        </div>
                     </div>
                 </div>
                 <van-card

@@ -53,13 +53,18 @@
         <van-tabs :active="active1" @change="onChange1">
             <van-tab title="预约申请">
                 <div>
-                    <div>
-                        <van-dropdown-menu>
-                            <van-dropdown-item
-                                :value="value1"
-                                :options="option1"
-                            />
-                        </van-dropdown-menu>
+                    <div class="flex-width">
+                        <div class=".white-padding">
+                            <span>预约类型:</span>
+                        </div>
+                        <div class="flex-1">
+                            <van-dropdown-menu>
+                                <van-dropdown-item
+                                    :value="value1"
+                                    :options="option1"
+                                />
+                            </van-dropdown-menu>
+                        </div>
                     </div>
                 </div>
                 <van-panel
@@ -71,7 +76,11 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：首次购买</td>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >首次购买</span
+                                    >
+                                </td>
                                 <td>性别：男</td>
                                 <td>出生日期：1960年12月9日</td>
                                 <td>手机号码：199xxxxxxxx</td>
@@ -115,7 +124,11 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：首次购买</td>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >首次购买</span
+                                    >
+                                </td>
                                 <td>性别：男</td>
                                 <td>出生日期：1960年12月9日</td>
                                 <td>手机号码：199xxxxxxxx</td>
@@ -138,13 +151,18 @@
             </van-tab>
             <van-tab title="签约绑定">
                 <div>
-                    <div>
-                        <van-dropdown-menu>
-                            <van-dropdown-item
-                                :value="value2"
-                                :options="option2"
-                            />
-                        </van-dropdown-menu>
+                    <div class="flex-width">
+                        <div class=".white-padding">
+                            <span>签约类型:</span>
+                        </div>
+                        <div class="flex-1">
+                            <van-dropdown-menu>
+                                <van-dropdown-item
+                                    :value="value2"
+                                    :options="option2"
+                                />
+                            </van-dropdown-menu>
+                        </div>
                     </div>
                 </div>
                 <van-panel
@@ -156,7 +174,11 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：首次购买</td>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >首次购买</span
+                                    >
+                                </td>
                                 <td>性别：男</td>
                                 <td>出生日期：1960年12月9日</td>
                                 <td>手机号码：199xxxxxxxx</td>
@@ -166,9 +188,7 @@
                             </tr>
                         </table>
                     </div>
-                    <!--
-          加个样式把按钮搞右边去
-          -->
+                    <!--加个样式把按钮搞右边去-->
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             @click="onConfirmSign"
@@ -188,7 +208,11 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：首次购买</td>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >首次购买</span
+                                    >
+                                </td>
                                 <td>性别：男</td>
                                 <td>出生日期：1960年12月9日</td>
                                 <td>手机号码：199xxxxxxxx</td>
@@ -241,23 +265,33 @@
             </van-tab>
             <van-tab title="出入库管理">
                 <div>
-                    <div>
-                        <van-dropdown-menu>
-                            <van-dropdown-item
-                                :value="value3"
-                                :options="option3"
-                            />
-                        </van-dropdown-menu>
+                    <div class="flex-width">
+                        <div class=".white-padding">
+                            <span>库存操作:</span>
+                        </div>
+                        <div class="flex-1">
+                            <van-dropdown-menu>
+                                <van-dropdown-item
+                                    :value="value3"
+                                    :options="option3"
+                                />
+                            </van-dropdown-menu>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <div>
-                        <van-dropdown-menu>
-                            <van-dropdown-item
-                                :value="value4"
-                                :options="option4"
-                            />
-                        </van-dropdown-menu>
+                    <div class="flex-width">
+                        <div class=".white-padding">
+                            <span>操作日期:</span>
+                        </div>
+                        <div class="flex-1">
+                            <van-dropdown-menu>
+                                <van-dropdown-item
+                                    :value="value4"
+                                    :options="option4"
+                                />
+                            </van-dropdown-menu>
+                        </div>
                     </div>
                 </div>
                 <van-panel

@@ -10,10 +10,14 @@
 
 .content {
     font-size: 14px;
-    margin: 10px;
+    padding: 10px 20px;
 }
 
 .divInlineBlock {
+    display: inline-block;
+}
+
+.divBlock {
     display: inline-block;
 }
 
@@ -24,7 +28,19 @@
     justify-content: space-around;
 }
 
-.flex-container-no-margin {
+.flex-width {
     display: flex;
-    justify-content: space-around;
+    width: 100%;
+    overflow: hidden;
+}
+
+.white-padding {
+    font-size: 15px;
+    color: dodgerblue;
+    padding: 14px 16px;
+    background-color: white;
+}
+
+.flex-1 {
+    flex: 1;
 }
