@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div>
-                <van-icon size="80px" name="qr" @click="scanProduct2" />
+                <van-icon size="80px" name="qr" @click="scanSearchProduct" />
                 <div>
                     <div class="divInlineBlock">
                         <van-icon size="17px" name="search" />
@@ -251,40 +251,14 @@
                     </div>
                 </div>
                 <div>
-                    <van-popup :show="isshowdatetimepicker1" position="bottom">
-                        <van-datetime-picker
-                            type="date"
-                            :value="currentDate"
-                            @confirm="userselectdate1"
-                            @cancel="usercancel"
-                        />
-                    </van-popup>
-                    <van-field
-                        :value="selectedDate1"
-                        label="开始日期"
-                        icon="calender-o"
-                        icon-class="icon"
-                        required
-                        @clickicon="showdatetimepicker1"
-                    />
-                </div>
-                <div>
-                    <van-popup :show="isshowdatetimepicker2" position="bottom">
-                        <van-datetime-picker
-                            type="date"
-                            :value="currentDate"
-                            @confirm="userselectdate2"
-                            @cancel="usercancel"
-                        />
-                    </van-popup>
-                    <van-field
-                        :value="selectedDate2"
-                        label="结束日期"
-                        icon="calender-o"
-                        icon-class="icon"
-                        required
-                        @clickicon="showdatetimepicker2"
-                    />
+                    <div>
+                        <van-dropdown-menu>
+                            <van-dropdown-item
+                                :value="value4"
+                                :options="option4"
+                            />
+                        </van-dropdown-menu>
+                    </div>
                 </div>
                 <van-panel
                     title="产品编号"
@@ -305,13 +279,11 @@
                             </tr>
                         </table>
                     </div>
-                    <!--
-          加个样式把按钮搞右边去
-          -->
+                    <!--加个样式把按钮搞右边去-->
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             class="confirmBooking"
-                            @click="onCocOut"
+                            @click="onDtpOut"
                             size="small"
                             type="primary"
                             >产品返厂</van-button
@@ -340,9 +312,7 @@
                             </tr>
                         </table>
                     </div>
-                    <!--
-          加个样式把按钮搞右边去
-          -->
+                    <!--加个样式把按钮搞右边去-->
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             class="confirmBooking"
@@ -373,13 +343,10 @@
                             </tr>
                         </table>
                     </div>
-                    <!--
-          加个样式把按钮搞右边去
-          -->
+                    <!--加个样式把按钮搞右边去-->
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             class="confirmBooking"
-                            @click="onCocOut"
                             size="small"
                             type="primary"
                             >维修出库</van-button
@@ -390,9 +357,6 @@
         </van-tabs>
         <mybr />
         <mybr />
-        <!--
-    注意要配一个van-dialog,才会显示提示 ,默认id van-dialog
-    -->
         <van-dialog id="van-dialog" />
     </div>
 </template>
@@ -442,11 +406,15 @@ export default {
             ],
 
             value3: 0,
-            isshowdatetimepicker1: false,
-            isshowdatetimepicker2: false,
-            selectedDate1: new Date().toLocaleDateString(),
-            selectedDate2: new Date().toLocaleDateString(),
-            currentDate: new Date().getTime(),
+
+            option4: [
+                { text: '今日', value: 0 },
+                { text: '近7日', value: 1 },
+                { text: '近一个月', value: 2 },
+                { text: '近三个月', value: 3 },
+            ],
+
+            value4: 0,
         }
     },
     //方法
@@ -455,14 +423,9 @@ export default {
             const url = '../a-dtpproductin/main'
             wx.navigateTo({ url: url })
         },
-        scanProduct2(event) {
-            const message =
-                '暂未完成此功能设计；预期结果是识别产品条形码并跳转至入库界面'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
+        scanSearchProduct(event) {
+            const url = '../a-dtpproductsearch/main'
+            wx.navigateTo({ url: url })
         },
         onCancelBooking(event) {
             const message = '已取消此预约申请，并通知相关人员！'
@@ -512,8 +475,8 @@ export default {
             const url = '../a-dtprentout/main'
             wx.navigateTo({ url: url })
         },
-        onCocOut(event) {
-            const url = '../a-dtpcocout/main'
+        onDtpOut(event) {
+            const url = '../a-dtpout/main'
             wx.navigateTo({ url: url })
         },
         onProductChange(event) {
@@ -531,34 +494,6 @@ export default {
         onDtpChange(event) {
             const url = '../a-dtpchange/main'
             wx.navigateTo({ url: url })
-        },
-        showdatetimepicker1(event) {
-            this.isshowdatetimepicker1 = true
-        },
-        showdatetimepicker2(event) {
-            this.isshowdatetimepicker2 = true
-        },
-        userselectdate1(event) {
-            //console.log( 'onconfirm2' , event )
-            const { detail, currentTarget } = event.mp
-            // console.log( detail )
-            // console.log( currentTarget )
-            const date = new Date(detail)
-            this.selectedDate1 = date.toLocaleDateString()
-            this.isshowdatetimepicker1 = false
-        },
-        userselectdate2(event) {
-            //console.log( 'onconfirm2' , event )
-            const { detail, currentTarget } = event.mp
-            // console.log( detail )
-            // console.log( currentTarget )
-            const date = new Date(detail)
-            this.selectedDate2 = date.toLocaleDateString()
-            this.isshowdatetimepicker2 = false
-        },
-        usercancel(event) {
-            this.isshowdatetimepicker1 = false
-            this.isshowdatetimepicker2 = false
         },
     },
     //计算属性
