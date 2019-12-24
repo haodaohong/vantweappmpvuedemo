@@ -14,6 +14,7 @@
         "pages/a-dtpout/main",
         "pages/a-dtpproductin/main",
         "pages/a-dtpproductsearch/main",
+        "pages/a-dtpproductchange/main",
         "pages/a-cochome/main",
         "pages/a-cocproductin/main",
         "pages/a-cocproductsearch/main",

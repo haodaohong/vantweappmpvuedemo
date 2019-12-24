@@ -67,12 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <van-panel
-                    title="李斌"
-                    desc="确诊自华山医院"
-                    status="待确认"
-                    use-footer-slot
-                >
+                <van-panel title="李斌" status="待确认" use-footer-slot>
                     <div>
                         <table class="content">
                             <tr>
@@ -115,12 +110,7 @@
                     </view>
                 </van-panel>
 
-                <van-panel
-                    title="王武"
-                    desc="确诊自华山医院"
-                    status="确认"
-                    use-footer-slot
-                >
+                <van-panel title="王武" status="确认" use-footer-slot>
                     <div>
                         <table class="content">
                             <tr>
@@ -148,6 +138,40 @@
                         >
                     </view>
                 </van-panel>
+
+                <van-panel title="李斌" status="待确认" use-footer-slot>
+                    <div>
+                        <table class="content">
+                            <tr>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >购买贴片</span
+                                    >
+                                </td>
+                                <td>性别：男</td>
+                                <td>出生日期：1960年12月9日</td>
+                                <td>手机号码：199xxxxxxxx</td>
+                                <td>预约日期：2019年12月30日 10:00-11:00</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <view style="text-align: right;" slot="footer">
+                        <van-button
+                            class="confirmBooking"
+                            @click="onConfirmBooking"
+                            size="small"
+                            type="primary"
+                            >确认预约</van-button
+                        >
+                        <van-button
+                            class="confirmBooking"
+                            @click="onCancelBooking"
+                            size="small"
+                            type="default"
+                            >取消预约</van-button
+                        >
+                    </view>
+                </van-panel>
             </van-tab>
             <van-tab title="签约绑定">
                 <div>
@@ -165,12 +189,7 @@
                         </div>
                     </div>
                 </div>
-                <van-panel
-                    title="李斌"
-                    desc="确诊自华山医院"
-                    status="待签约"
-                    use-footer-slot
-                >
+                <van-panel title="李斌" status="待签约" use-footer-slot>
                     <div>
                         <table class="content">
                             <tr>
@@ -199,12 +218,7 @@
                     </view>
                 </van-panel>
 
-                <van-panel
-                    title="王武"
-                    desc="确诊自华山医院"
-                    status="已签约"
-                    use-footer-slot
-                >
+                <van-panel title="王武" status="已签约" use-footer-slot>
                     <div>
                         <table class="content">
                             <tr>
@@ -219,6 +233,7 @@
                                 <td>产品名称：XXX仪器</td>
                                 <td>预约数量：1</td>
                                 <td>预约日期：2019年12月30日 10:00-11:00</td>
+                                <td>已签约DTP：XXXDTP</td>
                             </tr>
                         </table>
                     </div>
@@ -231,28 +246,23 @@
                         >
                     </view>
                 </van-panel>
-
-                <van-panel
-                    title="李斌"
-                    desc="确诊自华山医院"
-                    status="待变更"
-                    use-footer-slot
-                >
+                <van-panel title="李斌" status="待签约" use-footer-slot>
                     <div>
                         <table class="content">
                             <tr>
-                                <td>产品名称：XXX仪器</td>
-                                <td>产品类别：产品主机</td>
-                            </tr>
-                            <tr>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月8日</td>
+                                <td>
+                                    预约类型：<span class="font-color-red"
+                                        >购买贴片</span
+                                    >
+                                </td>
+                                <td>性别：男</td>
+                                <td>出生日期：1960年12月9日</td>
+                                <td>手机号码：199xxxxxxxx</td>
+                                <td>预约日期：2019年12月30日 10:00-11:00</td>
                             </tr>
                         </table>
                     </div>
-                    <!--
-          加个样式把按钮搞右边去
-          -->
+                    <!--加个样式把按钮搞右边去-->
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             @click="onDtpChange"
@@ -381,6 +391,7 @@
                     <view style="text-align: right;" slot="footer">
                         <van-button
                             class="confirmBooking"
+                            @click="onDtpOut"
                             size="small"
                             type="primary"
                             >维修出库</van-button
@@ -501,6 +512,10 @@ export default {
                 message,
             })
         },
+        onDtpChange(event) {
+            const url = '../a-dtpchange/main'
+            wx.navigateTo({ url: url })
+        },
         onConfirmSign(event) {
             const url = '../a-dtpsign/main'
             wx.navigateTo({ url: url })
@@ -524,10 +539,6 @@ export default {
                 title: '信息提示',
                 message,
             })
-        },
-        onDtpChange(event) {
-            const url = '../a-dtpchange/main'
-            wx.navigateTo({ url: url })
         },
     },
     //计算属性
