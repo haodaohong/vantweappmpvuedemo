@@ -19,6 +19,7 @@
         "pages/a-cocproductin/main",
         "pages/a-cocproductsearch/main",
         "pages/a-cocout/main",
+        "pages/a-registeruser/main",
         "pages/button/main",
         "pages/tab/main",
         "pages/tag/main",
