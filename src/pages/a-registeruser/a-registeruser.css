@@ -83,3 +83,15 @@ image {
     margin-bottom: 15px 20px 30px 20px;
     text-align: center;
 }
+
+.selectRole{
+    text-align: center;
+    vertical-align: middle;
+    margin: 10px;
+}
+
+.middle{
+    text-align: center;
+    vertical-align: middle;
+    margin-left: 5px;
+}

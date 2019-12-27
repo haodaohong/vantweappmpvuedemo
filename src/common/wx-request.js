@@ -1,4 +1,4 @@
-const host = 'https://rmall.ukelink.net' //写自己的域名
+const host = 'https://oostest.zailaboratory.com' //写自己的域名
  
 function request (url, method, data, header = {}) {
   wx.showLoading({

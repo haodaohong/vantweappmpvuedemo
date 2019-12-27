@@ -555,7 +555,7 @@ export default {
                 console.log('res:', res)
                 this.$http
                     .post({
-                        url: '/mms/country/queryValidZoneListForMallHome',
+                        url: '/COC/GetAll',
                         data: {
                             categoryType: 'SaleGoodsType@sim',
                             streamNo: 'web_bss153570682909641893',
