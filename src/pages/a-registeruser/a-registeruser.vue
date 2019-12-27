@@ -125,13 +125,29 @@ export default {
         },
         onConfirmRegister(event) {
             const message = '已成功注册角色！'
-
+            if(this.selectedRole == "未知")
+            {
+                Dialog.alert({
+                    title: '信息提示',
+                    message: '请选择用户类型',
+                });
+                return;
+            }
             Dialog.alert({
                 title: '信息提示',
                 message,
             }).then(() => {
-                const url = '../a-demoindex/main'
-                wx.navigateBack({ url: url })
+                if(this.selectedRole == "DTP")
+                {
+                    const url = '../a-dtphome/main'
+                    console.log("url",this.selectedRole+url);
+                    wx.navigateTo({ url: url })
+                }else if(this.selectedRole == "COC")
+                {
+                    const url = '../a-cochome/main'
+                    wx.navigateTo({ url: url })
+                    console.log("url",this.selectedRole+url);
+                }
             })
         },
     },
