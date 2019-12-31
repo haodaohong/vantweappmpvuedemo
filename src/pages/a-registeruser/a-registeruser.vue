@@ -15,14 +15,17 @@
 
     <div class="flex-container">
         <div class="selectRole">
-             <van-button type="default" @click="onShowRoles">选择角色：
-               <span :class="[selectedRole == '未知'?'font-color-red':'']" >{{selectedRole}}</span>  
-                 <van-icon class="middle" custom-class="middle" name="arrow-down" /></van-button>
+            <van-button type="default" @click="onShowRoles"
+                >选择角色：
+                <span
+                    :class="[selectedRole == '未知' ? 'font-color-red' : '']"
+                    >{{ selectedRole }}</span
+                >
+                <van-icon class="middle" custom-class="middle" name="arrow-down"
+            /></van-button>
         </div>
         <div>
-
             <van-cell-group>
-               
                 <van-field
                     :value="phone"
                     label="手机号"
@@ -58,11 +61,11 @@
         <mybr />
         <van-dialog id="van-dialog" />
         <van-action-sheet
-        :show="isShowRole"
-        :actions="Roles"
-        title="选择角色类型"
-        @close="onCloseRoles"
-        @select="onSelectRole"
+            :show="isShowRole"
+            :actions="Roles"
+            title="选择角色类型"
+            @close="onCloseRoles"
+            @select="onSelectRole"
         />
     </div>
 </template>
@@ -91,15 +94,14 @@ export default {
                 active:
                     'https://img.yzcdn.cn/public_files/2017/10/13/793c77793db8641c4c325b7f25bf130d.png',
             },
-             Roles : 
-            [
-            {
-                name : 'DTP'
-            } ,
-            {
-                name : 'COC'
-            }
-            ]
+            Roles: [
+                {
+                    name: 'DTP',
+                },
+                {
+                    name: 'COC',
+                },
+            ],
         }
     },
     //方法
@@ -107,46 +109,42 @@ export default {
         onChange(event) {
             this.radio = event.mp.detail
         },
-        onShowRoles(event){
-            this.isShowRole = true;
+        onShowRoles(event) {
+            this.isShowRole = true
         },
-        onCloseRoles(event){
-            this.isShowRole = false;
-        }
-        ,
-        onSelectRole(event){
-            let obj = event.mp.detail;
+        onCloseRoles(event) {
+            this.isShowRole = false
+        },
+        onSelectRole(event) {
+            let obj = event.mp.detail
             //取到选择的值
-            let name = obj.name;
-            this.selectedRole = name;
-            this.isShowRole = false;
-            console.log("this.selectedRole",this.selectedRole);
-            console.log("this.isShowRole",this.isShowRole);
+            let name = obj.name
+            this.selectedRole = name
+            this.isShowRole = false
+            console.log('this.selectedRole', this.selectedRole)
+            console.log('this.isShowRole', this.isShowRole)
         },
         onConfirmRegister(event) {
             const message = '已成功注册角色！'
-            if(this.selectedRole == "未知")
-            {
+            if (this.selectedRole == '未知') {
                 Dialog.alert({
                     title: '信息提示',
                     message: '请选择用户类型',
-                });
-                return;
+                })
+                return
             }
             Dialog.alert({
                 title: '信息提示',
                 message,
             }).then(() => {
-                if(this.selectedRole == "DTP")
-                {
+                if (this.selectedRole == 'DTP') {
                     const url = '../a-dtphome/main'
-                    console.log("url",this.selectedRole+url);
+                    console.log('url', this.selectedRole + url)
                     wx.navigateTo({ url: url })
-                }else if(this.selectedRole == "COC")
-                {
+                } else if (this.selectedRole == 'COC') {
                     const url = '../a-cochome/main'
                     wx.navigateTo({ url: url })
-                    console.log("url",this.selectedRole+url);
+                    console.log('url', this.selectedRole + url)
                 }
             })
         },
