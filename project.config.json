@@ -70,6 +70,12 @@
 					"pathName": "pages/a-dtpcheckout/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/a-registeruser/main",
+					"pathName": "pages/a-registeruser/main",
+					"scene": null
 				}
 			]
 		}
