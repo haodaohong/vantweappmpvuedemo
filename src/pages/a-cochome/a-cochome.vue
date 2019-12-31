@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <!-- <div>
                 <div class="flex-width">
                     <div class=".white-padding">
                         <span>操作日期:</span>
@@ -69,7 +69,7 @@
                         </van-dropdown-menu>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <van-panel
                 title="产品编号"
                 desc="SNXXXXXXXXXXXXX"

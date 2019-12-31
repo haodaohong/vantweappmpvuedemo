@@ -182,7 +182,7 @@ export default {
             option1: [
                 { text: '首次预约', value: 0 },
                 { text: '购买贴片', value: 1 },
-                { text: '产品维修', value: 2 },
+                // { text: '产品维修', value: 2 },
             ],
             value1: 0,
             dtpName: 'xxxDTP药店',
