@@ -30,20 +30,27 @@
                     :value="phone"
                     label="手机号"
                     placeholder="请输入手机号"
-                    error-message="手机号格式错误"
+                    :error-message="errorMessagePhoneField"
+                    @change="onPhoneFieldChange"
                     :border="isBorder"
                 />
                 <van-field
-                    :value="sms"
+                    :value="smsCode"
                     center
                     clearable
                     label="短信验证码"
                     placeholder="请输入短信验证码"
+                    @change="onSmsCodeFieldChange"
                     :border="isBorder"
                     use-button-slot
                 >
-                    <van-button slot="button" size="small" type="primary"
-                        >发送验证码</van-button
+                    <van-button
+                        slot="button"
+                        size="small"
+                        type="primary"
+                        :disabled="isBtnSmsCodeDisabled"
+                        @click="onClickBtnSendSmsCode"
+                        >{{ BtnSendSmsCodeContent }}</van-button
                     >
                 </van-field>
             </van-cell-group>
@@ -87,13 +94,10 @@ export default {
             radio: '1',
             isBorder: false,
             isShowRole: false,
+            isBtnSmsCodeDisabled: true,
+            BtnSendSmsCodeContent: '发送验证码',
+            countdownTime: 5,
             selectedRole: '未知',
-            icon: {
-                normal:
-                    'https://img.yzcdn.cn/public_files/2017/10/13/c547715be149dd3faa817e4a948b40c4.png',
-                active:
-                    'https://img.yzcdn.cn/public_files/2017/10/13/793c77793db8641c4c325b7f25bf130d.png',
-            },
             Roles: [
                 {
                     name: 'DTP',
@@ -102,6 +106,11 @@ export default {
                     name: 'COC',
                 },
             ],
+            timer: '',
+            //value: 0,
+            errorMessagePhoneField: '手机号不能为空',
+            phone: '',
+            smsCode: '',
         }
     },
     //方法
@@ -124,8 +133,66 @@ export default {
             console.log('this.selectedRole', this.selectedRole)
             console.log('this.isShowRole', this.isShowRole)
         },
+        onPhoneFieldChange(event) {
+            this.phone = event.mp.detail
+            if (this.phone !== '') {
+                //var reg = /^1[3456789]\d{9value}$/
+                var reg = /\d{11}/
+                if (!reg.test(this.phone)) {
+                    this.errorMessagePhoneField = '请输入有效的手机号码'
+                    this.isBtnSmsCodeDisabled = true
+                } else {
+                    console.log(this.phone)
+                    this.errorMessagePhoneField = ''
+                    this.isBtnSmsCodeDisabled = false
+                }
+            }
+        },
+        onClickBtnSendSmsCode(event) {
+            if (this.isBtnSmsCodeDisabled) {
+                return
+            }
+            this.$http
+                .post({
+                    url: '/Users/GetCodeByPhone?phone=' + this.phone,
+                })
+                .then(res => {
+                    console.log('/Users/GetCodeByPhone response', res)
+                })
+            this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
+            this.isBtnSmsCodeDisabled = true
+            const _this = this
+            this.timer = setInterval(function() {
+                _this.countdownTime--
+                _this.BtnSendSmsCodeContent =
+                    _this.countdownTime + 's后重新发送'
+                if (_this.countdownTime < 0) {
+                    //当倒计时小于0时清除定时器
+                    clearInterval(_this.timer)
+                    _this.BtnSendSmsCodeContent = '重新发送验证码'
+                    _this.countdownTime = 5
+                    _this.isBtnSmsCodeDisabled = false
+                }
+            }, 1000)
+        },
+        onSmsCodeFieldChange(event) {
+            this.smsCode = event.mp.detail
+        },
         onConfirmRegister(event) {
-            const message = '已成功注册角色！'
+            if (this.errorMessagePhoneField !== '') {
+                Dialog.alert({
+                    title: '信息提示',
+                    message: '请输入正确的手机号',
+                })
+                return
+            }
+            if (this.smsCode === '') {
+                Dialog.alert({
+                    title: '信息提示',
+                    message: '验证码不能为空',
+                })
+                return
+            }
             if (this.selectedRole == '未知') {
                 Dialog.alert({
                     title: '信息提示',
@@ -133,20 +200,36 @@ export default {
                 })
                 return
             }
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            }).then(() => {
-                if (this.selectedRole == 'DTP') {
-                    const url = '../a-dtphome/main'
-                    console.log('url', this.selectedRole + url)
-                    wx.navigateTo({ url: url })
-                } else if (this.selectedRole == 'COC') {
-                    const url = '../a-cochome/main'
-                    wx.navigateTo({ url: url })
-                    console.log('url', this.selectedRole + url)
-                }
-            })
+            this.$http
+                .post({
+                    url:
+                        '/Users/ConfirmRegisterUser?phone=' +
+                        this.phone +
+                        '&code=' +
+                        this.smsCode,
+                })
+                .then(res => {
+                    console.log('/Users/ConfirmRegisterUser response', res)
+                    var isSuccess = res.data
+                    console.log(isSuccess)
+                    if (isSuccess) {
+                        const message = '已成功注册角色！'
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            if (this.selectedRole == 'DTP') {
+                                const url = '../a-dtphome/main'
+                                console.log('url', this.selectedRole + url)
+                                wx.navigateTo({ url: url })
+                            } else if (this.selectedRole == 'COC') {
+                                const url = '../a-cochome/main'
+                                wx.navigateTo({ url: url })
+                                console.log('url', this.selectedRole + url)
+                            }
+                        })
+                    }
+                })
         },
     },
     //计算属性
@@ -157,7 +240,9 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        //this.timer = setInterval(this.get, 1000)
+    },
 }
 </script>
 
