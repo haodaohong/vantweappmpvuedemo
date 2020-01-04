@@ -1,4 +1,4 @@
-const host = 'https://oostest.zailaboratory.com' //写自己的域名
+const host = 'http://localhost:1626' //写自己的域名     https://oostest.zailaboratory.com
 //const host = 'http://localhost' //写自己的域名
 
 function request(url, method, data, header = {}) {

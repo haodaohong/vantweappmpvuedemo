@@ -98,6 +98,7 @@ export default {
             BtnSendSmsCodeContent: '发送验证码',
             countdownTime: 5,
             selectedRole: '未知',
+            selectedDepartId: '99',
             Roles: [
                 {
                     name: 'DTP',
@@ -157,7 +158,8 @@ export default {
                     url: '/Users/GetCodeByPhone?phone=' + this.phone,
                 })
                 .then(res => {
-                    console.log('/Users/GetCodeByPhone response', res)
+                    console.log('/Users/GetCodeByPhone response:depart id', res)
+                    this.selectedDepartId = res;
                 })
             this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
             this.isBtnSmsCodeDisabled = true
@@ -200,13 +202,14 @@ export default {
                 })
                 return
             }
-            this.$http
-                .post({
-                    url:
-                        '/Users/ConfirmRegisterUser?phone=' +
-                        this.phone +
-                        '&code=' +
-                        this.smsCode,
+            var that = this;
+            wx.login({
+        success (res) {
+            if (res.code){
+                console.log(res.code+";这里可以把code传给后台，后台用此获取openid及session_key")
+                // 这里可以把code传给后台，后台用此获取openid及session_key
+                 that.$http.post({
+                    url:'/Users/ConfirmRegisterUser?phone='+that.phone+'&smscode='+that.smsCode+'&sessioncode='+res.code+'&departid='+that.selectedDepartId+'&role='+that.selectedRole,
                 })
                 .then(res => {
                     console.log('/Users/ConfirmRegisterUser response', res)
@@ -229,7 +232,11 @@ export default {
                             }
                         })
                     }
-                })
+                });
+                }
+            },
+        });
+           
         },
     },
     //计算属性
