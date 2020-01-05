@@ -204,37 +204,39 @@ export default {
             }
             var that = this;
             wx.login({
-        success (res) {
-            if (res.code){
-                console.log(res.code+";这里可以把code传给后台，后台用此获取openid及session_key")
-                // 这里可以把code传给后台，后台用此获取openid及session_key
-                 that.$http.post({
-                    url:'/Users/ConfirmRegisterUser?phone='+that.phone+'&smscode='+that.smsCode+'&sessioncode='+res.code+'&departid='+that.selectedDepartId+'&role='+that.selectedRole,
-                })
-                .then(res => {
-                    console.log('/Users/ConfirmRegisterUser response', res)
-                    var isSuccess = res.data
-                    console.log(isSuccess)
-                    if (isSuccess) {
-                        const message = '已成功注册角色！'
-                        Dialog.alert({
-                            title: '信息提示',
-                            message,
-                        }).then(() => {
-                            if (this.selectedRole == 'DTP') {
-                                const url = '../a-dtphome/main'
-                                console.log('url', this.selectedRole + url)
-                                wx.navigateTo({ url: url })
-                            } else if (this.selectedRole == 'COC') {
-                                const url = '../a-cochome/main'
-                                wx.navigateTo({ url: url })
-                                console.log('url', this.selectedRole + url)
-                            }
+                success (res) {
+                    if (res.code){
+                        console.log(res.code+";这里可以把code传给后台，后台用此获取openid及session_key")
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.post({
+                            url:'/Users/ConfirmRegisterUser?phone='+that.phone+'&smscode='+
+                            that.smsCode+'&sessioncode='+res.code+'&departid='+
+                            that.selectedDepartId+'&role='+that.selectedRole,
                         })
+                        .then(res => {
+                            console.log('/Users/ConfirmRegisterUser response', res)
+                            var isSuccess = res.data
+                            console.log(isSuccess)
+                            if (isSuccess) {
+                                const message = '已成功注册角色！'
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                }).then(() => {
+                                    if (this.selectedRole == 'DTP') {
+                                        const url = '../a-dtphome/main'
+                                        console.log('url', this.selectedRole + url)
+                                        wx.navigateTo({ url: url })
+                                    } else if (this.selectedRole == 'COC') {
+                                        const url = '../a-cochome/main'
+                                        wx.navigateTo({ url: url })
+                                        console.log('url', this.selectedRole + url)
+                                    }
+                                })
+                            }
+                        });
+                        }
                     }
-                });
-                }
-            },
         });
            
         },
