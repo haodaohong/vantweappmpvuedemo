@@ -159,7 +159,7 @@ export default {
                 })
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
-                    this.selectedDepartId = res;
+                    this.selectedDepartId = res.data;
                 })
             this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
             this.isBtnSmsCodeDisabled = true
@@ -206,7 +206,7 @@ export default {
             wx.login({
                 success (res) {
                     if (res.code){
-                        console.log(res.code+";这里可以把code传给后台，后台用此获取openid及session_key")
+                        console.log("login result",res)
                         // 这里可以把code传给后台，后台用此获取openid及session_key
                         that.$http.post({
                             url:'/Users/ConfirmRegisterUser?phone='+that.phone+'&smscode='+
@@ -232,7 +232,7 @@ export default {
                                         wx.navigateTo({ url: url })
                                         console.log('url', this.selectedRole + url)
                                     }
-                                })
+                                });
                             }
                         });
                         }
@@ -250,7 +250,36 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        //this.timer = setInterval(this.get, 1000)
+        
+        var that = this;
+        //登陆验证用户是否已经绑定过，绑定过则直接跳转
+            wx.login({
+                success (res) {
+                    if (res.code){
+                        console.log("login result",res)
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.get({
+                            url:'/Users/GetBySessionCode?code='+res.code
+                        })
+                        .then(res => {
+                            console.log('/Users/GetBySessionCode response', res)
+                            var user = res.data
+                            if(user){
+                              if (user.Role == 'DTP'){
+                                    const url = '../a-dtphome/main'
+                                    console.log('url', user.Role + url)
+                                    wx.navigateTo({ url: url })
+                                } else if (user.Role == 'COC') {
+                                    const url = '../a-cochome/main'
+                                    wx.navigateTo({ url: url })
+                                    console.log('url', user.Role + url)
+                                }
+                            }
+                             console.log('未绑定过')
+                        });
+                        }
+                    }
+        });
     },
 }
 </script>
