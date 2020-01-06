@@ -358,7 +358,37 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        var that = this;
+        //登陆验证用户是否已经绑定过，绑定过则直接跳转
+            wx.login({
+                success (res) {
+                    if (res.code){
+                        console.log("login result",res)
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.post({
+                            url:'/Contact/UpdateBySessionCode?code='+res.code
+                        })
+                        .then(res => {
+                            console.log('/Contact/UpdateBySessionCode response', res)
+                            var user = res.data
+                            if(user){
+                              if (user.Role == 'DTP'){
+                                    const url = '../a-dtphome/main'
+                                    console.log('url', user.Role + url)
+                                    wx.navigateTo({ url: url })
+                                } else if (user.Role == 'COC') {
+                                    const url = '../a-cochome/main'
+                                    wx.navigateTo({ url: url })
+                                    console.log('url', user.Role + url)
+                                }
+                            }
+                             console.log('未绑定过')
+                        });
+                        }
+                    }
+        });
+    },
 }
 </script>
 
