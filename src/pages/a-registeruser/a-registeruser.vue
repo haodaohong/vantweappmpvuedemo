@@ -12,68 +12,76 @@
 
   collapse也有类似情况
   -->
-
-    <div class="flex-container">
-        <div class="selectRole">
-            <van-button type="default" @click="onShowRoles"
-                >选择角色：
-                <span
-                    :class="[selectedRole == '未知' ? 'font-color-red' : '']"
-                    >{{ selectedRole }}</span
-                >
-                <van-icon class="middle" custom-class="middle" name="arrow-down"
-            /></van-button>
-        </div>
-        <div>
-            <van-cell-group>
-                <van-field
-                    :value="phone"
-                    label="手机号"
-                    placeholder="请输入手机号"
-                    :error-message="errorMessagePhoneField"
-                    @change="onPhoneFieldChange"
-                    :border="isBorder"
-                />
-                <van-field
-                    :value="smsCode"
-                    center
-                    clearable
-                    label="短信验证码"
-                    placeholder="请输入短信验证码"
-                    @change="onSmsCodeFieldChange"
-                    :border="isBorder"
-                    use-button-slot
-                >
-                    <van-button
-                        slot="button"
-                        size="small"
-                        type="primary"
-                        :disabled="isBtnSmsCodeDisabled"
-                        @click="onClickBtnSendSmsCode"
-                        >{{ BtnSendSmsCodeContent }}</van-button
+    <!-- <div v-show="isShowLoading"><span>aaa</span></div> -->
+    <div>
+        <div v-show="isShowLoading"></div>
+        <div class="flex-container" v-show="isShowRegister">
+            <div class="selectRole">
+                <van-button type="default" @click="onShowRoles"
+                    >选择角色：
+                    <span
+                        :class="[
+                            selectedRole == '未知' ? 'font-color-red' : '',
+                        ]"
+                        >{{ selectedRole }}</span
                     >
-                </van-field>
-            </van-cell-group>
+                    <van-icon
+                        class="middle"
+                        custom-class="middle"
+                        name="arrow-down"
+                /></van-button>
+            </div>
+            <div>
+                <van-cell-group>
+                    <van-field
+                        :value="phone"
+                        label="手机号"
+                        placeholder="请输入手机号"
+                        :error-message="errorMessagePhoneField"
+                        @change="onPhoneFieldChange"
+                        :border="isBorder"
+                    />
+                    <van-field
+                        :value="smsCode"
+                        center
+                        clearable
+                        label="短信验证码"
+                        placeholder="请输入短信验证码"
+                        @change="onSmsCodeFieldChange"
+                        :border="isBorder"
+                        use-button-slot
+                    >
+                        <van-button
+                            slot="button"
+                            size="small"
+                            type="primary"
+                            :disabled="isBtnSmsCodeDisabled"
+                            @click="onClickBtnSendSmsCode"
+                            >{{ BtnSendSmsCodeContent }}</van-button
+                        >
+                    </van-field>
+                </van-cell-group>
+            </div>
+            <mybr />
+            <div class="confirmsignbtn">
+                <van-button
+                    square
+                    size="normal"
+                    type="info"
+                    @click="onConfirmRegister"
+                    >确认注册角色</van-button
+                >
+            </div>
+            <mybr />
+            <van-dialog id="van-dialog" />
+            <van-action-sheet
+                :show="isShowRole"
+                :actions="Roles"
+                title="选择角色类型"
+                @close="onCloseRoles"
+                @select="onSelectRole"
+            />
         </div>
-        <mybr />
-        <div class="confirmsignbtn">
-            <van-button
-                square
-                size="normal"
-                type="info"
-                @click="onConfirmRegister"
-                >确认注册角色</van-button
-            >
-        </div>
-        <mybr />
-        <van-dialog id="van-dialog" />
-        <van-action-sheet
-            :show="isShowRole"
-            :actions="Roles"
-            title="选择角色类型"
-            @close="onCloseRoles"
-            @select="onSelectRole"
-        />
     </div>
 </template>
 
@@ -90,6 +98,8 @@ export default {
     //数据模型
     data() {
         return {
+            isShowLoading: true,
+            isShowRegister: false,
             //从0开始的
             radio: '1',
             isBorder: false,
@@ -159,7 +169,7 @@ export default {
                 })
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
-                    this.selectedDepartId = res.data;
+                    this.selectedDepartId = res.data
                 })
             this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
             this.isBtnSmsCodeDisabled = true
@@ -202,43 +212,66 @@ export default {
                 })
                 return
             }
-            var that = this;
+            var that = this
             wx.login({
-                success (res) {
-                    if (res.code){
-                        console.log("login result",res)
+                success(res) {
+                    if (res.code) {
+                        console.log('login result', res)
                         // 这里可以把code传给后台，后台用此获取openid及session_key
-                        that.$http.post({
-                            url:'/Users/ConfirmRegisterUser?phone='+that.phone+'&smscode='+
-                            that.smsCode+'&sessioncode='+res.code+'&departid='+
-                            that.selectedDepartId+'&role='+that.selectedRole,
-                        })
-                        .then(res => {
-                            console.log('/Users/ConfirmRegisterUser response', res)
-                            var isSuccess = res.data
-                            console.log(isSuccess)
-                            if (isSuccess) {
-                                const message = '已成功注册角色！'
-                                Dialog.alert({
-                                    title: '信息提示',
-                                    message,
-                                }).then(() => {
-                                    if (this.selectedRole == 'DTP') {
-                                        const url = '../a-dtphome/main'
-                                        console.log('url', this.selectedRole + url)
-                                        wx.navigateTo({ url: url })
-                                    } else if (this.selectedRole == 'COC') {
-                                        const url = '../a-cochome/main'
-                                        wx.navigateTo({ url: url })
-                                        console.log('url', this.selectedRole + url)
-                                    }
-                                });
-                            }
-                        });
-                        }
+                        that.$http
+                            .post({
+                                url:
+                                    '/Users/ConfirmRegisterUser?phone=' +
+                                    that.phone +
+                                    '&smscode=' +
+                                    that.smsCode +
+                                    '&sessioncode=' +
+                                    res.code +
+                                    '&departid=' +
+                                    that.selectedDepartId +
+                                    '&role=' +
+                                    that.selectedRole,
+                            })
+                            .then(res => {
+                                console.log(
+                                    '/Users/ConfirmRegisterUser response',
+                                    res
+                                )
+                                var isSuccess = res.data
+                                console.log(isSuccess)
+                                if (isSuccess) {
+                                    const message = '已成功注册角色！'
+                                    Dialog.alert({
+                                        title: '信息提示',
+                                        message,
+                                    }).then(() => {
+                                        if (that.selectedRole == 'DTP') {
+                                            const url = '../a-dtphome/main'
+                                            console.log(
+                                                'url',
+                                                that.selectedRole + url
+                                            )
+                                            wx.navigateTo({ url: url })
+                                        } else if (that.selectedRole == 'COC') {
+                                            const url = '../a-cochome/main'
+                                            wx.navigateTo({ url: url })
+                                            console.log(
+                                                'url',
+                                                that.selectedRole + url
+                                            )
+                                        }
+                                    })
+                                } else {
+                                    const message = res.message
+                                    Dialog.alert({
+                                        title: '信息提示',
+                                        message,
+                                    })
+                                }
+                            })
                     }
-        });
-           
+                },
+            })
         },
     },
     //计算属性
@@ -250,22 +283,22 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        
-        var that = this;
+        var that = this
         //登陆验证用户是否已经绑定过，绑定过则直接跳转
-            wx.login({
-                success (res) {
-                    if (res.code){
-                        console.log("login result",res)
-                        // 这里可以把code传给后台，后台用此获取openid及session_key
-                        that.$http.get({
-                            url:'/Users/GetBySessionCode?code='+res.code
+        wx.login({
+            success(res) {
+                if (res.code) {
+                    console.log('login result', res)
+                    // 这里可以把code传给后台，后台用此获取openid及session_key
+                    that.$http
+                        .get({
+                            url: '/Users/GetBySessionCode?code=' + res.code,
                         })
                         .then(res => {
                             console.log('/Users/GetBySessionCode response', res)
                             var user = res.data
-                            if(user){
-                              if (user.Role == 'DTP'){
+                            if (user) {
+                                if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     console.log('url', user.Role + url)
                                     wx.navigateTo({ url: url })
@@ -274,12 +307,15 @@ export default {
                                     wx.navigateTo({ url: url })
                                     console.log('url', user.Role + url)
                                 }
+                            } else {
+                                that.isShowRegister = true
+                                that.isShowLoading = false
+                                console.log('未绑定过')
                             }
-                             console.log('未绑定过')
-                        });
-                        }
-                    }
-        });
+                        })
+                }
+            },
+        })
     },
 }
 </script>
