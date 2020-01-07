@@ -297,7 +297,8 @@ export default {
                         .then(res => {
                             console.log('/Users/GetBySessionCode response', res)
                             var user = res.data
-                            if (user) {
+                            var code = res.code
+                            if (code === 200) {
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     console.log('url', user.Role + url)

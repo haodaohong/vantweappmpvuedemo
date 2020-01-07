@@ -48,14 +48,15 @@
                     <div class="flex-1">
                         <van-dropdown-menu>
                             <van-dropdown-item
-                                :value="value1"
-                                :options="option1"
+                                :value="statusFilterValue"
+                                :options="statusFilterOption"
+                                @change="onstatusFilterChange"
                             />
                         </van-dropdown-menu>
                     </div>
                 </div>
             </div>
-            <!-- <div>
+            <div>
                 <div class="flex-width">
                     <div class=".white-padding">
                         <span>操作日期:</span>
@@ -63,81 +64,44 @@
                     <div class="flex-1">
                         <van-dropdown-menu>
                             <van-dropdown-item
-                                :value="value2"
-                                :options="option2"
+                                :value="timeFilterValue"
+                                :options="timeFilterOption"
+                                @change="onTimeFilterChange"
                             />
                         </van-dropdown-menu>
                     </div>
                 </div>
-            </div> -->
-            <van-panel
-                title="产品编号"
-                desc="SNXXXXXXXXXXXXX"
-                status="已入库"
-                use-footer-slot
-            >
-                <div>
-                    <table class="content">
-                        <tr>
-                            <td>名称：xxx仪器</td>
-                            <td>类别：产品主机</td>
-                            <td>规格：20*30</td>
-                            <td>单位：台</td>
-                            <td>数量：1</td>
-                            <td>生产日期：2019年01月01日</td>
-                            <td>入库日期：2019年12月30日</td>
-                            <td>入库类型：维修入库</td>
-                        </tr>
-                    </table>
-                </div>
-                <!--加个样式把按钮搞右边去-->
-                <view style="text-align: right;" slot="footer">
-                    <van-button
-                        class="confirmBooking"
-                        @click="onCocOut"
-                        size="small"
-                        type="info"
-                        >产品出库</van-button
-                    >
-                    <van-button
-                        class="confirmBooking"
-                        size="small"
-                        type="primary"
-                        >已清洗</van-button
-                    >
-                </view>
-            </van-panel>
-            <van-panel
-                title="产品编号"
-                desc="SNXXXXXXXXXXXXX"
-                status="已质检"
-                use-footer-slot
-            >
-                <div>
-                    <table class="content">
-                        <tr>
-                            <td>名称：xxx仪器</td>
-                            <td>类别：产品主机</td>
-                            <td>规格：20*30</td>
-                            <td>单位：台</td>
-                            <td>数量：1</td>
-                            <td>生产日期：2019年01月01日</td>
-                            <td>入库日期：2019年12月30日</td>
-                            <td>入库类型：维修入库</td>
-                        </tr>
-                    </table>
-                </div>
-                <!--加个样式把按钮搞右边去-->
-                <view style="text-align: right;" slot="footer">
-                    <van-button
-                        class="confirmBooking"
-                        @click="onCocOut"
-                        size="small"
-                        type="info"
-                        >产品出库</van-button
-                    >
-                </view>
-            </van-panel>
+            </div>
+            <div v-for="product in products" :key="product">
+                <van-panel
+                    title="产品编号"
+                    :desc="product.SNCode"
+                    :status="product.TitleStatus"
+                    use-footer-slot
+                >
+                    <div>
+                        <table class="content">
+                            <tr>
+                                <td>名称：{{ product.Name }}</td>
+                                <td>类别：{{ product.Type }}</td>
+                                <td>规格：{{ product.Specification }}</td>
+                                <td>生产日期：{{ product.ProductionDate }}</td>
+                                <td>入库日期：{{ product.CheckInDate }}</td>
+                                <td>入库类型：{{ product.CurrentStatus }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <view style="text-align: right;" slot="footer">
+                        <van-button
+                            class="confirmBooking"
+                            @click="onCocOut"
+                            size="small"
+                            type="info"
+                            >产品出库</van-button
+                        >
+                    </view>
+                </van-panel>
+            </div>
         </div>
         <mybr />
         <mybr />
@@ -158,22 +122,23 @@ export default {
     //数据模型
     data() {
         return {
-            active1: 0,
-            option1: [
+            statusFilterActiveValue: 0,
+            statusFilterActiveValueStr: '维修入库',
+            statusFilterValue: 0,
+            statusFilterOption: [
                 { text: '维修入库', value: 0 },
                 { text: '归还入库', value: 1 },
+                { text: '出库', value: 2 },
             ],
-
-            value1: 0,
-
-            option2: [
-                { text: '今日', value: 0 },
-                { text: '近7日', value: 1 },
-                { text: '近一个月', value: 2 },
-                { text: '近三个月', value: 3 },
+            timeFilterActiveValue: 0,
+            timeFilterActiveValueStr: '今日',
+            timeFilterValue: 0,
+            timeFilterOption: [
+                { text: '近7日', value: 0 },
+                { text: '近一个月', value: 1 },
+                { text: '近三个月', value: 2 },
             ],
-
-            value2: 0,
+            products: [],
         }
     },
     //方法
@@ -185,6 +150,33 @@ export default {
         scanSearchProduct(event) {
             const url = '../a-cocproductsearch/main'
             wx.navigateTo({ url: url })
+        },
+        onstatusFilterChange(event) {
+            this.statusFilterActiveValue = event.mp.detail
+            this.statusFilterActiveValueStr = this.statusFilterOption[
+                this.statusFilterActiveValue
+            ].text
+            console.log(this.statusFilterActiveValue)
+            console.log(this.statusFilterActiveValueStr)
+            this.$http
+                .get({
+                    url:
+                        '/COC/GetProductsByFilter?statusFilter=' +
+                        this.statusFilterActiveValueStr +
+                        '&timeFilter=' +
+                        this.timeFilterActiveValueStr,
+                })
+                .then(res => {
+                    this.products = res.data
+                })
+        },
+        onTimeFilterChange(event) {
+            this.timeFilterActiveValue = event.mp.detail
+            this.timeFilterActiveValueStr = this.timeFilterOption[
+                this.timeFilterActiveValue
+            ].text
+            console.log(this.timeFilterActiveValue)
+            console.log(this.timeFilterActiveValueStr)
         },
         onCocOut(event) {
             const url = '../a-cocout/main'
@@ -198,7 +190,28 @@ export default {
         //return this.data;
         //}
     },
-    onLoad: function(options) {},
+    onLoad: function(options) {
+        var that = this
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('res:', res)
+                this.$http
+                    .get({
+                        url:
+                            '/COC/GetProductsByFilter?statusFilter=' +
+                            that.statusFilterActiveValueStr +
+                            '&timeFilter=' +
+                            that.timeFilterActiveValueStr,
+                    })
+                    .then(res => {
+                        that.products = res.data
+                        //console.log('/COC/GetProductsByFilter response', res)
+                        console.log(that.products)
+                    })
+            },
+        })
+    },
     //生命周期(mounted)
     mounted() {},
 }
