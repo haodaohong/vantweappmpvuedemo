@@ -15,79 +15,34 @@
 
     <div>
         <div class="scanBtn">
-            <div class="myphoto">
-                <img src="/static/img/touxiang.jpg" />
-            </div>
-            <h5>李斌</h5>
+            <h5>您好，{{}}</h5>
             <div class="editmyprofile">
                 <van-button @click="onUpdateInfo" type="default" size="small"
                     >更新资料</van-button
                 >
             </div>
         </div>
-
-        <van-tabs :active="active" @change="onChange1">
-            <van-tab title="预约服务">
-                <div>
-                    <div class="flex-width">
-                        <div class=".white-padding">
-                            <span>选择城市:</span>
-                        </div>
-                        <div class="flex-1">
-                            <van-dropdown-menu>
-                                <van-dropdown-item
-                                    :value="value1"
-                                    :options="option1"
-                                />
-                            </van-dropdown-menu>
-                        </div>
-                    </div>
+        <div>
+            <div class="flex-width">
+                <div class=".white-padding">
+                    <span>选择城市:</span>
                 </div>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
+                <div class="flex-1">
+                    <van-dropdown-menu>
+                        <van-dropdown-item
+                            :value="selectedCity"
+                            :options="Cities"
+                            @change="onSelectCity"
+                        />
+                    </van-dropdown-menu>
+                </div>
+            </div>
+        </div>
+        <van-tabs :active="active" @change="onSelectTab">
+            <van-tab title="预约服务">
+                <van-card v-for="(dtp, index) in dtps" :key="index"
+                    :desc="dtp.Address"
+                    :title="dtp.Name"
                     :thumb="imageURL"
                 >
                     <view class="gosubmit" slot="footer">
@@ -321,14 +276,15 @@ export default {
             imageURL: '/static/img/yaodian.png',
             touxiang: '/static/img/touxiang.jpg',
             active: 0,
-            option1: [
-                { text: '上海', value: 0 },
-                { text: '北京', value: 1 },
-                { text: '杭州', value: 2 },
-                { text: '广州', value: 3 },
-                { text: '深圳', value: 3 },
+            Cities: [
+                { text: '上海', value: '上海' },
+                { text: '北京', value: '北京' },
+                { text: '杭州', value: '杭州' },
+                { text: '广州', value: '广州' },
+                { text: '深圳', value: '深圳' },
             ],
-            value1: 0,
+            selectedCity: '上海',
+            dtps: {}
         }
     },
     //方法
@@ -349,18 +305,21 @@ export default {
                 message,
             })
         },
-    },
-    //计算属性
-    computed: {
-        //name() {
-        //代码搞这里
-        //return this.data;
-        //}
-    },
-    //生命周期(mounted)
-    mounted() {
-        var that = this;
-        //登陆验证用户是否已经绑定过，绑定过则直接跳转
+        onLoadDtps(){
+            var that = this;
+            that.$http.get({
+                url:'/DTP/GetByCity?city='+that.selectedCity
+            })
+            .then(res => {
+                console.log('/DTP/GetByCity?city='+that.selectedCity, res)
+                that.dtps = res.data
+                console.log('that.dtps', that.dtps);
+                
+            });
+        },
+        onCreateContactInfo(){
+            var that = this;
+            //登陆验证用户是否已经绑定过，绑定过则直接跳转
             wx.login({
                 success (res) {
                     if (res.code){
@@ -371,23 +330,31 @@ export default {
                         })
                         .then(res => {
                             console.log('/Contact/UpdateBySessionCode response', res)
-                            var user = res.data
-                            if(user){
-                              if (user.Role == 'DTP'){
-                                    const url = '../a-dtphome/main'
-                                    console.log('url', user.Role + url)
-                                    wx.navigateTo({ url: url })
-                                } else if (user.Role == 'COC') {
-                                    const url = '../a-cochome/main'
-                                    wx.navigateTo({ url: url })
-                                    console.log('url', user.Role + url)
-                                }
-                            }
-                             console.log('未绑定过')
+                            var user = res.data;
                         });
-                        }
                     }
-        });
+                }
+            });
+        },
+        onSelectCity(event){
+            var that = this;
+            console.log('event', event);
+            that.selectedCity = event.mp.detail;
+            console.log('that.selectedCity', that.selectedCity);
+            this.onLoadDtps();
+        }
+    },
+    //计算属性
+    computed: {
+        //name() {
+        //代码搞这里
+        //return this.data;
+        //}
+    },
+    //生命周期(mounted)
+    mounted() {
+        this.onCreateContactInfo();
+        this.onLoadDtps();
     },
 }
 </script>
