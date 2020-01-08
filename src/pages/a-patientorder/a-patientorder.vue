@@ -25,7 +25,7 @@
                             <span>预约DTP：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>xxxDTP药房</span>
+                            <span>{{ApplyOrder.DTP.Name}}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -41,7 +41,7 @@
                             <span>预约数量：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span><van-stepper :value="1" integer/></span>
+                            <span><van-stepper :value="ApplyOrder.ProductCount" integer/></span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -52,8 +52,8 @@
                             <span
                                 ><van-dropdown-menu>
                                     <van-dropdown-item
-                                        :value="value1"
-                                        :options="option1"
+                                        :value="ApplyOrder.OrderType"
+                                        :options="OrderTypes"
                                     /> </van-dropdown-menu
                             ></span>
                         </div>
@@ -103,7 +103,7 @@
                             <span>姓名：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>李斌</span>
+                            <span>{{ApplyOrder.Contact.Name2}}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -111,7 +111,7 @@
                             <span>性别：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>男</span>
+                            <span>{{ApplyOrder.Contact.Sex}}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -119,7 +119,7 @@
                             <span>出生年月：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>1970/01/01</span>
+                            <span>{{ApplyOrder.Contact.Birthday}}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -127,15 +127,7 @@
                             <span>手机号码：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>139XXXXXXXX</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>确诊医院：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span>xxx医院</span>
+                            <span>{{ApplyOrder.Contact.Phone}}</span>
                         </div>
                     </div>
                 </div>
@@ -179,15 +171,57 @@ export default {
             minDate: new Date().getTime(),
             minHour: 9,
             maxHour: 17,
-            option1: [
-                { text: '首次预约', value: 0 },
-                { text: '购买贴片', value: 1 },
+            OrderTypes: [
+                { text: '首次预约', value: '首次预约' },
+                { text: '购买贴片', value: '购买贴片' },
                 // { text: '产品维修', value: 2 },
             ],
             value1: 0,
             dtpName: 'xxxDTP药店',
             appointmentType: '首次购买',
             appointmentTime: '2019/12/31 11:00-12:00',
+            openid: '',
+            dtpid: 0,
+            ApplyOrder: {
+                DTP: {
+                    Id: 0,
+                    Code: "",
+                    Name: "",
+                    Address: "",
+                    Phone: "",
+                    PhoneText: "",
+                    City: "",
+                    Note: ""
+                },
+                Contact: {
+                    Id: 0,
+                    Name: "",
+                    Sex: "",
+                    Province: "",
+                    City: "",
+                    Address: "",
+                    IDType: "",
+                    IDNum: "",
+                    Birthday: "0001-01-01T00:00:00",
+                    Phone: "",
+                    PhoneText: "",
+                    OAOpenId: "",
+                    MPOpenId: "",
+                    UnionId: ""
+                },
+                Id: 0,
+                ContactId: 0,
+                OrderType: "",
+                DTPId: 0,
+                LastDTPId: 0,
+                ProductCount: 0,
+                ApplyStatus: "",
+                ApplyDate: "0001-01-01T00:00:00",
+                IsConfirmedWithVendor: false,
+                CreateTime: "0001-01-01T00:00:00",
+                ComfirmBy: 0,
+                ComfirmTime: "0001-01-01T00:00:00"
+            }
         }
     },
     //方法
@@ -225,34 +259,46 @@ export default {
             return result
         },
         onConfirmAppointment(event) {
-            const message =
-                '您将提交如下预约信息:\n' +
-                '预约DTP：' +
-                this.dtpName +
-                '\n' +
-                '预约类型：' +
-                this.appointmentType +
-                '\n' +
-                '预约时间：' +
-                this.appointmentTime +
-                '\n'
-            Dialog.confirm({
-                messageAlign: 'left',
-                title: '提交确认',
-                message,
-            })
-                .then(() => {
-                    const url = '../a-patienthome/main'
-                    Dialog.alert({
-                        title: ' 提交成功',
-                        message: '已经将您的申请发送至DTP药房,请等待确认通知.',
-                    }).then(() => {
-                        wx.navigateBack({ url: url })
-                    })
-                })
-                .catch(() => {
-                    Dialog.close()
-                })
+            var that = this;
+            console.log('that.ApplyOrder', that.ApplyOrder)
+            that.$http.post({
+                            url:'/ApplyOrder/Add',
+                            data:{
+                                order: that.ApplyOrder
+                            }
+                        })
+                        .then(res => {
+                            console.log('/ApplyOrder/Add response', res)
+                            const message =
+                                '您将提交如下预约信息:\n' +
+                                '预约DTP：' +
+                                that.dtpName +
+                                '\n' +
+                                '预约类型：' +
+                                that.appointmentType +
+                                '\n' +
+                                '预约时间：' +
+                                that.appointmentTime +
+                                '\n'
+                            Dialog.confirm({
+                                messageAlign: 'left',
+                                title: '提交确认',
+                                message,
+                            })
+                                .then(() => {
+                                    const url = '../a-patienthome/main'
+                                    Dialog.alert({
+                                        title: ' 提交成功',
+                                        message: '已经将您的申请发送至DTP药房,请等待确认通知.',
+                                    }).then(() => {
+                                        wx.navigateBack({ url: url })
+                                    })
+                                })
+                                .catch(() => {
+                                    Dialog.close()
+                                });
+                        });
+
         },
         showdatetimepicker(event) {
             console.log('showdatetimepicker event', event)
@@ -267,11 +313,45 @@ export default {
             const date = new Date(detail)
 
             this.selectedDate = this.dateFormat(date)
-            this.isshowdatetimepicker = false
+            this.ApplyOrder.ApplyDate = this.selectedDate;
+            this.isshowdatetimepicker = false;
         },
         usercancel(event) {
             this.isshowdatetimepicker = false
         },
+        onGetOpenId(){
+            var that = this;
+            //登陆验证用户是否已经绑定过，绑定过则直接跳转
+            wx.login({
+                success (res) {
+                    if (res.code){
+                        console.log("login result",res)
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.get({
+                            url:'/WeChatMP/GetOpenId?code='+res.code
+                        })
+                        .then(res => {
+                            console.log('/WeChatMP/GetOpenId response', res)
+                            that.openid = res;
+                            that.onCreate();
+                            // that.onLoadDtps();
+                            // that.onLoadApplys();
+                        });
+                    }
+                }
+            });
+        },
+        onCreate(){
+            var that = this;
+            //ApplyOrder/Create
+            that.$http.get({
+                            url:'/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.openid
+                        })
+                        .then(res => {
+                            console.log('/ApplyOrder/Create response', res)
+                            that.ApplyOrder = res.data;
+                        });
+        }
     },
     //计算属性
     computed: {
@@ -281,7 +361,10 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        this.dtpid = this.$root.$mp.query.dtpid;
+        this.onGetOpenId();
+    },
 }
 </script>
 
