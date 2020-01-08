@@ -122,14 +122,33 @@ export default {
         { text: "维修入库", value: 1 },
         { text: "归还入库", value: 2 }
       ],
-
-      value1: 0
+      value1: 0,
+      //qrcode产品二维码扫描结果
+      product: {qrcode:"",Id:0,Specification:"",ProductionDate:"",DTPId:0,UDICode:"",UDISN:"",UDIDate:"",ProductName:"",Manufacturer:"",Vendor:"",CertificateNumber:"",ExpiredYear:0,ProductCategory:"",CurrentOrderId:0,CurrentStatus:"",NormalCheckInDate:"0001-01-01 00:00:00",MaintainedCheckInDate:"0001-01-01 00:00:00",NormalCheckOutDate:"0001-01-01 00:00:00",MaintainedCheckOutDate:"0001-01-01 00:00:00",COCCheckInDate:"0001-01-01 00:00:00",COCCheckOutDate:"0001-01-01 00:00:00"}
     };
   },
   //方法
   methods: {
     productIn(event) {
+      var that = this;
       const message = "该产品已成功录入系统!";
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('res:', res)
+                that.$http.post({
+                    url: '/dtp/Add',
+                    data: {
+                      product: this.product,
+                      code: res.code
+                    },
+                })
+                .then(res => {
+                    console.log('/COC/GetAll response',res)
+                });
+            },
+        })
+
 
       Dialog.alert({
         title: "入库成功",
@@ -152,7 +171,10 @@ export default {
     //}
   },
   //生命周期(mounted)
-  mounted() {}
+  mounted() {
+    console.log("qrcode",this.$root.$mp.query.qrcode);
+    this.product.qrcode = this.$root.$mp.query.qrcode;
+  }
 };
 </script>
 

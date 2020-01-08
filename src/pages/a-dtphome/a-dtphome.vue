@@ -465,8 +465,16 @@ export default {
     //方法
     methods: {
         scanProduct(event) {
-            const url = '../a-dtpproductin/main'
-            wx.navigateTo({ url: url })
+                // 允许从相机和相册扫码
+                wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    console.log('all: ', res)
+                    const url = '../a-dtpproductin/main?qrcode=' + res.result
+                    wx.navigateTo({ url: url })
+                }
+            });
+
         },
         scanSearchProduct(event) {
             const url = '../a-dtpproductsearch/main'
@@ -567,7 +575,7 @@ export default {
                     })
                     .then(res => {
                         console.log('/COC/GetAll response',res)
-                    })
+                    });
             },
         })
     },
