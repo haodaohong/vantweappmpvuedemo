@@ -1,7 +1,6 @@
-
 <!-- html代码片段 -->
 <template>
-  <!--
+    <!--
   这是产品出库页面
   特别提示:
   van-tabs组件的:active="active"不是双向数据绑定,
@@ -9,176 +8,199 @@
 
   collapse也有类似情况
   -->
-  <div>
-    <div class="basicinfo">
-      <div>
-        <h2 class="van-doc-demo-block__title">基本信息</h2>
-      </div>
-      <div>
-        <div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>产品编号</span>
+    <div>
+        <div class="basicinfo">
+            <div>
+                <h2 class="van-doc-demo-block__title">基本信息</h2>
             </div>
-            <div class="van-cell__value">
-              <span>SNxxxxxxxxxxxx</span>
+            <div>
+                <div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>产品编号</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>SNxxxxxxxxxxxx</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>产品名称</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>XXX仪器</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>生产企业名称</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>美国xxx公司</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>生产规格</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>20*30</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>生产日期</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>2019-01-01</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>使用期限</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>2年</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>代理商名称</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>再鼎xxx公司</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>医疗器械注册证编号</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>BHXXXXXXX</span>
+                        </div>
+                    </div>
+                </div>
+                <view class="divLine"></view>
             </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>产品名称</span>
-            </div>
-            <div class="van-cell__value">
-              <span>XXX仪器</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>生产企业名称</span>
-            </div>
-            <div class="van-cell__value">
-              <span>美国xxx公司</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>生产规格</span>
-            </div>
-            <div class="van-cell__value">
-              <span>20*30</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>生产日期</span>
-            </div>
-            <div class="van-cell__value">
-              <span>2019-01-01</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>使用期限</span>
-            </div>
-            <div class="van-cell__value">
-              <span>2年</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>代理商名称</span>
-            </div>
-            <div class="van-cell__value">
-              <span>再鼎xxx公司</span>
-            </div>
-          </div>
-          <div class="van-cell">
-            <div class="van-cell__title">
-              <span>医疗器械注册证编号</span>
-            </div>
-            <div class="van-cell__value">
-              <span>BHXXXXXXX</span>
-            </div>
-          </div>
         </div>
-        <view class="divLine"></view>
-      </div>
-    </div>
-    <van-panel title="维护信息">
-      <div>
-        <div>
-          <van-dropdown-menu>
-            <van-dropdown-item :value="value1" :options="option1" />
-          </van-dropdown-menu>
+        <van-panel title="维护信息">
+            <div>
+                <div>
+                    <van-dropdown-menu>
+                        <van-dropdown-item :value="value1" :options="option1" />
+                    </van-dropdown-menu>
+                </div>
+            </div>
+        </van-panel>
+        <mybr />
+        <div class="confirmsignbtn">
+            <van-button square size="normal" type="info" @click="productIn"
+                >提交入库</van-button
+            >
         </div>
-      </div>
-    </van-panel>
-    <mybr />
-    <div class="confirmsignbtn">
-      <van-button square size="normal" type="info" @click="productIn">提交入库</van-button>
-    </div>
-    <!--
+        <!--
     注意要配一个van-dialog,才会显示提示 ,默认id van-dialog
     -->
-    <van-dialog id="van-dialog" />
-  </div>
+        <van-dialog id="van-dialog" />
+    </div>
 </template>
 
 <!-- js脚本代码片段 -->
 <script>
-import Dialog from "../../../static/vant/dialog/dialog";
-import mybr from "@/components/mybr/mybr.vue";
+import Dialog from '../../../static/vant/dialog/dialog'
+import mybr from '@/components/mybr/mybr.vue'
 
 export default {
-  name: "tab",
-  components: {
-    mybr
-  },
-  //数据模型
-  data() {
-    return {
-      option1: [
-        { text: "销售入库", value: 0 },
-        { text: "维修入库", value: 1 },
-        { text: "归还入库", value: 2 }
-      ],
-      value1: 0,
-      //qrcode产品二维码扫描结果
-      product: {qrcode:"",Id:0,Specification:"",ProductionDate:"",DTPId:0,UDICode:"",UDISN:"",UDIDate:"",ProductName:"",Manufacturer:"",Vendor:"",CertificateNumber:"",ExpiredYear:0,ProductCategory:"",CurrentOrderId:0,CurrentStatus:"",NormalCheckInDate:"0001-01-01 00:00:00",MaintainedCheckInDate:"0001-01-01 00:00:00",NormalCheckOutDate:"0001-01-01 00:00:00",MaintainedCheckOutDate:"0001-01-01 00:00:00",COCCheckInDate:"0001-01-01 00:00:00",COCCheckOutDate:"0001-01-01 00:00:00"}
-    };
-  },
-  //方法
-  methods: {
-    productIn(event) {
-      var that = this;
-      const message = "该产品已成功录入系统!";
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('res:', res)
-                that.$http.post({
-                    url: '/dtp/Add',
-                    data: {
-                      product: this.product,
-                      code: res.code
-                    },
-                })
-                .then(res => {
-                    console.log('/COC/GetAll response',res)
-                });
-            },
-        })
-
-
-      Dialog.alert({
-        title: "入库成功",
-        message
-      }).then(() => {
-        const url = "../a-dtphome/main";
-        wx.navigateBack({ url: url });
-      });
+    name: 'tab',
+    components: {
+        mybr,
     },
-    onConfirmProductOut(event) {
-      const url = "../a-dtphome/main";
-      wx.navigateTo({ url: url });
-    }
-  },
-  //计算属性
-  computed: {
-    //name() {
-    //代码搞这里
-    //return this.data;
-    //}
-  },
-  //生命周期(mounted)
-  mounted() {
-    console.log("qrcode",this.$root.$mp.query.qrcode);
-    this.product.qrcode = this.$root.$mp.query.qrcode;
-  }
-};
+    //数据模型
+    data() {
+        return {
+            option1: [
+                { text: '销售入库', value: 0 },
+                { text: '维修入库', value: 1 },
+                { text: '归还入库', value: 2 },
+            ],
+            value1: 0,
+            //qrcode产品二维码扫描结果
+            product: {
+                qrcode: '',
+                Id: 0,
+                Specification: '',
+                ProductionDate: '',
+                DTPId: 0,
+                UDICode: '',
+                UDISN: '',
+                UDIDate: '',
+                ProductName: '',
+                Manufacturer: '',
+                Vendor: '',
+                CertificateNumber: '',
+                ExpiredYear: 0,
+                ProductCategory: '',
+                CurrentOrderId: 0,
+                CurrentStatus: '',
+                NormalCheckInDate: '0001-01-01 00:00:00',
+                MaintainedCheckInDate: '0001-01-01 00:00:00',
+                NormalCheckOutDate: '0001-01-01 00:00:00',
+                MaintainedCheckOutDate: '0001-01-01 00:00:00',
+                COCCheckInDate: '0001-01-01 00:00:00',
+                COCCheckOutDate: '0001-01-01 00:00:00',
+            },
+        }
+    },
+    //方法
+    methods: {
+        productIn(event) {
+            var that = this
+            const message = '该产品已成功录入系统!'
+            wx.login({
+                success: res => {
+                    // 调用接口获取openid
+                    console.log('res:', res)
+                    that.$http
+                        .post({
+                            url: '/dtp/Add',
+                            data: {
+                                product: this.product,
+                                code: res.code,
+                            },
+                        })
+                        .then(res => {
+                            console.log('/COC/GetAll response', res)
+                        })
+                },
+            })
+
+            Dialog.alert({
+                title: '入库成功',
+                message,
+            }).then(() => {
+                const url = '../a-dtphome/main'
+                wx.navigateBack({ url: url })
+            })
+        },
+        onConfirmProductOut(event) {
+            const url = '../a-dtphome/main'
+            wx.navigateTo({ url: url })
+        },
+    },
+    //计算属性
+    computed: {
+        //name() {
+        //代码搞这里
+        //return this.data;
+        //}
+    },
+    //生命周期(mounted)
+    mounted() {
+        console.log('qrcode', this.$root.$mp.query.qrcode)
+        this.product.qrcode = this.$root.$mp.query.qrcode
+    },
+}
 </script>
 
 <!-- 样式代码片段  scoped -->
-<style scoped
-       src="./a-dtpproductin.css">
-</style>
+<style scoped src="./a-dtpproductin.css"></style>

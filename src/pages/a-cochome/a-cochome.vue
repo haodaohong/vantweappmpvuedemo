@@ -195,7 +195,7 @@ export default {
         wx.login({
             success: res => {
                 // 调用接口获取openid
-                console.log('global_msg departId', that.$global_msg.departId)
+                console.log('globalData departId', that.$globalData.departId)
                 console.log('res:', res)
                 this.$http
                     .get({
