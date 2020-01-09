@@ -131,12 +131,12 @@ export default {
                 { text: '出库', value: 2 },
             ],
             timeFilterActiveValue: 0,
-            timeFilterActiveValueStr: '今日',
+            timeFilterActiveValueStr: '近三天',
             timeFilterValue: 0,
             timeFilterOption: [
-                { text: '近7日', value: 0 },
-                { text: '近一个月', value: 1 },
-                { text: '近三个月', value: 2 },
+                { text: '近三天', value: 0 },
+                { text: '近一周', value: 1 },
+                { text: '近一个月', value: 2 },
             ],
             products: [],
         }
@@ -195,11 +195,12 @@ export default {
         wx.login({
             success: res => {
                 // 调用接口获取openid
+                console.log('global_msg departId', that.$global_msg.departId)
                 console.log('res:', res)
                 this.$http
                     .get({
                         url:
-                            '/COC/GetProductsByFilter?statusFilter=' +
+                            '/Product/GetProductsByFilter?statusFilter=' +
                             that.statusFilterActiveValueStr +
                             '&timeFilter=' +
                             that.timeFilterActiveValueStr,
