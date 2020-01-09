@@ -15,84 +15,39 @@
 
     <div>
         <div class="scanBtn">
-            <div class="myphoto">
-                <img src="/static/img/touxiang.jpg" />
-            </div>
-            <h5>李斌</h5>
+            <h5>您好，{{}}</h5>
             <div class="editmyprofile">
                 <van-button @click="onUpdateInfo" type="default" size="small"
                     >更新资料</van-button
                 >
             </div>
         </div>
-
-        <van-tabs :active="active" @change="onChange1">
-            <van-tab title="预约服务">
-                <div>
-                    <div class="flex-width">
-                        <div class=".white-padding">
-                            <span>选择城市:</span>
-                        </div>
-                        <div class="flex-1">
-                            <van-dropdown-menu>
-                                <van-dropdown-item
-                                    :value="value1"
-                                    :options="option1"
-                                />
-                            </van-dropdown-menu>
-                        </div>
-                    </div>
+        <div>
+            <div class="flex-width">
+                <div class=".white-padding">
+                    <span>选择城市:</span>
                 </div>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
+                <div class="flex-1">
+                    <van-dropdown-menu>
+                        <van-dropdown-item
+                            :value="selectedCity"
+                            :options="Cities"
+                            @change="onSelectCity"
+                        />
+                    </van-dropdown-menu>
+                </div>
+            </div>
+        </div>
+        <van-tabs :active="active" @change="onSelectTab">
+            <van-tab title="预约服务">
+                <van-card v-for="(dtp, index) in dtps" :key="index"
+                    :desc="dtp.Address"
+                    :title="dtp.Name"
                     :thumb="imageURL"
                 >
                     <view class="gosubmit" slot="footer">
                         <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
-                            size="small"
-                            type="primary"
-                            >立即预约</van-button
-                        >
-                    </view>
-                </van-card>
-                <van-card
-                    desc="地址：上海市XXX路888号"
-                    title="XXX大药房"
-                    :thumb="imageURL"
-                >
-                    <view class="gosubmit" slot="footer">
-                        <van-button
-                            @click="onMakeAppointment"
+                            @click="onMakeAppointment(dtp.Id)"
                             size="small"
                             type="primary"
                             >立即预约</van-button
@@ -101,33 +56,31 @@
                 </van-card>
             </van-tab>
             <van-tab title="历史记录">
-                <van-panel
-                    title="预约DTP：xxxDTP"
-                    desc="地址：上海市XXXXXX"
-                    status="待确认"
+                <van-panel v-for="(apply, index) in applys" :key="index"
+                    :title="apply.DTP.Name"
+                    :desc="apply.DTP.Address"
+                    :status="apply.ApplyStatus"
                     use-footer-slot
                 >
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：购买贴片</td>
                                 <td>预约产品：xxx仪器</td>
                             </tr>
                             <tr>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月8日 10:00-11:00</td>
+                                <td>预约数量：{{apply.ProductCount}}</td>
+                                <td>预约日期：{{apply.ApplyDate}}</td>
                             </tr>
                             <tr>
-                                <td>姓名：李斌</td>
-                                <td>性别：男</td>
+                                <td>姓名：{{apply.Contact.Name}}</td>
+                                <td>性别：{{apply.Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>出生日期：1978年12月8日</td>
-                                <td>手机号码：197xxxxxxxx</td>
+                                <td>出生日期：{{apply.Contact.Birthday}}</td>
+                                <td>手机号码：{{apply.Contact.Phone}}</td>
                             </tr>
                             <tr>
-                                <td>身份证号：3XXXXXXXXXXXXXXX</td>
-                                <td>确诊医院：xxx医院</td>
+                                <td>身份证号：{{apply.Contact.IDNum}}</td>
                             </tr>
                         </table>
                     </div>
@@ -140,91 +93,7 @@
                         >
                     </view>
                 </van-panel>
-                <van-panel
-                    title="预约DTP：xxxDTP-B"
-                    desc="地址：上海市XXXXXX"
-                    status="已确认"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>预约类型：购买贴片</td>
-                                <td>预约产品：xxx仪器</td>
-                            </tr>
-                            <tr>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月8日 10:00-11:00</td>
-                            </tr>
-                            <tr>
-                                <td>姓名：李斌</td>
-                                <td>性别：男</td>
-                            </tr>
-                            <tr>
-                                <td>出生日期：1978年12月8日</td>
-                                <td>手机号码：197xxxxxxxx</td>
-                            </tr>
-                            <tr>
-                                <td>身份证号：3XXXXXXXXXXXXXXX</td>
-                                <td>确诊医院：xxx医院</td>
-                            </tr>
-                            <tr>
-                                <td>当前已签约DTP：DTP-A</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            @click="onCancelAppointment"
-                            size="small"
-                            type="danger"
-                            >取消预约</van-button
-                        >
-                    </view>
-                </van-panel>
-                <van-panel
-                    title="预约DTP：xxxDTP"
-                    desc="地址：上海市XXXXXX"
-                    status="待确认"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>预约类型：产品维修</td>
-                                <td>预约日期：2019年12月8日 10:00-11:00</td>
-                            </tr>
-                            <tr>
-                                <td>维修单号：R19XXXXXXX</td>
-                                <td>产品名称：xxx仪器</td>
-                            </tr>
-                            <tr>
-                                <td>产品类型：主机</td>
-                                <td>产品编码：SNXXXXXXXXX</td>
-                            </tr>
-                            <tr>
-                                <td>姓名：李斌</td>
-                                <td>性别：男</td>
-                            </tr>
-                            <tr>
-                                <td>出生日期：1978年12月8日</td>
-                                <td>手机号码：197xxxxxxxx</td>
-                            </tr>
-                            <tr>
-                                <td>身份证号：3XXXXXXXXXXXXXXX</td>
-                                <td>确诊医院：xxx医院</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            @click="onCancelAppointment"
-                            size="small"
-                            type="danger"
-                            >取消预约</van-button
-                        >
-                    </view>
-                </van-panel>
+                
             </van-tab>
             <van-tab title="个人中心">
                 <van-panel title="基本信息">
@@ -321,14 +190,17 @@ export default {
             imageURL: '/static/img/yaodian.png',
             touxiang: '/static/img/touxiang.jpg',
             active: 0,
-            option1: [
-                { text: '上海', value: 0 },
-                { text: '北京', value: 1 },
-                { text: '杭州', value: 2 },
-                { text: '广州', value: 3 },
-                { text: '深圳', value: 3 },
+            Cities: [
+                { text: '上海', value: '上海' },
+                { text: '北京', value: '北京' },
+                { text: '杭州', value: '杭州' },
+                { text: '广州', value: '广州' },
+                { text: '深圳', value: '深圳' },
             ],
-            value1: 0,
+            selectedCity: '上海',
+            dtps: {},
+            applys:{},
+            openid: ''
         }
     },
     //方法
@@ -338,7 +210,8 @@ export default {
             wx.navigateTo({ url: url })
         },
         onMakeAppointment(event) {
-            const url = '../a-patientorder/main'
+            console.log("onMakeAppointment event",event);
+            const url = '../a-patientorder/main?dtpid='+event
             wx.navigateTo({ url: url })
         },
         onCancelAppointment(event) {
@@ -349,18 +222,32 @@ export default {
                 message,
             })
         },
-    },
-    //计算属性
-    computed: {
-        //name() {
-        //代码搞这里
-        //return this.data;
-        //}
-    },
-    //生命周期(mounted)
-    mounted() {
-        var that = this;
-        //登陆验证用户是否已经绑定过，绑定过则直接跳转
+        onLoadDtps(){
+            var that = this;
+            that.$http.get({
+                url:'/DTP/GetByCity?city='+that.selectedCity
+            })
+            .then(res => {
+                console.log('/DTP/GetByCity?city='+that.selectedCity, res)
+                that.dtps = res.data
+                console.log('that.dtps', that.dtps);
+                
+            });
+        },
+        onLoadApplys(){
+            var that = this;
+            that.$http.get({
+                url:'/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行'
+            })
+            .then(res => {
+                console.log('/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行', res)
+                that.applys = res.data
+                console.log('that.applys', that.applys);
+            });
+        },
+        onCreateContactInfo(){
+            var that = this;
+            //登陆验证用户是否已经绑定过，绑定过则直接跳转
             wx.login({
                 success (res) {
                     if (res.code){
@@ -371,23 +258,53 @@ export default {
                         })
                         .then(res => {
                             console.log('/Contact/UpdateBySessionCode response', res)
-                            var user = res.data
-                            if(user){
-                              if (user.Role == 'DTP'){
-                                    const url = '../a-dtphome/main'
-                                    console.log('url', user.Role + url)
-                                    wx.navigateTo({ url: url })
-                                } else if (user.Role == 'COC') {
-                                    const url = '../a-cochome/main'
-                                    wx.navigateTo({ url: url })
-                                    console.log('url', user.Role + url)
-                                }
-                            }
-                             console.log('未绑定过')
+                            var user = res.data;
                         });
-                        }
                     }
-        });
+                }
+            });
+        },
+        onSelectCity(event){
+            var that = this;
+            console.log('event', event);
+            that.selectedCity = event.mp.detail;
+            console.log('that.selectedCity', that.selectedCity);
+            this.onLoadDtps();
+        },
+        onGetOpenId(){
+            var that = this;
+            //登陆验证用户是否已经绑定过，绑定过则直接跳转
+            wx.login({
+                success (res) {
+                    if (res.code){
+                        console.log("login result",res)
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.get({
+                            url:'/WeChatMP/GetOpenId?code='+res.code
+                        })
+                        .then(res => {
+                            console.log('/WeChatMP/GetOpenId response', res)
+                            that.openid = res;
+                            that.globalData.openid = res;
+                            that.onCreateContactInfo();
+                            that.onLoadDtps();
+                            that.onLoadApplys();
+                        });
+                    }
+                }
+            });
+        }
+    },
+    //计算属性
+    computed: {
+        //name() {
+        //代码搞这里
+        //return this.data;
+        //}
+    },
+    //生命周期(mounted)
+    mounted() {
+        this.onGetOpenId();
     },
 }
 </script>
