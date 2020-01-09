@@ -362,7 +362,10 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
+        var that = this;
         this.dtpid = this.$root.$mp.query.dtpid;
+        console.log('mounted this.dtpid', this.dtpid)
+        console.log("that.globalData.openid",that.globalData.openid)
         this.onGetOpenId();
     },
 }

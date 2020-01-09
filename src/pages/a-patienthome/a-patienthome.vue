@@ -285,6 +285,7 @@ export default {
                         .then(res => {
                             console.log('/WeChatMP/GetOpenId response', res)
                             that.openid = res;
+                            that.globalData.openid = res;
                             that.onCreateContactInfo();
                             that.onLoadDtps();
                             that.onLoadApplys();
