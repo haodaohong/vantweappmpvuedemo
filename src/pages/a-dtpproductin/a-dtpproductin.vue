@@ -20,7 +20,7 @@
                             <span>产品编号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>SNxxxxxxxxxxxx</span>
+                            <span>{{ product.UDISN }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -28,7 +28,7 @@
                             <span>产品名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>XXX仪器</span>
+                            <span>{{ product.ProductName }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -36,7 +36,7 @@
                             <span>生产企业名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>美国xxx公司</span>
+                            <span>{{ product.Manufacturer }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -44,7 +44,7 @@
                             <span>生产规格</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>20*30</span>
+                            <span>{{ product.Specification }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -52,7 +52,7 @@
                             <span>生产日期</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2019-01-01</span>
+                            <span>{{ product.ProductionDateFormat }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -60,7 +60,7 @@
                             <span>使用期限</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2年</span>
+                            <span>{{ product.ExpiredYearFormat }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -68,7 +68,7 @@
                             <span>代理商名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>再鼎xxx公司</span>
+                            <span>{{ product.Vendor }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -76,7 +76,7 @@
                             <span>医疗器械注册证编号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>BHXXXXXXX</span>
+                            <span>{{ product.CertificateNumber }}</span>
                         </div>
                     </div>
                 </div>
@@ -87,14 +87,21 @@
             <div>
                 <div>
                     <van-dropdown-menu>
-                        <van-dropdown-item :value="value1" :options="option1" />
+                        <van-dropdown-item
+                            :value="checkInStatusActiveValue"
+                            :options="checkInStatusOption"
+                        />
                     </van-dropdown-menu>
                 </div>
             </div>
         </van-panel>
         <mybr />
         <div class="confirmsignbtn">
-            <van-button square size="normal" type="info" @click="productIn"
+            <van-button
+                square
+                size="normal"
+                type="info"
+                @click="onProductCheckIn"
                 >提交入库</van-button
             >
         </div>
@@ -118,42 +125,22 @@ export default {
     //数据模型
     data() {
         return {
-            option1: [
-                { text: '销售入库', value: 0 },
+            checkInStatusActiveValueStr: '租赁入库',
+            checkInStatusOption: [
+                { text: '租赁入库', value: 0 },
                 { text: '维修入库', value: 1 },
                 { text: '归还入库', value: 2 },
             ],
-            value1: 0,
+            checkInStatusActiveValue: 0,
+            snCode: '',
             //qrcode产品二维码扫描结果
-            product: {
-                qrcode: '',
-                Id: 0,
-                Specification: '',
-                ProductionDate: '',
-                DTPId: 0,
-                UDICode: '',
-                UDISN: '',
-                UDIDate: '',
-                ProductName: '',
-                Manufacturer: '',
-                Vendor: '',
-                CertificateNumber: '',
-                ExpiredYear: 0,
-                ProductCategory: '',
-                CurrentOrderId: 0,
-                CurrentStatus: '',
-                NormalCheckInDate: '0001-01-01 00:00:00',
-                MaintainedCheckInDate: '0001-01-01 00:00:00',
-                NormalCheckOutDate: '0001-01-01 00:00:00',
-                MaintainedCheckOutDate: '0001-01-01 00:00:00',
-                COCCheckInDate: '0001-01-01 00:00:00',
-                COCCheckOutDate: '0001-01-01 00:00:00',
-            },
+            qrCode: '',
+            product: {},
         }
     },
     //方法
     methods: {
-        productIn(event) {
+        onProductCheckIn(event) {
             var that = this
             const message = '该产品已成功录入系统!'
             wx.login({
@@ -198,6 +185,31 @@ export default {
     mounted() {
         console.log('qrcode', this.$root.$mp.query.qrcode)
         this.product.qrcode = this.$root.$mp.query.qrcode
+        this.snCode = 'SN00001001'
+        var that = this
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('globalData departId', that.$globalData.departId)
+                console.log('res:', res)
+                this.$http
+                    .get({
+                        url: '/Product/GetBySN?snCode=' + that.snCode,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            console.log('/Product/GetBySN response', res)
+                            that.product = res.data
+                        } else {
+                            const message = res.message
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            },
+        })
     },
 }
 </script>

@@ -163,6 +163,12 @@ export default {
             if (this.isBtnSmsCodeDisabled) {
                 return
             }
+            if (this.selectedRole == '未知') {
+                Dialog.alert({
+                    title: '信息提示',
+                    message: '请选择你的角色',
+                })
+            }
             this.$http
                 .post({
                     url: '/Users/GetCodeByPhone?phone=' + this.phone,
@@ -170,6 +176,7 @@ export default {
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
                     this.selectedDepartId = res.data
+                    this.$globalData.departId = res.data
                 })
             this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
             this.isBtnSmsCodeDisabled = true

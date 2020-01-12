@@ -20,7 +20,7 @@
                             <span>产品编号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>SNxxxxxxxxxxxx</span>
+                            <span>{{ product.UDISN }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -28,7 +28,7 @@
                             <span>产品名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>XXX仪器</span>
+                            <span>{{ product.ProductName }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -36,7 +36,7 @@
                             <span>产品类别</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>主机</span>
+                            <span>{{ product.ProductCategory }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -44,7 +44,7 @@
                             <span>生产规格</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>20*30</span>
+                            <span>{{ product.Specification }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -52,7 +52,7 @@
                             <span>生产日期</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2019-01-01</span>
+                            <span>{{ product.ProductionDateFormat }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -60,7 +60,7 @@
                             <span>入库日期</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2019-01-01</span>
+                            <span>{{ product.DTPCheckInDateFormat }}</span>
                         </div>
                     </div>
                 </div>
@@ -85,7 +85,12 @@ export default {
     },
     //数据模型
     data() {
-        return {}
+        return {
+            snCode: '',
+            //qrcode产品二维码扫描结果
+            qrCode: '',
+            product: {},
+        }
     },
     //方法
     methods: {},
@@ -97,7 +102,35 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        console.log('qrcode', this.$root.$mp.query.qrcode)
+        this.product.qrcode = this.$root.$mp.query.qrcode
+        this.snCode = 'SN00001001'
+        var that = this
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('globalData departId', that.$globalData.departId)
+                console.log('res:', res)
+                this.$http
+                    .get({
+                        url: '/Product/GetBySN?snCode=' + that.snCode,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            console.log('/Product/GetBySN response', res)
+                            that.product = res.data
+                        } else {
+                            const message = res.message
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            },
+        })
+    },
 }
 </script>
 

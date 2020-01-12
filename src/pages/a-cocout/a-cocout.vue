@@ -17,31 +17,27 @@
                 <div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>产品编号：SNxxxxxxxxxxxx</span>
+                            <span>产品编号：{{ product.UDISN }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>名称：XXX仪器</span>
+                            <span>名称：{{ product.ProductName }}</span>
                         </div>
                         <div class="van-cell__title">
-                            <span>类型：产品主机</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>规格：20*30</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>单位：台</span>
+                            <span>类型：{{ product.ProductCategory }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>生产日期：2019-01-01</span>
+                            <span>规格：{{ product.Specification }}</span>
                         </div>
                         <div class="van-cell__title">
-                            <span>数量：1</span>
+                            <span
+                                >生产日期：{{
+                                    product.ProductionDateFormat
+                                }}</span
+                            >
                         </div>
                     </div>
                 </div>
@@ -50,7 +46,8 @@
         </div>
         <van-panel title="寄送信息">
             <van-field
-                :value="username"
+                :value="trackingNumber"
+                @change="onTrackingNumberFieldChange"
                 label="物流单号"
                 placeholder="请输入物流单号"
                 clearable
@@ -59,7 +56,11 @@
         </van-panel>
         <mybr />
         <div class="confirmsignbtn">
-            <van-button square size="normal" type="info" @click="onConfirmOut"
+            <van-button
+                square
+                size="normal"
+                type="info"
+                @click="onConfirmOut(product.Id)"
                 >提交出库</van-button
             >
         </div>
@@ -82,20 +83,61 @@ export default {
     },
     //数据模型
     data() {
-        return {}
+        return {
+            trackingNumber: '',
+            snCode: '',
+            product: {},
+        }
     },
     //方法
     methods: {
-        onConfirmOut(event) {
-            const message = '该产品信息及快递单号将同步至DTP！'
-
-            Dialog.alert({
-                title: '提交成功',
-                message,
-            }).then(() => {
-                const url = '../a-cochome/main'
-                wx.navigateBack({ url: url })
-            })
+        onConfirmOut() {
+            const message = '已成功出库产品！'
+            console.log('product data is', this.product)
+            console.log('trackingNumber is', this.trackingNumber)
+            var url =
+                '/Product/CheckOut?role=DTP&pruductId=' +
+                this.product.Id +
+                '&currentStatus=' +
+                this.product.CurrentStatus +
+                '&trackingNumber=' +
+                this.trackingNumber
+            //console.log('url is', url)
+            this.$http
+                .post({
+                    url:
+                        '/Product/CheckOut?productId=' +
+                        this.product.Id +
+                        '&currentStatus=' +
+                        this.product.CurrentStatus +
+                        '&trackingNumber=' +
+                        this.trackingNumber,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        console.log('/Product/CheckOut response', res)
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            const url = '../a-cochome/main'
+                            wx.navigateBack({ url: url })
+                        })
+                    } else {
+                        const message = res.message
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            const url = '../a-cochome/main'
+                            wx.navigateBack({ url: url })
+                        })
+                    }
+                })
+        },
+        onTrackingNumberFieldChange(event) {
+            this.trackingNumber = event.mp.detail
+            console.log('trackingNumber is', this.trackingNumber)
         },
     },
     //计算属性
@@ -106,7 +148,35 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        this.snCode = this.$root.$mp.query.snCode
+        console.log('snCode:', this.snCode)
+        this.snCode = 'SN00001001'
+        var that = this
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('globalData departId', that.$globalData.departId)
+                console.log('res:', res)
+                this.$http
+                    .get({
+                        url: '/Product/GetBySN?snCode=' + that.snCode,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            console.log('/Product/GetBySN response', res)
+                            that.product = res.data
+                        } else {
+                            const message = res.message
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            },
+        })
+    },
 }
 </script>
 

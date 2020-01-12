@@ -20,7 +20,7 @@
                             <span>产品编号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>SNxxxxxxxxxxxx</span>
+                            <span>{{ product.UDISN }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -28,7 +28,7 @@
                             <span>产品名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>XXX仪器</span>
+                            <span>{{ product.ProductName }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -36,7 +36,7 @@
                             <span>生产企业名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>美国xxx公司</span>
+                            <span>{{ product.Manufacturer }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -44,7 +44,7 @@
                             <span>生产规格</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>20*30</span>
+                            <span>{{ product.Specification }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -52,7 +52,7 @@
                             <span>生产日期</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2019-01-01</span>
+                            <span>{{ product.ProductionDateFormat }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -60,7 +60,7 @@
                             <span>使用期限</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>2年</span>
+                            <span>{{ product.ExpiredYearFormat }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -68,7 +68,7 @@
                             <span>代理商名称</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>再鼎xxx公司</span>
+                            <span>{{ product.Vendor }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -76,7 +76,7 @@
                             <span>医疗器械注册证编号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>BHXXXXXXX</span>
+                            <span>{{ product.CertificateNumber }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -84,7 +84,7 @@
                             <span>维修单号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>R121XXXXX</span>
+                            <span></span>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,11 @@
             <div>
                 <div>
                     <van-dropdown-menu>
-                        <van-dropdown-item :value="value1" :options="option1" />
+                        <van-dropdown-item
+                            :value="checkInStatusActiveValue"
+                            :options="checkInStatusOption"
+                            @change="onCheckInStatusChange"
+                        />
                     </van-dropdown-menu>
                 </div>
             </div>
@@ -126,30 +130,57 @@ export default {
     //数据模型
     data() {
         return {
-            option1: [
-                { text: '维修入库', value: 1 },
-                { text: '归还入库', value: 2 },
+            checkInStatusActiveValueStr: '维修入库',
+            checkInStatusOption: [
+                { text: '维修入库', value: 0 },
+                { text: '归还入库', value: 1 },
             ],
-
-            value1: 0,
+            checkInStatusActiveValue: 0,
+            qrCode: '',
+            product: {},
         }
     },
     //方法
     methods: {
-        productIn(event) {
-            const message = '该产品已成功录入系统!'
-
-            Dialog.alert({
-                title: '入库成功',
-                message,
-            }).then(() => {
-                const url = '../a-dtphome/main'
-                wx.navigateBack({ url: url })
-            })
+        onCheckInStatusChange(event) {
+            this.checkInStatusActiveValue = event.mp.detail
+            this.checkInStatusActiveValueStr = this.checkInStatusOption[
+                this.checkInStatusActiveValue
+            ].text
+            console.log(this.checkInStatusActiveValue)
+            console.log(this.checkInStatusActiveValueStr)
         },
-        onConfirmProductOut(event) {
-            const url = '../a-cochome/main'
-            wx.navigateTo({ url: url })
+        productIn(event) {
+            const successMessage = '已成功入库产品!'
+            const errorMessage = '产品入库失败!'
+            this.$http
+                .get({
+                    url:
+                        '/Product/CocCheckIn?snCode=' +
+                        this.product.UDISN +
+                        '&departId=' +
+                        this.$globalData.departId +
+                        '&status=' +
+                        this.checkInStatusActiveValueStr,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        console.log('/Product/GetBySN response', res)
+                        Dialog.alert({
+                            title: '信息提示',
+                            successMessage,
+                        }).then(() => {
+                            const url = '../a-cochome/main'
+                            wx.navigateBack({ url: url })
+                        })
+                    } else {
+                        const message = res.message
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        })
+                    }
+                })
         },
     },
     //计算属性
@@ -160,7 +191,36 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        //console.log('qrcode', this.$root.$mp.query.qrcode)
+        this.qrCode = this.$root.$mp.query.qrcode
+        console.log('qrCode:', this.qrCode)
+        this.qrCode = 'SN00001001'
+        var that = this
+        wx.login({
+            success: res => {
+                // 调用接口获取openid
+                console.log('globalData departId', that.$globalData.departId)
+                console.log('res:', res)
+                this.$http
+                    .get({
+                        url: '/Product/GetBySN?snCode=' + that.qrCode,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            console.log('/Product/GetBySN response', res)
+                            that.product = res.data
+                        } else {
+                            const message = res.message
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            },
+        })
+    },
 }
 </script>
 

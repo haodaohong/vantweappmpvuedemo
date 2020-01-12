@@ -82,19 +82,34 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>名称：{{ product.Name }}</td>
-                                <td>类别：{{ product.Type }}</td>
+                                <td>名称：{{ product.ProductName }}</td>
+                                <td>类别：{{ product.ProductCategory }}</td>
                                 <td>规格：{{ product.Specification }}</td>
-                                <td>生产日期：{{ product.ProductionDate }}</td>
-                                <td>入库日期：{{ product.CheckInDate }}</td>
-                                <td>入库类型：{{ product.CurrentStatus }}</td>
+                                <td>
+                                    生产日期：{{ product.ProductionDateFormat }}
+                                </td>
+                                <td v-if="product.ShowCOCCheckOutFooter">
+                                    入库日期：{{ product.COCCheckInDateFormat }}
+                                </td>
+                                <td v-else>
+                                    出库日期：{{
+                                        product.COCCheckOutDateFormat
+                                    }}
+                                </td>
+                                <td v-show="product.ShowCheckOut">
+                                    入库类型：{{ product.CurrentStatus }}
+                                </td>
                             </tr>
                         </table>
                     </div>
-                    <view style="text-align: right;" slot="footer">
+                    <view
+                        style="text-align: right;"
+                        slot="footer"
+                        v-show="product.ShowCOCCheckOutFooter"
+                    >
                         <van-button
                             class="confirmBooking"
-                            @click="onCocOut"
+                            @click="onCocOut(product.UDISN)"
                             size="small"
                             type="info"
                             >产品出库</van-button
@@ -144,12 +159,27 @@ export default {
     //方法
     methods: {
         scanProduct(event) {
-            const url = '../a-cocproductin/main'
-            wx.navigateTo({ url: url })
+            // 允许从相机和相册扫码
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    console.log('all: ', res)
+                    const url = '../a-cocproductin/main?qrcode=' + res.result
+                    wx.navigateTo({ url: url })
+                },
+            })
         },
         scanSearchProduct(event) {
-            const url = '../a-cocproductsearch/main'
-            wx.navigateTo({ url: url })
+            // 允许从相机和相册扫码
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    console.log('all: ', res)
+                    const url =
+                        '../a-cocproductsearch/main?qrcode=' + res.result
+                    wx.navigateTo({ url: url })
+                },
+            })
         },
         onstatusFilterChange(event) {
             this.statusFilterActiveValue = event.mp.detail
@@ -161,7 +191,7 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/COC/GetProductsByFilter?statusFilter=' +
+                        '/Product/GetProductsByFilter?statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -177,9 +207,22 @@ export default {
             ].text
             console.log(this.timeFilterActiveValue)
             console.log(this.timeFilterActiveValueStr)
+            this.$http
+                .get({
+                    url:
+                        '/Product/GetProductsByFilter?statusFilter=' +
+                        this.statusFilterActiveValueStr +
+                        '&timeFilter=' +
+                        this.timeFilterActiveValueStr,
+                })
+                .then(res => {
+                    this.products = res.data
+                })
         },
-        onCocOut(event) {
-            const url = '../a-cocout/main'
+        onCocOut(snCode) {
+            //console.log('coc out button data', event)
+            console.log('snCode', snCode)
+            const url = '../a-cocout/main?snCode=' + snCode
             wx.navigateTo({ url: url })
         },
     },
