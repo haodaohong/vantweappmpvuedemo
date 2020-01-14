@@ -52,7 +52,7 @@
                             <span
                                 ><van-dropdown-menu>
                                     <van-dropdown-item
-                                        :value="ApplyOrder.OrderType"
+                                        :value="CurrApplyOrder"
                                         :options="OrderTypes"
                                     /> </van-dropdown-menu
                             ></span>
@@ -99,37 +99,59 @@
             <div>
                 <div>
                     <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>姓名：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span>{{ApplyOrder.Contact.Name2}}</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>性别：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span>{{ApplyOrder.Contact.Sex}}</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>出生年月：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span>{{ApplyOrder.Contact.Birthday}}</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>手机号码：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span>{{ApplyOrder.Contact.Phone}}</span>
-                        </div>
-                    </div>
+                <div class="van-cell__title">
+                    <span>姓名</span>
+                </div>
+                <div class="van-cell__value">
+                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" />
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>性别</span>
+                </div>
+                <div class="van-cell__value">
+                    <van-dropdown-menu>
+                        <van-dropdown-item :value="ApplyOrder.Contact.Sex" :options="Sexs" />
+                    </van-dropdown-menu>
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>出生日期</span>
+                </div>
+                <div  class="van-cell__value">
+                    <van-popup :show="isshowdatetimepicker" position="bottom">
+                        <van-datetime-picker
+                            type="date"
+                            :value="currentDate"
+                            :min-date="minDate"
+                            @confirm="userselectdate"
+                            @cancel="usercancel"
+                        />
+                    </van-popup>
+                    <van-field
+                        :value="selectedDate"
+                        icon="calender-o"
+                        icon-class="icon"
+                        required
+                        @clickicon="showdatetimepicker"
+                    />
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>手机号码</span>
+                </div>
+                <div class="van-cell__value">
+                    <input
+                        type="text"
+                        class="van-field__input"
+                        :value="ApplyOrder.Contact.Phone"
+                    />
+                </div>
+            </div>
+
                 </div>
                 <view class="divLine"></view>
             </div>
@@ -176,9 +198,15 @@ export default {
                 { text: '购买贴片', value: '购买贴片' },
                 // { text: '产品维修', value: 2 },
             ],
+            CurrSex: '',
+            Sexs: [
+                { text: '男', value: '男' },
+                { text: '女', value: '女' },
+                // { text: '产品维修', value: 2 },
+            ],
             value1: 0,
             dtpName: 'xxxDTP药店',
-            appointmentType: '首次购买',
+            CurrApplyOrder: '首次购买',
             appointmentTime: '2019/12/31 11:00-12:00',
             openid: '',
             dtpid: 0,
@@ -260,12 +288,12 @@ export default {
         },
         onConfirmAppointment(event) {
             var that = this;
+            that.ApplyOrder.OrderType = that.CurrApplyOrder;
+            that.ApplyOrder.Contact.Sex = that.CurrSex;
             console.log('that.ApplyOrder', that.ApplyOrder)
             that.$http.post({
                             url:'/ApplyOrder/Add',
-                            data:{
-                                order: that.ApplyOrder
-                            }
+                            data:that.ApplyOrder
                         })
                         .then(res => {
                             console.log('/ApplyOrder/Add response', res)
@@ -319,37 +347,16 @@ export default {
         usercancel(event) {
             this.isshowdatetimepicker = false
         },
-        onGetOpenId(){
-            var that = this;
-            //登陆验证用户是否已经绑定过，绑定过则直接跳转
-            wx.login({
-                success (res) {
-                    if (res.code){
-                        console.log("login result",res)
-                        // 这里可以把code传给后台，后台用此获取openid及session_key
-                        that.$http.get({
-                            url:'/WeChatMP/GetOpenId?code='+res.code
-                        })
-                        .then(res => {
-                            console.log('/WeChatMP/GetOpenId response', res)
-                            that.openid = res;
-                            that.onCreate();
-                            // that.onLoadDtps();
-                            // that.onLoadApplys();
-                        });
-                    }
-                }
-            });
-        },
         onCreate(){
             var that = this;
             //ApplyOrder/Create
             that.$http.get({
-                            url:'/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.openid
+                            url:'/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.$globalData.openId
                         })
                         .then(res => {
                             console.log('/ApplyOrder/Create response', res)
                             that.ApplyOrder = res.data;
+                            that.currentDate = Date.parse(that.ApplyOrder.Contact.Birthday);
                         });
         }
     },
@@ -365,8 +372,8 @@ export default {
         var that = this;
         this.dtpid = this.$root.$mp.query.dtpid;
         console.log('mounted this.dtpid', this.dtpid)
-        console.log("that.globalData.openid",that.globalData.openid)
-        this.onGetOpenId();
+        console.log("that.globalData.openid",that.$globalData.openId)
+        that.onCreate();
     },
 }
 </script>

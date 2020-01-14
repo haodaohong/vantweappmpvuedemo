@@ -198,9 +198,63 @@ export default {
                 { text: '深圳', value: '深圳' },
             ],
             selectedCity: '上海',
-            dtps: {},
-            applys:{},
-            openid: ''
+            dtps: [
+                {
+                    Id: 0,
+                    Code: "",
+                    Name: "",
+                    Address: "",
+                    Phone: "",
+                    PhoneText: "",
+                    City: "",
+                    Note: ""
+                }
+            ],
+            applys:[
+                {
+                DTP: {
+                    Id: 0,
+                    Code: "",
+                    Name: "",
+                    Address: "",
+                    Phone: "",
+                    PhoneText: "",
+                    City: "",
+                    Note: ""
+                },
+                Contact: {
+                    Id: 0,
+                    Name: "",
+                    Sex: "",
+                    Province: "",
+                    City: "",
+                    Address: "",
+                    IDType: "",
+                    IDNum: "",
+                    Birthday: "0001-01-01T00:00:00",
+                    Phone: "",
+                    PhoneText: "",
+                    OAOpenId: "",
+                    MPOpenId: "",
+                    UnionId: ""
+                },
+                Id: 0,
+                ContactId: 0,
+                OrderType: "",
+                DTPId: 0,
+                LastDTPId: 0,
+                ProductCount: 0,
+                ApplyStatus: "",
+                ApplyDate: "0001-01-01T00:00:00",
+                IsConfirmedWithVendor: false,
+                CreateTime: "0001-01-01T00:00:00",
+                ComfirmBy: 0,
+                ComfirmTime: "0001-01-01T00:00:00"
+                }
+            ],
+            openid: '',
+            MyOrder:{"Products":[{"qrcode":null,"ProductionDateFormat":null,"DTPCheckInDateFormat":null,"DTPCheckOutDateFormat":null,"COCCheckInDateFormat":null,"COCCheckOutDateFormat":null,"ExpiredYearFormat":null,"TitleStatus":null,"ShowReturnFooter":false,"ShowChangeProductFooter":false,"ShowCOCCheckOutFooter":false,"Id":0,"Specification":"","ProductionDate":"","DTPId":0,"COCId":0,"UDICode":"","UDISN":"","UDIDate":"","ProductName":"","Manufacturer":"","Vendor":"","CertificateNumber":"","ExpiredYears":0,"ProductCategory":"","CurrentOrderId":0,"CurrentStatus":"","CheckInFromRentalDate":"0001-01-01 00:00:00","CheckInFromReturnDate":"0001-01-01 00:00:00","CheckInFromMaintenanceDate":"0001-01-01 00:00:00","CheckOutToUserDate":"0001-01-01 00:00:00","CheckOutFromReturnDate":"0001-01-01 00:00:00","CheckOutFromMaintenanceDate":"0001-01-01 00:00:00","COCCheckInDate":"0001-01-01 00:00:00","COCCheckOutDate":"0001-01-01 00:00:00","DTPCheckOutShipCode":"","COCCheckOutShipCode":""}],"OrderDetails":[{"Id":0,"ApplyOrderId":0,"OrderId":0,"ProductId":0,"RepairApplyStatus":""}],"Id":0,"ApplyOrderId":0,"ContactId":0,"DTPId":0,"ProductCount":0,"SignStatus":"","SignNo":"","SignSubmitDate":"0001-01-01 00:00:00","SignPhotos":"","CreateBy":0,"CreateTime":"0001-01-01 00:00:00"}
+            
         }
     },
     //方法
@@ -209,10 +263,10 @@ export default {
             const url = '../a-patientdetail/main'
             wx.navigateTo({ url: url })
         },
-        onMakeAppointment(event) {
-            console.log("onMakeAppointment event",event);
-            const url = '../a-patientorder/main?dtpid='+event
-            wx.navigateTo({ url: url })
+        onMakeAppointment(dtpid) {
+            console.log("onMakeAppointment event",dtpid);
+            const url = '../a-patientorder/main?dtpid=' + dtpid
+            wx.navigateTo({ url: url });
         },
         onCancelAppointment(event) {
             const message = '已取消此预约'
@@ -236,11 +290,12 @@ export default {
         },
         onLoadApplys(){
             var that = this;
+            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行';
             that.$http.get({
-                url:'/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行'
+                url: url
             })
             .then(res => {
-                console.log('/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行', res)
+                console.log(url, res)
                 that.applys = res.data
                 console.log('that.applys', that.applys);
             });
@@ -285,7 +340,7 @@ export default {
                         .then(res => {
                             console.log('/WeChatMP/GetOpenId response', res)
                             that.openid = res;
-                            that.globalData.openid = res;
+                            that.$globalData.openId = res;
                             that.onCreateContactInfo();
                             that.onLoadDtps();
                             that.onLoadApplys();
