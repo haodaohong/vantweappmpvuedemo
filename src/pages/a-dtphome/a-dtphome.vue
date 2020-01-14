@@ -50,7 +50,7 @@
             </van-search>
         </div>
 
-        <van-tabs :active="active1" @change="onChange1">
+        <van-tabs :active="activeTab" @change="onChangeTab">
             <van-tab title="预约申请">
                 <div>
                     <div class="flex-width">
@@ -60,8 +60,8 @@
                         <div class="flex-1">
                             <van-dropdown-menu>
                                 <van-dropdown-item
-                                    :value="value1"
-                                    :options="option1"
+                                    :value="applyOrderTypeActiveValue"
+                                    :options="applyOrderTypeOption"
                                 />
                             </van-dropdown-menu>
                         </div>
@@ -182,8 +182,8 @@
                         <div class="flex-1">
                             <van-dropdown-menu>
                                 <van-dropdown-item
-                                    :value="value2"
-                                    :options="option2"
+                                    :value="signOrderTypeActiveValue"
+                                    :options="signOrderTypeOption"
                                 />
                             </van-dropdown-menu>
                         </div>
@@ -282,8 +282,9 @@
                         <div class="flex-1">
                             <van-dropdown-menu>
                                 <van-dropdown-item
-                                    :value="value3"
-                                    :options="option3"
+                                    :value="statusFilterActiveValue"
+                                    :options="statusFilterOption"
+                                    @change="onStatusFilterOptionChange"
                                 />
                             </van-dropdown-menu>
                         </div>
@@ -297,107 +298,115 @@
                         <div class="flex-1">
                             <van-dropdown-menu>
                                 <van-dropdown-item
-                                    :value="value4"
-                                    :options="option4"
+                                    :value="timeFilterActiveValue"
+                                    :options="timeFilterOption"
+                                    @change="onTimeFilterOptionChange"
                                 />
                             </van-dropdown-menu>
                         </div>
                     </div>
                 </div>
-                <van-panel
-                    title="产品编号"
-                    desc="SNXXXXXXXXXXXXX"
-                    status="已入库"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>名称：xxx仪器</td>
-                                <td>类别：产品主机</td>
-                                <td>规格：20*30</td>
-                                <td>单位：台</td>
-                                <td>数量：1</td>
-                                <td>生产日期：2019年01月01日</td>
-                                <td>入库日期：2019年12月30日</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            class="confirmBooking"
-                            @click="onDtpOut"
-                            size="small"
-                            type="primary"
-                            >产品返厂</van-button
+                <div v-for="product in products" :key="product">
+                    <van-panel
+                        title="产品编号"
+                        :desc="product.UDISN"
+                        :status="product.TitleStatus"
+                        use-footer-slot
+                    >
+                        <div>
+                            <table class="content">
+                                <tr>
+                                    <td>名称：{{ product.ProductName }}</td>
+                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>规格：{{ product.Specification }}</td>
+                                    <td>
+                                        生产日期：{{
+                                            product.ProductionDateFormat
+                                        }}
+                                    </td>
+                                    <td v-if="product.ShowCheckInDateTitle">
+                                        入库日期：{{
+                                            product.DTPCheckInDateFormat
+                                        }}
+                                    </td>
+                                    <td v-else>
+                                        出库日期：{{
+                                            product.DTPCheckOutDateFormat
+                                        }}
+                                    </td>
+                                    <td v-if="product.ShowCheckInDateTitle">
+                                        入库类型：{{ product.CurrentStatus }}
+                                    </td>
+                                    <td v-else>
+                                        出库类型：{{ product.CurrentStatus }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <view
+                            style="text-align: right;"
+                            slot="footer"
+                            v-show="product.ShowReturnFooter"
                         >
-                    </view>
-                </van-panel>
+                            <van-button
+                                class="confirmBooking"
+                                @click="onCocOut(product.UDISN)"
+                                size="small"
+                                type="info"
+                                >产品返厂</van-button
+                            >
+                        </view>
+                    </van-panel>
+                </div>
             </van-tab>
             <van-tab title="维修管理">
-                <van-panel
-                    title="产品编号"
-                    desc="SNXXXXXXXXXXXXX"
-                    status="待更换"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>名称：xxx仪器</td>
-                                <td>类别：产品主机</td>
-                                <td>规格：20*30</td>
-                                <td>单位：台</td>
-                                <td>数量：1</td>
-                                <td>生产日期：2019年01月01日</td>
-                                <td>绑定用户：李斌</td>
-                                <td>维修单号：R1XXXXX</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            class="confirmBooking"
-                            @click="onProductChange"
-                            size="small"
-                            type="primary"
-                            >产品更换</van-button
+                <div v-for="product in maintenanceProducts" :key="product">
+                    <van-panel
+                        title="产品编号"
+                        :desc="product.UDISN"
+                        :status="product.TitleStatus"
+                        use-footer-slot
+                    >
+                        <div>
+                            <table class="content">
+                                <tr>
+                                    <td>名称：{{ product.ProductName }}</td>
+                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>规格：{{ product.Specification }}</td>
+                                    <td>
+                                        生产日期：{{
+                                            product.ProductionDateFormat
+                                        }}
+                                    </td>
+                                    <td>绑定用户：{{ product.ContactName }}</td>
+                                    <td>维修单号：R1XXXXX</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <view
+                            style="text-align: right;"
+                            slot="footer"
+                            v-if="product.ShowChangeProductFooter"
                         >
-                    </view>
-                </van-panel>
-                <van-panel
-                    title="产品编号"
-                    desc="SNXXXXXXXXXXXXX"
-                    status="已更换"
-                    use-footer-slot
-                >
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>名称：xxx仪器</td>
-                                <td>类别：产品主机</td>
-                                <td>规格：20*30</td>
-                                <td>单位：台</td>
-                                <td>数量：1</td>
-                                <td>生产日期：2019年01月01日</td>
-                                <td>绑定用户：李斌</td>
-                                <td>维修单号：R1XXXXX</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            class="confirmBooking"
-                            @click="onDtpOut"
-                            size="small"
-                            type="primary"
-                            >维修出库</van-button
-                        >
-                    </view>
-                </van-panel>
+                            <van-button
+                                class="confirmBooking"
+                                @click="onProductChange"
+                                size="small"
+                                type="info"
+                                >产品更换</van-button
+                            >
+                        </view>
+                        <view style="text-align: right;" slot="footer" v-else>
+                            <van-button
+                                class="confirmBooking"
+                                @click="onDtpOut"
+                                size="small"
+                                type="info"
+                                >产品出库</van-button
+                            >
+                        </view>
+                    </van-panel>
+                </div>
             </van-tab>
         </van-tabs>
         <mybr />
@@ -420,50 +429,165 @@ export default {
     data() {
         return {
             //从0开始的
-            active1: 0,
+            activeTab: 0,
 
-            active2: 0,
-
-            active3: 0,
-
-            active4: 1,
-
-            option1: [
+            applyOrderTypeOption: [
                 { text: '所有申请', value: 0 },
                 { text: '首次购买', value: 1 },
                 { text: '更换DTP购买贴片', value: 2 },
                 { text: '产品维修', value: 3 },
             ],
+            applyOrderTypeActiveValue: 0,
+            applyOrderTypeActiveValueStr: '所有申请',
 
-            value1: 0,
-
-            option2: [
+            signOrderTypeOption: [
                 { text: '所有类型', value: 0 },
                 { text: '已签约', value: 1 },
                 { text: '待签约', value: 2 },
                 { text: '待变更', value: 3 },
             ],
+            signOrderTypeActiveValue: 0,
+            signOrderTypeActiveValueStr: '所有类型',
 
-            value2: 0,
-            option3: [
+            statusFilterOption: [
                 { text: '入库', value: 0 },
                 { text: '出库', value: 1 },
             ],
+            statusFilterActiveValue: 0,
+            statusFilterActiveValueStr: '入库',
 
-            value3: 0,
-
-            option4: [
-                { text: '今日', value: 0 },
-                { text: '近7日', value: 1 },
+            timeFilterOption: [
+                { text: '近三天', value: 0 },
+                { text: '近一周', value: 1 },
                 { text: '近一个月', value: 2 },
-                { text: '近三个月', value: 3 },
             ],
+            timeFilterActiveValue: 0,
+            timeFilterActiveValueStr: '近三天',
 
-            value4: 0,
+            applyOrders: [],
+            signOrders: [],
+            products: [],
+            maintenanceProducts: [],
         }
     },
     //方法
     methods: {
+        onChangeTab(event) {
+            console.log(event)
+            var tabIndex = event.mp.detail['index']
+            if (tabIndex == '0') {
+            }
+            if (tabIndex == '1') {
+            }
+            if (tabIndex == '2') {
+                this.$http
+                    .get({
+                        url:
+                            '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                            this.statusFilterActiveValueStr +
+                            '&timeFilter=' +
+                            this.timeFilterActiveValueStr,
+                    })
+                    .then(res => {
+                        this.products = res.data
+                        console.log(
+                            '/Product/GetProductsByFilter response',
+                            res
+                        )
+                    })
+            }
+            if (tabIndex == '3') {
+                this.$http
+                    .get({
+                        url: '/Product/GetMaintenanceProducts',
+                    })
+                    .then(res => {
+                        this.maintenanceProducts = res.data
+                        console.log(
+                            '/Product/GetMaintenanceProducts response',
+                            res
+                        )
+                    })
+            }
+        },
+        onApplyOrderTypeOptionChange(event) {
+            this.applyOrderTypeActiveValue = event.mp.detail
+            this.applyOrderTypeActiveValueStr = this.applyOrderTypeOption[
+                this.applyOrderTypeActiveValue
+            ].text
+            console.log(this.statusFilterActiveValue)
+            console.log(this.statusFilterActiveValueStr)
+            // this.$http
+            //     .get({
+            //         url:
+            //             '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+            //             this.statusFilterActiveValueStr +
+            //             '&timeFilter=' +
+            //             this.timeFilterActiveValueStr,
+            //     })
+            //     .then(res => {
+            //         this.products = res.data
+            //     })
+        },
+        onSignOrderTypeOptionChange(event) {
+            this.signOrderTypeActiveValue = event.mp.detail
+            this.signOrderTypeActiveValueStr = this.signOrderTypeOption[
+                this.signOrderTypeActiveValue
+            ].text
+            console.log(this.signOrderTypeActiveValue)
+            console.log(this.signOrderTypeActiveValueStr)
+            // this.$http
+            //     .get({
+            //         url:
+            //             '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+            //             this.statusFilterActiveValueStr +
+            //             '&timeFilter=' +
+            //             this.timeFilterActiveValueStr,
+            //     })
+            //     .then(res => {
+            //         this.products = res.data
+            //     })
+        },
+        onStatusFilterOptionChange(event) {
+            this.statusFilterActiveValue = event.mp.detail
+            this.statusFilterActiveValueStr = this.statusFilterOption[
+                this.statusFilterActiveValue
+            ].text
+            console.log(this.statusFilterActiveValue)
+            console.log(this.statusFilterActiveValueStr)
+            this.$http
+                .get({
+                    url:
+                        '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                        this.statusFilterActiveValueStr +
+                        '&timeFilter=' +
+                        this.timeFilterActiveValueStr,
+                })
+                .then(res => {
+                    this.products = res.data
+                    console.log('/Product/GetProductsByFilter response', res)
+                })
+        },
+        onTimeFilterOptionChange(event) {
+            this.timeFilterActiveValue = event.mp.detail
+            this.timeFilterActiveValueStr = this.timeFilterOption[
+                this.timeFilterActiveValue
+            ].text
+            console.log(this.timeFilterActiveValue)
+            console.log(this.timeFilterActiveValueStr)
+            this.$http
+                .get({
+                    url:
+                        '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                        this.statusFilterActiveValueStr +
+                        '&timeFilter=' +
+                        this.timeFilterActiveValueStr,
+                })
+                .then(res => {
+                    this.products = res.data
+                    console.log('/Product/GetProductsByFilter response', res)
+                })
+        },
         scanProduct(event) {
             // 允许从相机和相册扫码
             wx.scanCode({

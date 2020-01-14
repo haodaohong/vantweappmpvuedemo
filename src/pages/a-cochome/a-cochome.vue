@@ -96,7 +96,7 @@
                                         product.COCCheckOutDateFormat
                                     }}
                                 </td>
-                                <td v-show="product.ShowCheckOut">
+                                <td v-show="product.ShowCOCCheckOutFooter">
                                     入库类型：{{ product.CurrentStatus }}
                                 </td>
                             </tr>
@@ -191,7 +191,7 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?statusFilter=' +
+                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -210,7 +210,7 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?statusFilter=' +
+                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -243,7 +243,7 @@ export default {
                 this.$http
                     .get({
                         url:
-                            '/Product/GetProductsByFilter?statusFilter=' +
+                            '/Product/GetProductsByFilter?role=COC&statusFilter=' +
                             that.statusFilterActiveValueStr +
                             '&timeFilter=' +
                             that.timeFilterActiveValueStr,
