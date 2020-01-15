@@ -115,7 +115,7 @@
                         >
                             <van-button
                                 class="confirmRental"
-                                @click="confirmRental"
+                                @click="onConfirmWithVendor"
                                 size="small"
                                 type="info"
                                 v-show="applyOrder.ShowSignWithVendorFooter"
@@ -123,7 +123,14 @@
                             >
                             <van-button
                                 class="confirmBooking"
-                                @click="onConfirmBooking"
+                                @click="
+                                    onConfirmAppointment(
+                                        applyOrder.Id,
+                                        applyOrder.ProductCount,
+                                        applyOrder.Contact.Id,
+                                        applyOrder.DTP.Id
+                                    )
+                                "
                                 size="small"
                                 type="primary"
                                 v-show="applyOrder.ShowConfirmApplyFooter"
@@ -437,6 +444,12 @@ export default {
             signOrders: [],
             products: [],
             maintenanceProducts: [],
+            signOrder: {
+                ApplyOrderId: '',
+                ContactId: '',
+                DTPId: '',
+                ProductCount: '',
+            },
         }
     },
     //方法
@@ -597,6 +610,40 @@ export default {
             const url = '../a-dtpproductsearch/main'
             wx.navigateTo({ url: url })
         },
+        //确认与租赁商签约
+        onConfirmWithVendor(event) {},
+        //确认预约
+        onConfirmAppointment(applyOrderId, productCount, contactId, dtpId) {
+            this.signOrder.DTPId = dtpId
+            this.signOrder.ContactId = contactId
+            this.signOrder.ApplyOrderId = applyOrderId
+            this.signOrder.ProductCount = productCount
+            console.log('SignOrder data:', this.signOrder)
+            this.$http
+                .post({
+                    url:
+                        '/SignOrder/AddSignOrder?applyOrderId=' +
+                        this.signOrder.ApplyOrderId +
+                        '&productCount=' +
+                        this.signOrder.ProductCount +
+                        '&contactId=' +
+                        this.signOrder.ContactId +
+                        '&dtpId=' +
+                        this.signOrder.DTPId,
+                    // data: {
+                    //     signOrder: this.signOrder,
+                    // },
+                })
+                .then(res => {
+                    console.log('/SignOrder/AddSignOrder response', res)
+                })
+            // const message = '预约已确认，并已通知相关用户！'
+
+            // Dialog.alert({
+            //     title: '信息提示',
+            //     message,
+            // })
+        },
         onCancelBooking(event) {
             const message = '已取消此预约申请，并通知相关人员！'
 
@@ -656,14 +703,6 @@ export default {
         onProductChange(event) {
             const url = '../a-dtpproductchange/main'
             wx.navigateTo({ url: url })
-        },
-        onConfirmBooking(event) {
-            const message = '预约已确认，并已通知相关用户！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
         },
     },
     //计算属性
