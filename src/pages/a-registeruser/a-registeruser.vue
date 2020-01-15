@@ -306,14 +306,15 @@ export default {
                             var user = res.data
                             var code = res.code
                             if (code === 200) {
+                                that.$globalData.departId = user.DepartId
+                                that.$globalData.openId = user.MPOpenId
+                                that.$globalData.unionId = user.UnionId
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
-                                    that.$globalData.departId = user.DepartId
                                     console.log('url', user.Role + url)
                                     wx.navigateTo({ url: url })
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
-                                    that.$globalData.departId = user.DepartId
                                     wx.navigateTo({ url: url })
                                     console.log('url', user.Role + url)
                                 }
