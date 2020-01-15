@@ -22,7 +22,7 @@
                 >
             </div>
         </div>
-        <div>
+        <div style="display:none;">
             <div class="flex-width">
                 <div class=".white-padding">
                     <span>选择城市:</span>
@@ -40,6 +40,18 @@
         </div>
         <van-tabs :active="active" @change="onSelectTab">
             <van-tab title="预约服务">
+            <mybr/>
+            <van-search :value="selectedCity"
+                        placeholder="请输入药店代码"
+                        use-action-slot
+                        @change="onchange2"
+                        @search="onSearch2">
+            <view slot="action"
+                    @tap="onSearchDTP">搜索
+            </view>
+            </van-search>
+
+
                 <van-card v-for="(dtp, index) in dtps" :key="index"
                     :desc="dtp.Address"
                     :title="dtp.Name"
@@ -197,7 +209,7 @@ export default {
                 { text: '广州', value: '广州' },
                 { text: '深圳', value: '深圳' },
             ],
-            selectedCity: '上海',
+            selectedCity: '',
             dtps: [
                 {
                     Id: 0,
@@ -276,8 +288,14 @@ export default {
                 message,
             })
         },
+         onSearchDTP (event) {
+            var that = this;
+            console.log("onSearchDTP", that.selectedCity );
+           this.onLoadDtps();
+        },
         onLoadDtps(){
             var that = this;
+                console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
             that.$http.get({
                 url:'/DTP/GetByCity?city='+that.selectedCity
             })
@@ -290,7 +308,7 @@ export default {
         },
         onLoadApplys(){
             var that = this;
-            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待执行';
+            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待确认';
             that.$http.get({
                 url: url
             })
@@ -326,6 +344,22 @@ export default {
             console.log('that.selectedCity', that.selectedCity);
             this.onLoadDtps();
         },
+      onSearch2 ( event ) {
+        console.log( event )
+
+        let val = event.mp.detail;
+        console.log( val )
+        this.selectedCity = val;
+      } ,
+      onchange2 ( event ) {
+        console.log( event )
+
+        let val = event.mp.detail;
+        console.log( val )
+
+        // 最好 把模型同步一下
+        this.selectedCity = val;
+      } ,
         onGetOpenId(){
             var that = this;
             //登陆验证用户是否已经绑定过，绑定过则直接跳转

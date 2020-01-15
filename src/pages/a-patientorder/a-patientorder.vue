@@ -54,6 +54,7 @@
                                     <van-dropdown-item
                                         :value="CurrApplyOrder"
                                         :options="OrderTypes"
+                                        @change="onChangeType"
                                     /> </van-dropdown-menu
                             ></span>
                         </div>
@@ -112,7 +113,7 @@
                 </div>
                 <div class="van-cell__value">
                     <van-dropdown-menu>
-                        <van-dropdown-item :value="ApplyOrder.Contact.Sex" :options="Sexs" />
+                        <van-dropdown-item :value="ApplyOrder.Contact.Sex" @change="onChangeSex" :options="Sexs" />
                     </van-dropdown-menu>
                 </div>
             </div>
@@ -139,18 +140,13 @@
                     />
                 </div>
             </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>手机号码</span>
-                </div>
-                <div class="van-cell__value">
-                    <input
-                        type="text"
-                        class="van-field__input"
-                        :value="ApplyOrder.Contact.Phone"
-                    />
-                </div>
-            </div>
+                <van-field
+                    :value="Phone"
+                    label="手机号"
+                    placeholder="请输入手机号"
+                    @change="onChangePhone"
+                    error-message="手机号格式错误"
+                />
 
                 </div>
                 <view class="divLine"></view>
@@ -249,7 +245,8 @@ export default {
                 CreateTime: "0001-01-01T00:00:00",
                 ComfirmBy: 0,
                 ComfirmTime: "0001-01-01T00:00:00"
-            }
+            },
+            Phone: '13900000000'
         }
     },
     //方法
@@ -286,11 +283,25 @@ export default {
                 ':00'
             return result
         },
+      onChangePhone ( event ) {
+        var that = this;
+        that.ApplyOrder.Contact.Phone =  event.mp.detail;
+        console.log('that.Phone', that.ApplyOrder.Contact.Phone)
+      } ,
+      onChangeSex ( event ) {
+        var that = this;
+        that.ApplyOrder.Contact.Sex =  event.mp.detail;
+        console.log('that.Sex', that.ApplyOrder.Contact.Sex)
+      } ,
+      onChangeType ( event ) {
+        var that = this;
+        that.ApplyOrder.Contact.OrderType =  event.mp.detail;
+        console.log('that.OrderType', that.ApplyOrder.Contact.OrderType)
+      } ,
         onConfirmAppointment(event) {
-            var that = this;
-            that.ApplyOrder.OrderType = that.CurrApplyOrder;
-            that.ApplyOrder.Contact.Sex = that.CurrSex;
-            console.log('that.ApplyOrder', that.ApplyOrder)
+             var that = this;
+            console.log('that.event', event)
+
             that.$http.post({
                             url:'/ApplyOrder/Add',
                             data:that.ApplyOrder

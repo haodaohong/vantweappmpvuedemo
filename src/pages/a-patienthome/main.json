@@ -11,7 +11,8 @@
         "van-loading": "/static/vant/loading/index",
         "van-field": "/static/vant/field/index",
         "van-dropdown-menu": "/static/vant/dropdown-menu/index",
-        "van-dropdown-item": "/static/vant/dropdown-item/index"
+        "van-dropdown-item": "/static/vant/dropdown-item/index",
+        "van-search": "/static/vant/search/index"
     },
     "navigationBarTitleText": "预约租赁"
 }
