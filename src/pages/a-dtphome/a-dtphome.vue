@@ -70,7 +70,7 @@
                 </div>
                 <div v-for="applyOrder in applyOrders" :key="applyOrder">
                     <van-panel
-                        :title="applyOrder.ApplyOrderContactName"
+                        :title="applyOrder.Contact.Name"
                         :status="applyOrder.TitleStatus"
                         use-footer-slot
                     >
@@ -85,20 +85,19 @@
                                             }}</span
                                         >
                                     </td>
-                                    <td>
-                                        性别：{{
-                                            applyOrder.ApplyOrderTypeFormat
-                                        }}
-                                    </td>
+                                    <td>性别：{{ applyOrder.Contact.Sex }}</td>
                                     <td>
                                         出生日期：{{
-                                            applyOrder.ApplyOrderContactBirthday
+                                            applyOrder.Contact.BirthDayFormat
                                         }}
                                     </td>
                                     <td>
                                         手机号码：{{
-                                            applyOrder.ApplyOrderContactPhoneText
+                                            applyOrder.Contact.PhoneText
                                         }}
+                                    </td>
+                                    <td>
+                                        预约数量：{{ applyOrder.ProductCount }}
                                     </td>
                                     <td>
                                         预约日期：{{
@@ -114,11 +113,11 @@
                             v-show="applyOrder.ShowFooter"
                         >
                             <van-button
-                                class="confirmRental"
-                                @click="onConfirmWithVendor"
+                                class="confirmBooking"
+                                @click="onConfirmWithVendor(applyOrder.Id)"
                                 size="small"
                                 type="info"
-                                v-show="applyOrder.ShowSignWithVendorFooter"
+                                v-if="applyOrder.ShowSignWithVendorFooter"
                                 >已与租赁商签约</van-button
                             >
                             <van-button
@@ -133,15 +132,15 @@
                                 "
                                 size="small"
                                 type="primary"
-                                v-show="applyOrder.ShowConfirmApplyFooter"
+                                v-if="applyOrder.ShowConfirmApplyFooter"
                                 >确认预约</van-button
                             >
                             <van-button
                                 class="confirmBooking"
-                                @click="onCancelBooking"
+                                @click="onCancelAppointment(applyOrder.Id)"
                                 size="small"
                                 type="default"
-                                v-show="applyOrder.ShowCancelApplyFooter"
+                                v-if="applyOrder.ShowCancelApplyFooter"
                                 >取消预约</van-button
                             >
                         </view>
@@ -159,94 +158,63 @@
                                 <van-dropdown-item
                                     :value="signOrderTypeActiveValue"
                                     :options="signOrderTypeOption"
+                                    @change="onSignOrderTypeOptionChange"
                                 />
                             </van-dropdown-menu>
                         </div>
                     </div>
                 </div>
-                <van-panel title="李斌" status="待签约" use-footer-slot>
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>
-                                    预约类型：<span class="font-color-red"
-                                        >首次购买</span
-                                    >
-                                </td>
-                                <td>性别：男</td>
-                                <td>出生日期：1960年12月9日</td>
-                                <td>手机号码：199xxxxxxxx</td>
-                                <td>产品名称：XXX仪器</td>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月30日 10:00-11:00</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            @click="onConfirmSign"
-                            size="small"
-                            type="primary"
-                            >提交使用协议</van-button
-                        >
-                    </view>
-                </van-panel>
-
-                <van-panel title="王武" status="已签约" use-footer-slot>
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>
-                                    预约类型：<span class="font-color-red"
-                                        >首次购买</span
-                                    >
-                                </td>
-                                <td>性别：男</td>
-                                <td>出生日期：1960年12月9日</td>
-                                <td>手机号码：199xxxxxxxx</td>
-                                <td>产品名称：XXX仪器</td>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月30日 10:00-11:00</td>
-                                <td>已签约DTP：XXXDTP</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            @click="onRentOut"
-                            size="small"
-                            type="primary"
-                            >销售出库</van-button
-                        >
-                    </view>
-                </van-panel>
-                <van-panel title="李斌" status="待签约" use-footer-slot>
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>
-                                    预约类型：<span class="font-color-red"
-                                        >购买贴片</span
-                                    >
-                                </td>
-                                <td>性别：男</td>
-                                <td>出生日期：1960年12月9日</td>
-                                <td>手机号码：199xxxxxxxx</td>
-                                <td>预约日期：2019年12月30日 10:00-11:00</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!--加个样式把按钮搞右边去-->
-                    <view style="text-align: right;" slot="footer">
-                        <van-button
-                            @click="onDtpChange"
-                            size="small"
-                            type="primary"
-                            >DTP变更</van-button
-                        >
-                    </view>
-                </van-panel>
+                <div v-for="signOrder in signOrders" :key="signOrder">
+                    <van-panel
+                        :title="signOrder.Contact.Name"
+                        :status="signOrder.TitleStatus"
+                        use-footer-slot
+                    >
+                        <div>
+                            <table class="content">
+                                <tr>
+                                    <td>
+                                        预约类型：<span
+                                            class="font-color-red"
+                                            >{{
+                                                signOrder.ApplyOrder
+                                                    .ApplyOrderTypeFormat
+                                            }}</span
+                                        >
+                                    </td>
+                                    <td>性别：{{ signOrder.Contact.Sex }}</td>
+                                    <td>
+                                        出生日期：{{
+                                            signOrder.Contact.BirthDayFormat
+                                        }}
+                                    </td>
+                                    <td>
+                                        手机号码：{{
+                                            signOrder.Contact.PhoneText
+                                        }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--加个样式把按钮搞右边去-->
+                        <view style="text-align: right;" slot="footer">
+                            <van-button
+                                @click="onConfirmSign"
+                                size="small"
+                                type="primary"
+                                v-if="signOrder.ShowSignFooter"
+                                >提交使用协议</van-button
+                            >
+                            <van-button
+                                @click="onDtpChange"
+                                size="small"
+                                type="primary"
+                                v-if="signOrder.ShowChangeFooter"
+                                >DTP变更</van-button
+                            >
+                        </view>
+                    </van-panel>
+                </div>
             </van-tab>
             <van-tab title="出入库管理">
                 <div>
@@ -444,12 +412,6 @@ export default {
             signOrders: [],
             products: [],
             maintenanceProducts: [],
-            signOrder: {
-                ApplyOrderId: '',
-                ContactId: '',
-                DTPId: '',
-                ProductCount: '',
-            },
         }
     },
     //方法
@@ -478,6 +440,24 @@ export default {
                     })
             }
             if (tabIndex == '1') {
+                var openId = this.activeUser.openId
+                this.$http
+                    .get({
+                        url:
+                            '/SignOrder/GetByFilterStatus?mpOpenId=' +
+                            openId +
+                            '&filterStatus=' +
+                            this.signOrderTypeActiveValueStr,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            this.signOrders = res.data
+                            console.log(
+                                '/SignOrder/GetByFilterStatus response',
+                                res
+                            )
+                        }
+                    })
             }
             if (tabIndex == '2') {
                 this.$http
@@ -543,17 +523,24 @@ export default {
             ].text
             console.log(this.signOrderTypeActiveValue)
             console.log(this.signOrderTypeActiveValueStr)
-            // this.$http
-            //     .get({
-            //         url:
-            //             '/Product/GetProductsByFilter?role=COC&statusFilter=' +
-            //             this.statusFilterActiveValueStr +
-            //             '&timeFilter=' +
-            //             this.timeFilterActiveValueStr,
-            //     })
-            //     .then(res => {
-            //         this.products = res.data
-            //     })
+            var openId = this.activeUser.openId
+            this.$http
+                .get({
+                    url:
+                        '/SignOrder/GetByFilterStatus?mpOpenId=' +
+                        openId +
+                        '&filterStatus=' +
+                        this.signOrderTypeActiveValueStr,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        this.signOrders = res.data
+                        console.log(
+                            '/SignOrder/GetByFilterStatus response',
+                            res
+                        )
+                    }
+                })
         },
         onStatusFilterOptionChange(event) {
             this.statusFilterActiveValue = event.mp.detail
@@ -611,7 +598,40 @@ export default {
             wx.navigateTo({ url: url })
         },
         //确认与租赁商签约
-        onConfirmWithVendor(event) {},
+        onConfirmWithVendor(applyOrderId) {
+            console.log(applyOrderId)
+            this.$http
+                .post({
+                    url:
+                        '/ApplyOrder/ConfirmWithVendor?applyOrderId=' +
+                        applyOrderId,
+                })
+                .then(res => {
+                    if (res != null && res.code == 200) {
+                        console.log('/SignOrder/AddSignOrder response', res)
+                        const message = '已确认与租赁商签约'
+
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            var index = this.applyOrders.findIndex(
+                                x => x.Id == applyOrderId
+                            )
+                            this.applyOrders[
+                                index
+                            ].ShowSignWithVendorFooter = false
+                        })
+                    } else {
+                        const message = '确认与租赁商签约操作失败'
+
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        })
+                    }
+                })
+        },
         //确认预约
         onConfirmAppointment(applyOrderId, productCount, contactId, dtpId) {
             this.signOrder.DTPId = dtpId
@@ -619,6 +639,8 @@ export default {
             this.signOrder.ApplyOrderId = applyOrderId
             this.signOrder.ProductCount = productCount
             console.log('SignOrder data:', this.signOrder)
+            var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
+            var applyOrder = this.applyOrders[index]
             this.$http
                 .post({
                     url:
@@ -630,27 +652,83 @@ export default {
                         this.signOrder.ContactId +
                         '&dtpId=' +
                         this.signOrder.DTPId,
-                    // data: {
-                    //     signOrder: this.signOrder,
-                    // },
                 })
                 .then(res => {
-                    console.log('/SignOrder/AddSignOrder response', res)
+                    if (res != null && res.code == 200) {
+                        console.log('/SignOrder/AddSignOrder response', res)
+                        const message = '确认预约成功'
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            applyOrder.ShowConfirmApplyFooter = false
+                            applyOrder.ShowCancelApplyFooter = false
+                            applyOrder.ShowFooter =
+                                applyOrder.ShowSignWithVendorFooter ||
+                                applyOrder.ShowConfirmApplyFooter ||
+                                applyOrder.ShowCancelApplyFooter
+                        })
+                    } else {
+                        const message = '确认预约失败'
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        })
+                    }
                 })
-            // const message = '预约已确认，并已通知相关用户！'
-
-            // Dialog.alert({
-            //     title: '信息提示',
-            //     message,
-            // })
         },
-        onCancelBooking(event) {
-            const message = '已取消此预约申请，并通知相关人员！'
-
-            Dialog.alert({
+        //取消预约
+        onCancelAppointment(applyOrderId) {
+            console.log(applyOrderId)
+            var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
+            var applyOrder = this.applyOrders[index]
+            const confirmCancelAppointmentMessage = '是否确认取消该预约申请'
+            Dialog.confirm({
                 title: '信息提示',
-                message,
+                confirmCancelAppointmentMessage,
             })
+                .then(() => {
+                    // on confirm
+                    this.$http
+                        .post({
+                            url:
+                                '/ApplyOrder/CancelApplyOrder?applyOrderId=' +
+                                applyOrderId,
+                        })
+                        .then(res => {
+                            if (res != null && res.code == 200) {
+                                console.log(
+                                    '/SignOrder/AddSignOrder response',
+                                    res
+                                )
+                                const message = '取消预约成功'
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                }).then(() => {
+                                    applyOrder.TitleStatus = '已取消'
+                                    applyOrder.ShowSignWithVendorFooter = false
+                                    applyOrder.ShowConfirmApplyFooter = false
+                                    applyOrder.ShowCancelApplyFooter = false
+                                    applyOrder.ShowFooter =
+                                        applyOrder.ShowSignWithVendorFooter ||
+                                        applyOrder.ShowConfirmApplyFooter ||
+                                        applyOrder.ShowCancelApplyFooter
+                                    //this.applyOrders.splice(index, 1)
+                                })
+                            } else {
+                                const message = '取消预约失败'
+
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
+                })
+                .catch(() => {
+                    // on cancel
+                })
         },
         onConfirmChangeDTP(event) {
             const message = '已确认此DTP变更预约申请，并通知相关人员！'

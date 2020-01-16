@@ -168,10 +168,15 @@ export default {
                     title: '信息提示',
                     message: '请选择你的角色',
                 })
+                return
             }
             this.$http
                 .post({
-                    url: '/Users/GetCodeByPhone?phone=' + this.phone,
+                    url:
+                        '/Users/GetCodeByPhone?phone=' +
+                        this.phone +
+                        '&role=' +
+                        this.selectedRole,
                 })
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
@@ -244,9 +249,11 @@ export default {
                                     '/Users/ConfirmRegisterUser response',
                                     res
                                 )
-                                var isSuccess = res.data
-                                console.log(isSuccess)
-                                if (isSuccess) {
+                                if (res.code == 200) {
+                                    var user = res.data
+                                    that.$globalData.departId = user.DepartId
+                                    that.$globalData.openId = user.MPOpenId
+                                    that.$globalData.unionId = user.UnionId
                                     const message = '已成功注册角色！'
                                     Dialog.alert({
                                         title: '信息提示',
