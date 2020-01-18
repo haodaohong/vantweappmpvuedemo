@@ -193,20 +193,30 @@
                                             signOrder.Contact.PhoneText
                                         }}
                                     </td>
+                                    <td v-if="signOrder.ShowSignDetail">
+                                        已签约DTP: {{ signOrder.SignDTPName }}
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                         <!--加个样式把按钮搞右边去-->
                         <view style="text-align: right;" slot="footer">
                             <van-button
-                                @click="onConfirmSign"
+                                @click="onSignContract(signOrder.Id)"
                                 size="small"
                                 type="primary"
                                 v-if="signOrder.ShowSignFooter"
                                 >提交使用协议</van-button
                             >
                             <van-button
-                                @click="onDtpChange"
+                                @click="onProductBind(signOrder.Id)"
+                                size="small"
+                                type="primary"
+                                v-if="signOrder.ShowBindFooter"
+                                >产品绑定</van-button
+                            >
+                            <van-button
+                                @click="onDtpChange(signOrder.Id)"
                                 size="small"
                                 type="primary"
                                 v-if="signOrder.ShowChangeFooter"
@@ -293,7 +303,7 @@
                         >
                             <van-button
                                 class="confirmBooking"
-                                @click="onCocOut(product.UDISN)"
+                                @click="onUserReturnCheckOut(product.UDISN)"
                                 size="small"
                                 type="info"
                                 >产品返厂</van-button
@@ -322,7 +332,6 @@
                                         }}
                                     </td>
                                     <td>绑定用户：{{ product.ContactName }}</td>
-                                    <td>维修单号：R1XXXXX</td>
                                 </tr>
                             </table>
                         </div>
@@ -333,7 +342,7 @@
                         >
                             <van-button
                                 class="confirmBooking"
-                                @click="onProductChange"
+                                @click="onProductChange(product.UDISN)"
                                 size="small"
                                 type="primary"
                                 >产品更换</van-button
@@ -342,7 +351,9 @@
                         <view style="text-align: right;" slot="footer" v-else>
                             <van-button
                                 class="confirmBooking"
-                                @click="onDtpOut"
+                                @click="
+                                    onUserMaintenanceCheckOut(product.UDISN)
+                                "
                                 size="small"
                                 type="primary"
                                 >产品出库</van-button
@@ -419,7 +430,11 @@ export default {
         onChangeTab(event) {
             console.log(event)
             var tabIndex = event.mp.detail['index']
+            this.onLoadTabData(tabIndex)
+        },
+        onLoadTabData(tabIndex) {
             if (tabIndex == '0') {
+                this.activeTab = 0
                 var openId = this.activeUser.openId
                 this.$http
                     .get({
@@ -440,6 +455,7 @@ export default {
                     })
             }
             if (tabIndex == '1') {
+                this.activeTab = 1
                 var openId = this.activeUser.openId
                 this.$http
                     .get({
@@ -460,6 +476,7 @@ export default {
                     })
             }
             if (tabIndex == '2') {
+                this.activeTab = 2
                 this.$http
                     .get({
                         url:
@@ -477,6 +494,7 @@ export default {
                     })
             }
             if (tabIndex == '3') {
+                this.activeTab = 3
                 this.$http
                     .get({
                         url: '/Product/GetMaintenanceProducts',
@@ -490,6 +508,7 @@ export default {
                     })
             }
         },
+        //预约选项Filter
         onApplyOrderTypeOptionChange(event) {
             this.applyOrderTypeActiveValue = event.mp.detail
             this.applyOrderTypeActiveValueStr = this.applyOrderTypeOption[
@@ -516,6 +535,7 @@ export default {
                     }
                 })
         },
+        //签约选项Filter
         onSignOrderTypeOptionChange(event) {
             this.signOrderTypeActiveValue = event.mp.detail
             this.signOrderTypeActiveValueStr = this.signOrderTypeOption[
@@ -542,6 +562,7 @@ export default {
                     }
                 })
         },
+        //出入库选项Filter
         onStatusFilterOptionChange(event) {
             this.statusFilterActiveValue = event.mp.detail
             this.statusFilterActiveValueStr = this.statusFilterOption[
@@ -562,6 +583,7 @@ export default {
                     console.log('/Product/GetProductsByFilter response', res)
                 })
         },
+        //出入库时间选项Filter
         onTimeFilterOptionChange(event) {
             this.timeFilterActiveValue = event.mp.detail
             this.timeFilterActiveValueStr = this.timeFilterOption[
@@ -582,20 +604,30 @@ export default {
                     console.log('/Product/GetProductsByFilter response', res)
                 })
         },
+        //扫码入库产品
         scanProduct(event) {
             // 允许从相机和相册扫码
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('all: ', res)
-                    const url = '../a-dtpproductin/main?qrcode=' + res.result
-                    wx.navigateTo({ url: url })
+                    // const url = '../a-dtpproductin/main?qrcode=' + res.result
+                    // wx.navigateTo({ url: url })
                 },
             })
         },
+        //扫码查询产品
         scanSearchProduct(event) {
-            const url = '../a-dtpproductsearch/main'
-            wx.navigateTo({ url: url })
+            // 允许从相机和相册扫码
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    console.log('all: ', res)
+                    // const url =
+                    //     '../a-dtpproductsearch/main?qrcode=' + res.result
+                    // wx.navigateTo({ url: url })
+                },
+            })
         },
         //确认与租赁商签约
         onConfirmWithVendor(applyOrderId) {
@@ -730,56 +762,48 @@ export default {
                     // on cancel
                 })
         },
-        onConfirmChangeDTP(event) {
-            const message = '已确认此DTP变更预约申请，并通知相关人员！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
+        //确认预约后签约
+        onSignContract(signOrderId) {
+            console.log('signOrderId is:', signOrderId)
+            // const url = '../a-dtpsign/main'
+            // wx.navigateTo({ url: url })
         },
-        onCancelChangeDTP(event) {
-            const message = '已取消此DTP变更申请，并通知相关人员！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
+        onProductBind(signOrderId) {
+            console.log('signOrderId is:', signOrderId)
+            // const url = '../a-dtpproductbind/main'
+            // wx.navigateTo({ url: url })
         },
-        onChangeSign(event) {
-            const message = '暂未完成此功能设计；预期结果是跳转至合约变更界面'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
+        //变更DTP
+        onDtpChange(signOrderId) {
+            console.log('signOrderId is:', signOrderId)
+            // const url = '../a-dtpchange/main'
+            // wx.navigateTo({ url: url })
         },
-        onCancelSign(event) {
-            const message = '已取消此合约，并已通知相关用户！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
-        },
-        onDtpChange(event) {
-            const url = '../a-dtpchange/main'
+        //用户归还后产品返厂
+        onUserReturnCheckOut(productSNCode) {
+            console.log('productSNCode is:', productSNCode)
+            const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
-        onConfirmSign(event) {
-            const url = '../a-dtpsign/main'
-            wx.navigateTo({ url: url })
-        },
-        onRentOut(event) {
-            const url = '../a-dtprentout/main'
-            wx.navigateTo({ url: url })
-        },
-        onDtpOut(event) {
-            const url = '../a-dtpout/main'
-            wx.navigateTo({ url: url })
-        },
-        onProductChange(event) {
+        //用户维修归还后DTP员工操作更换产品
+        onProductChange(productSNCode) {
+            console.log('productSNCode is:', productSNCode)
+            // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    console.log('all: ', res)
+                    // const url = '../a-dtpproductin/main?qrcode=' + res.result
+                    // wx.navigateTo({ url: url })
+                },
+            })
             const url = '../a-dtpproductchange/main'
+            wx.navigateTo({ url: url })
+        },
+        //维修更换完后原产品进行出库到COC维修操作
+        onUserMaintenanceCheckOut(productSNCode) {
+            console.log('productSNCode is:', productSNCode)
+            const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
     },
@@ -833,20 +857,31 @@ export default {
         this.activeUser.unionId = this.$globalData.unionId
         console.log('active user data:', this.activeUser)
         var openId = this.activeUser.openId
-        this.$http
-            .get({
-                url:
-                    '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
-                    openId +
-                    '&filterStatus=' +
-                    this.applyOrderTypeActiveValueStr,
-            })
-            .then(res => {
-                if (res.code == 200) {
-                    this.applyOrders = res.data
-                    console.log('/ApplyOrder/GetByFilterStatus response', res)
-                }
-            })
+        var activeTabIndex = this.$root.$mp.query.activeTabIndex
+        console.log('activeTabIndex is:', activeTabIndex)
+        if (activeTabIndex) {
+            this.activeTab = activeTabIndex
+            this.onLoadTabData(activeTabIndex)
+        } else {
+            this.activeTab = 0
+            this.$http
+                .get({
+                    url:
+                        '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
+                        openId +
+                        '&filterStatus=' +
+                        this.applyOrderTypeActiveValueStr,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        this.applyOrders = res.data
+                        console.log(
+                            '/ApplyOrder/GetByFilterStatus response',
+                            res
+                        )
+                    }
+                })
+        }
     },
 }
 </script>

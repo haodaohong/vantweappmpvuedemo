@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './a-dtpout'
+import App from './a-dtpproductbind'
 
 const app = new Vue(App)
 app.$mount()
