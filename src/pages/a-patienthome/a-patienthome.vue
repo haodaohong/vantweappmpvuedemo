@@ -15,7 +15,7 @@
 
     <div>
         <div class="scanBtn">
-            <h5>您好，{{}}</h5>
+            <h5>您好，{{Contact.Name}}</h5>
             <div class="editmyprofile">
                 <van-button @click="onUpdateInfo" type="default" size="small"
                     >更新资料</van-button
@@ -109,71 +109,73 @@
             </van-tab>
             <van-tab title="个人中心">
                 <van-panel title="基本信息">
-                    <div>
                         <table class="content">
                             <tr>
-                                <td>预约类型：购买贴片</td>
-                                <td>预约产品：xxx仪器</td>
+                                <td>姓名：{{Contact.Name}}</td>
+                                <td>性别：{{Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>预约数量：1</td>
-                                <td>预约日期：2019年12月8日 10:00-11:00</td>
+                                <td>出生日期：{{Contact.Birthday}}</td>
+                                <td>手机号码：{{Contact.PhoneText}}</td>
                             </tr>
                             <tr>
-                                <td>姓名：李斌</td>
-                                <td>性别：男</td>
+                                <td>证件类型：{{Contact.IDType}}</td>
+                                <td>身份证号：{{Contact.IDNum}}</td>
+                            </tr>
+                        </table>
+                        
+                    <div v-for="(ApplyOrder, i) in ConfrimedApplyOrders" :key="i">
+                        <table class="content">
+                            <tr>
+                                <td>预约类型：{{ApplyOrder.OrderType}}</td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td>出生日期：1978年12月8日</td>
-                                <td>手机号码：197xxxxxxxx</td>
+                                <td>预约数量：{{ApplyOrder.ProductCount}}</td>
+                                <td>预约日期：{{ApplyOrder.ApplyDate}}</td>
                             </tr>
                             <tr>
-                                <td>证件类型：身份证</td>
-                                <td>身份证号：3XXXXXXXXXXXXXXX</td>
+                                <td>姓名：{{ApplyOrder.Contact.Name}}</td>
+                                <td>性别：{{ApplyOrder.Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>确诊医院：xxx医院</td>
+                                <td>出生日期：{{ApplyOrder.Contact.Birthday}}</td>
+                                <td>手机号码：{{ApplyOrder.Contact.PhoneText}}</td>
+                            </tr>
+                            <tr>
+                                <td>证件类型：{{ApplyOrder.Contact.IDType}}</td>
+                                <td>身份证号：{{ApplyOrder.Contact.IDNum}}</td>
                             </tr>
                         </table>
                     </div>
                 </van-panel>
-                <van-panel title="签约信息">
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>已签约DTP：xxxDTP</td>
-                                <td>协议编号：XXXXXXXXXXXX</td>
-                            </tr>
-                        </table>
-                    </div>
-                </van-panel>
-                <van-panel title="产品信息">
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>产品数量：1</td>
-                                <td>产品名称：xxx仪器</td>
-                            </tr>
-                            <tr>
-                                <td>产品类别：主机</td>
-                                <td>产品编码：SNXXXXXXXXXXXXX</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <view class="divLine"></view>
-                    <div>
-                        <table class="content">
-                            <tr>
-                                <td>产品数量：1</td>
-                                <td>产品名称：xxx仪器</td>
-                            </tr>
-                            <tr>
-                                <td>产品类别：配件</td>
-                                <td>产品编码：SNXXXXXXXXXXXXX</td>
-                            </tr>
-                        </table>
-                    </div>
-                </van-panel>
+                <div v-for="(SignOrder, indx) in SignOrders" :key="indx">
+                    <van-panel title="签约信息">
+                        <div>
+                            <table class="content">
+                                <tr>
+                                    <td>已签约DTP：{{SignOrder.DTP.Name}}</td>
+                                    <td>协议编号：{{SignOrder.SignNo}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </van-panel>
+                    <van-panel title="产品信息">
+                        <div>
+                            <table class="content" v-for="(product, index) in SignOrder.Products" :key="index">
+                                <tr>
+                                    <!-- <td>产品数量：1</td> -->
+                                    <td>产品名称：{{product.ProductName}}</td>
+                                </tr>
+                                <tr>
+                                    <td>产品类别：{{product.ProductCategory}}</td>
+                                    <td>产品编码：{{product.UDISN}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <view class="divLine"></view>
+                    </van-panel>
+                </div>
             </van-tab>
         </van-tabs>
         <mybr />
@@ -210,8 +212,7 @@ export default {
                 { text: '深圳', value: '深圳' },
             ],
             selectedCity: '',
-            dtps: [
-                {
+            dtps: [{
                     Id: 0,
                     Code: "",
                     Name: "",
@@ -220,8 +221,7 @@ export default {
                     PhoneText: "",
                     City: "",
                     Note: ""
-                }
-            ],
+                }],
             applys:[
                 {
                 DTP: {
@@ -265,8 +265,83 @@ export default {
                 }
             ],
             openid: '',
-            MyOrder:{"Products":[{"qrcode":null,"ProductionDateFormat":null,"DTPCheckInDateFormat":null,"DTPCheckOutDateFormat":null,"COCCheckInDateFormat":null,"COCCheckOutDateFormat":null,"ExpiredYearFormat":null,"TitleStatus":null,"ShowReturnFooter":false,"ShowChangeProductFooter":false,"ShowCOCCheckOutFooter":false,"Id":0,"Specification":"","ProductionDate":"","DTPId":0,"COCId":0,"UDICode":"","UDISN":"","UDIDate":"","ProductName":"","Manufacturer":"","Vendor":"","CertificateNumber":"","ExpiredYears":0,"ProductCategory":"","CurrentOrderId":0,"CurrentStatus":"","CheckInFromRentalDate":"0001-01-01 00:00:00","CheckInFromReturnDate":"0001-01-01 00:00:00","CheckInFromMaintenanceDate":"0001-01-01 00:00:00","CheckOutToUserDate":"0001-01-01 00:00:00","CheckOutFromReturnDate":"0001-01-01 00:00:00","CheckOutFromMaintenanceDate":"0001-01-01 00:00:00","COCCheckInDate":"0001-01-01 00:00:00","COCCheckOutDate":"0001-01-01 00:00:00","DTPCheckOutShipCode":"","COCCheckOutShipCode":""}],"OrderDetails":[{"Id":0,"ApplyOrderId":0,"OrderId":0,"ProductId":0,"RepairApplyStatus":""}],"Id":0,"ApplyOrderId":0,"ContactId":0,"DTPId":0,"ProductCount":0,"SignStatus":"","SignNo":"","SignSubmitDate":"0001-01-01 00:00:00","SignPhotos":"","CreateBy":0,"CreateTime":"0001-01-01 00:00:00"}
-            
+            MyOrder:{Products:[{qrcode:null,ProductionDateFormat:null,DTPCheckInDateFormat:null,DTPCheckOutDateFormat:null,COCCheckInDateFormat:null,COCCheckOutDateFormat:null,ExpiredYearFormat:null,TitleStatus:null,ShowReturnFooter:false,ShowChangeProductFooter:false,ShowCOCCheckOutFooter:false,Id:0,Specification:"",ProductionDate:"",DTPId:0,COCId:0,UDICode:"",UDISN:"",UDIDate:"",ProductName:"",Manufacturer:"",Vendor:"",CertificateNumber:"",ExpiredYears:0,ProductCategory:"",CurrentOrderId:0,CurrentStatus:"",CheckInFromRentalDate:"0001-01-01 00:00:00",CheckInFromReturnDate:"0001-01-01 00:00:00",CheckInFromMaintenanceDate:"0001-01-01 00:00:00",CheckOutToUserDate:"0001-01-01 00:00:00",CheckOutFromReturnDate:"0001-01-01 00:00:00",CheckOutFromMaintenanceDate:"0001-01-01 00:00:00",COCCheckInDate:"0001-01-01 00:00:00",COCCheckOutDate:"0001-01-01 00:00:00",DTPCheckOutShipCode:"",COCCheckOutShipCode:""}],OrderDetails:[{Id:0,ApplyOrderId:0,OrderId:0,ProductId:0,RepairApplyStatus:""}],Id:0,ApplyOrderId:0,ContactId:0,DTPId:0,ProductCount:0,SignStatus:"",SignNo:"",SignSubmitDate:"0001-01-01 00:00:00",SignPhotos:"",CreateBy:0,CreateTime:"0001-01-01 00:00:00"},
+            ConfrimedApplyOrders: [{
+                DTP: {
+                    Id: 0,
+                    Code: "",
+                    Name: "",
+                    Address: "",
+                    Phone: "",
+                    PhoneText: "",
+                    City: "",
+                    Note: ""
+                },
+                Contact: {
+                    Id: 0,
+                    Name: "",
+                    Sex: "",
+                    Province: "",
+                    City: "",
+                    Address: "",
+                    IDType: "",
+                    IDNum: "",
+                    Birthday: "0001-01-01T00:00:00",
+                    Phone: "",
+                    PhoneText: "",
+                    OAOpenId: "",
+                    MPOpenId: "",
+                    UnionId: ""
+                },
+                Id: 0,
+                ContactId: 0,
+                OrderType: "暂无",
+                DTPId: 0,
+                LastDTPId: 0,
+                ProductCount: 0,
+                ApplyStatus: "",
+                ApplyDate: "0001-01-01T00:00:00",
+                IsConfirmedWithVendor: false,
+                CreateTime: "0001-01-01T00:00:00",
+                ComfirmBy: 0,
+                ComfirmTime: "0001-01-01T00:00:00"
+            }],
+           SignOrders:[{
+               SignNo: "暂无",
+               DTP: {
+                    Id: 0,
+                    Code: "",
+                    Name: "暂无",
+                    Address: "",
+                    Phone: "",
+                    PhoneText: "",
+                    City: "",
+                    Note: ""
+                },
+              Products:[
+               {
+                    ProductName: "暂无",
+                    ProductCategory: '暂无',
+                    UDISN: '暂无'
+               }
+             ]
+           }],
+           Contact: {
+                    Id: 0,
+                    Name: "访客",
+                    Sex: "",
+                    Province: "",
+                    City: "",
+                    Address: "",
+                    IDType: "暂无",
+                    IDNum: "暂无",
+                    Birthday: "0001-01-01T00:00:00",
+                    Phone: "",
+                    PhoneText: "",
+                    OAOpenId: "",
+                    MPOpenId: "",
+                    UnionId: ""
+                },
         }
     },
     //方法
@@ -291,19 +366,31 @@ export default {
          onSearchDTP (event) {
             var that = this;
             console.log("onSearchDTP", that.selectedCity );
-           this.onLoadDtps();
+            that.onLoadDtps();
         },
         onLoadDtps(){
             var that = this;
-                console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
+            console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
             that.$http.get({
                 url:'/DTP/GetByCity?city='+that.selectedCity
             })
             .then(res => {
-                console.log('/DTP/GetByCity?city='+that.selectedCity, res)
-                that.dtps = res.data
-                console.log('that.dtps', that.dtps);
+                console.log('result: /DTP/GetByCity?city='+that.selectedCity, res);
+                that.dtps = null;
                 
+               if(res.data)
+               {
+                   
+                   that.dtps = res.data;
+                //    for (var i=0;i<res.data.length;i++)
+                //     { 
+                //         //that.dtps.push(res.data[i]);
+                //         that.$set(that.dtps,i, res.data[i]);
+                //         that.$forceUpdate();
+                //     }
+               }
+                //that.$forceUpdate();
+                console.log('so that.dtps', that.dtps);
             });
         },
         onLoadApplys(){
@@ -313,9 +400,77 @@ export default {
                 url: url
             })
             .then(res => {
-                console.log(url, res)
-                that.applys = res.data
-                console.log('that.applys', that.applys);
+                console.log(url, res);
+                that.applys = null;
+                if(res.data)
+               {
+                   that.applys = res.data;
+                //    for (var i=0;i<res.data.length;i++)
+                //     { 
+                //         that.applys.push(res.data[i]);
+                //     }
+               }
+               that.$forceUpdate();
+               console.log('that.applys', that.applys);
+            });
+        },
+        onLoadConfirmApplys(){
+            var that = this;
+            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=已确认';
+            that.$http.get({
+                url: url
+            })
+            .then(res => {
+                console.log(url, res);
+                that.ConfrimedApplyOrders = null;
+                if(res.data)
+               {
+                   that.ConfrimedApplyOrders = res.data;
+                //    for (var i=0;i<res.data.length;i++)
+                //     { 
+                //         that.applys.push(res.data[i]);
+                //     }
+               }
+               that.$forceUpdate();
+               console.log('that.applys', that.applys);
+            });
+        },
+        onLoadContact(){
+            var that = this;
+            var url = '/Contact/GetByOpenId?openid='+that.openid;
+            that.$http.get({
+                url: url
+            })
+            .then(res => {
+                console.log(url, res);
+
+                if(res.data)
+               {
+                   that.Contact = null;
+                   that.Contact = res.data;
+               }
+               that.$forceUpdate();
+            });
+        },
+        onLoadSignOrders(){
+            var that = this;
+            var url = '/SignOrder/GetByOpenId?openid='+that.openid;
+            that.$http.get({
+                url: url
+            })
+            .then(res => {
+                console.log(url, res);
+                that.SignOrders = null;
+                if(res.data)
+               {
+                   that.SignOrders = res.data;
+                //    for (var i=0;i<res.data.length;i++)
+                //     { 
+                //         that.applys.push(res.data[i]);
+                //     }
+               }
+               that.$forceUpdate();
+               console.log('that.applys', that.applys);
             });
         },
         onCreateContactInfo(){
@@ -378,6 +533,9 @@ export default {
                             that.onCreateContactInfo();
                             that.onLoadDtps();
                             that.onLoadApplys();
+                            that.onLoadSignOrders();
+                            that.onLoadConfirmApplys();
+                            that.onLoadContact();
                         });
                     }
                 }
