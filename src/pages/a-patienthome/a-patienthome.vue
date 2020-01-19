@@ -98,7 +98,7 @@
                     </div>
                     <view style="text-align: right;" slot="footer">
                         <van-button
-                            @click="onCancelAppointment"
+                            @click="onCancelAppointment(apply.Id,apply.Contact.Name)"
                             size="small"
                             type="danger"
                             >取消预约</van-button
@@ -355,13 +355,29 @@ export default {
             const url = '../a-patientorder/main?dtpid=' + dtpid
             wx.navigateTo({ url: url });
         },
-        onCancelAppointment(event) {
-            const message = '已取消此预约'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
+        onCancelAppointment(dtpid,contactname) {
+            console.log('onCancelAppointment current dtpid:', dtpid + '|' + contactname);
+            const message = '已成功取消此预约'
+            //CancelApplyOrderByContact
+            var that = this;
+            console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
+            that.$http.get({
+                url:'/ApplyOrder/CancelApplyOrderByContact?applyOrderId='+dtpid+'&contactName='+contactname
             })
+            .then(res => {
+                that.dtps = null;
+                
+               if(res.code == 200)
+               {
+                    that.dtps = res.data;
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    });
+                    that.onLoadApplys();
+               }
+                
+            });
         },
          onSearchDTP (event) {
             var that = this;
@@ -382,14 +398,7 @@ export default {
                {
                    
                    that.dtps = res.data;
-                //    for (var i=0;i<res.data.length;i++)
-                //     { 
-                //         //that.dtps.push(res.data[i]);
-                //         that.$set(that.dtps,i, res.data[i]);
-                //         that.$forceUpdate();
-                //     }
                }
-                //that.$forceUpdate();
                 console.log('so that.dtps', that.dtps);
             });
         },
