@@ -11,76 +11,57 @@
     <div>
         <div class="basicinfo">
             <div>
-                <h2 class="van-doc-demo-block__title">第二步-添加产品</h2>
+                <h2 class="van-doc-demo-block__title">添加产品</h2>
             </div>
-            <div>
+            <div v-for="product in products" :key="product">
+                <van-panel
+                    title="产品编号"
+                    :desc="product.UDISN"
+                    use-footer-slot
+                >
+                    <div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>名称：{{ product.ProductName }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span>类型：{{ product.ProductCategory }}</span>
+                            </div>
+                        </div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>规格：{{ product.Specification }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span
+                                    >生产日期：{{
+                                        product.ProductionDateFormat
+                                    }}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!--加个样式把按钮搞右边去-->
+                    <view style="text-align: right;" slot="footer">
+                        <van-button
+                            @click="onDeleteProduct(product.Id)"
+                            size="small"
+                            type="warning"
+                            >删除产品</van-button
+                        >
+                    </view>
+                </van-panel>
+            </div>
+            <!-- <div>
                 <div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>产品编号：SNxxxxxxxxxxxx</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>名称：XXX仪器</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>类型：产品主机</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>规格：20*30</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>单位：台</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>生产日期：2019-01-01</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>数量：1</span>
+                            <span>产品编号：{{ product.UDISN }}</span>
                         </div>
                     </div>
                 </div>
                 <view class="divLine"></view>
-            </div>
-            <div>
-                <div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>产品编号：SNxxxxxxxxxxxx</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>名称：XXX仪器</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>类型：产品主机</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>规格：20*30</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>单位：台</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>生产日期：2019-01-01</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>数量：1</span>
-                        </div>
-                    </div>
-                </div>
-                <view class="divLine"></view>
-            </div>
+            </div> -->
         </div>
         <mybr />
         <div class="confirmsignbtn">
@@ -90,11 +71,14 @@
         </div>
         <mybr />
         <div class="footer-container">
-            <div>
+            <!-- <div>
                 <text>出库件数：2</text>
                 <view class="divLine"></view>
-            </div>
-            <van-button type="primary" size="large" @click="onConfirmRepairOut"
+            </div> -->
+            <van-button
+                type="primary"
+                size="large"
+                @click="onConfirmProductChange"
                 >确认提交</van-button
             >
         </div>
@@ -119,26 +103,100 @@ export default {
     data() {
         return {
             //从0开始的
-            isshowdatetimepicker: false,
-            fileList: [],
-            contractfile: '',
-            selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date().getTime(),
-            minDate: new Date().getTime(),
-            selectedCount: 1,
+            products: [],
+            oldProductId: '',
+            oldProductOrderId: '',
+            newProductSNCode: '',
         }
     },
     //方法
     methods: {
-        onConfirmRepairOut(event) {
-            const url = '../a-dtphome/main'
-            const message = '产品更换绑定成功！'
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            }).then(() => {
-                wx.navigateBack({ url: url })
+        scanProduct(event) {
+            if (this.products.length > 0) {
+                const message = '产品更换只允许扫描一个产品'
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                })
+                return
+            }
+            // 允许从相机和相册扫码
+            var that = this
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    var newSnCode = 'SN00001012'
+                    console.log('all: ', res)
+                    that.$http
+                        .get({
+                            url: '/Product/GetBySN?snCode=' + newSnCode,
+                        })
+                        .then(res => {
+                            if (res.code == 200) {
+                                console.log('/Product/GetBySN response', res)
+                                that.products.push(res.data)
+                                that.newProductSNCode = res.data.UDISN
+                                console.log(
+                                    'old product product Id is:',
+                                    that.oldProductId
+                                )
+                                console.log(
+                                    'new product sn code is:',
+                                    that.newProductSNCode
+                                )
+                            } else {
+                                const message = res.message
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
+                },
             })
+        },
+        onDeleteProduct(productId) {
+            var index = this.products.findIndex(x => x.Id == productId)
+            this.products.splice(index, 1)
+        },
+        onConfirmProductChange(event) {
+            if (this.products.length == 0) {
+                const message = '请先扫描添加产品'
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                })
+            } else {
+                this.$http
+                    .post({
+                        url:
+                            '/SignOrderDetail/ProductChange?oldProductId=' +
+                            this.oldProductId +
+                            '&oldProductOrderId=' +
+                            this.oldProductOrderId +
+                            '&newProductSnCode=' +
+                            this.newProductSNCode,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            const url = '../a-dtphome/main?activeTabIndex=3'
+                            const message = '产品更换绑定成功！'
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            }).then(() => {
+                                wx.navigateTo({ url: url })
+                            })
+                        } else {
+                            const message = '产品更换绑定操作失败'
+
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            }
         },
     },
     //计算属性
@@ -149,7 +207,14 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        var oldProductId = this.$root.$mp.query.oldProductId
+        var oldProductOrderId = this.$root.$mp.query.oldProductOrderId
+        this.oldProductId = oldProductId
+        this.oldProductOrderId = oldProductOrderId
+        console.log('productId is:', this.oldProductId)
+        console.log('productOrderId is:', this.oldProductOrderId)
+    },
 }
 </script>
 

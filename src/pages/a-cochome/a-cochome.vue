@@ -75,7 +75,7 @@
             <div v-for="product in products" :key="product">
                 <van-panel
                     title="产品编号"
-                    :desc="product.SNCode"
+                    :desc="product.UDISN"
                     :status="product.TitleStatus"
                     use-footer-slot
                 >

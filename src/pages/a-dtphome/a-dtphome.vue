@@ -342,7 +342,12 @@
                         >
                             <van-button
                                 class="confirmBooking"
-                                @click="onProductChange(product.UDISN)"
+                                @click="
+                                    onProductChange(
+                                        product.Id,
+                                        product.CurrentOrderId
+                                    )
+                                "
                                 size="small"
                                 type="primary"
                                 >产品更换</van-button
@@ -765,8 +770,8 @@ export default {
         //确认预约后签约
         onSignContract(signOrderId) {
             console.log('signOrderId is:', signOrderId)
-            // const url = '../a-dtpsign/main'
-            // wx.navigateTo({ url: url })
+            const url = '../a-dtpsign/main?signOrderId=' + signOrderId
+            wx.navigateTo({ url: url })
         },
         onProductBind(signOrderId) {
             console.log('signOrderId is:', signOrderId)
@@ -786,19 +791,24 @@ export default {
             wx.navigateTo({ url: url })
         },
         //用户维修归还后DTP员工操作更换产品
-        onProductChange(productSNCode) {
-            console.log('productSNCode is:', productSNCode)
+        onProductChange(productId, productOrderId) {
+            console.log('productId is:', productId)
+            console.log('productOrderId is:', productOrderId)
             // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('all: ', res)
-                    // const url = '../a-dtpproductin/main?qrcode=' + res.result
-                    // wx.navigateTo({ url: url })
+                    const url =
+                        '../a-dtpproductchange/main?oldProductId=' +
+                        productId +
+                        '&oldProductOrderId=' +
+                        productOrderId
+                    wx.navigateTo({ url: url })
                 },
             })
-            const url = '../a-dtpproductchange/main'
-            wx.navigateTo({ url: url })
+            // const url = '../a-dtpproductchange/main'
+            // wx.navigateTo({ url: url })
         },
         //维修更换完后原产品进行出库到COC维修操作
         onUserMaintenanceCheckOut(productSNCode) {

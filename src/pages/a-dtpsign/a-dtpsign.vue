@@ -19,10 +19,19 @@
       -->
             <div class="basicinfo">
                 <van-row>
-                    <van-col span="12">租赁药房：国药DTP</van-col>
-                    <van-col span="12">租赁用户：李斌</van-col>
+                    <van-col span="12"
+                        >租赁药房：{{ signOrder.SignDTPName }}</van-col
+                    >
                 </van-row>
                 <van-row>
+                    <van-col span="12"
+                        >租赁用户：{{ signOrder.Contact.Name }}</van-col
+                    >
+                    <van-col span="12"
+                        >租赁数量：{{ signOrder.ProductCount }}</van-col
+                    >
+                </van-row>
+                <!-- <van-row>
                     <van-col span="12">产品名称：XXX仪器</van-col>
                     <van-col span="12">
                         <div class="flex-container-no-margin">
@@ -30,7 +39,7 @@
                             <van-stepper :value="1" integer />
                         </div>
                     </van-col>
-                </van-row>
+                </van-row> -->
             </div>
             <div>
                 <!--每次加减为1，可以对组件设置step、min、max属性-->
@@ -56,7 +65,7 @@
         <mybr />
         <van-panel title="使用协议信息">
             <van-field
-                :value="username"
+                :value="contractNumber"
                 label="协议编号"
                 placeholder="请输入协议编号"
                 clearable
@@ -66,10 +75,12 @@
 
             <div style="margin:10px;">
                 <van-uploader
-                    v-model="fileList"
+                    :v-model="fileList"
                     multiple
-                    :max-count="1"
+                    :max-count="3"
                     required
+                    preview-image="true"
+                    @afterread="afterRead"
                 />
             </div>
         </van-panel>
@@ -125,13 +136,16 @@ export default {
     data() {
         return {
             //从0开始的
+            selectedDate: '',
+            contractNumber: '',
             isshowdatetimepicker: false,
+            signOrderId: 0,
+            signOrder: {
+                SignDTPName: '',
+                Contact: { Name: '' },
+                ProductCount: '',
+            },
             fileList: [],
-            contractfile: '',
-            selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date().getTime(),
-            minDate: new Date().getTime(),
-            selectedCount: 1,
         }
     },
     //方法
@@ -167,21 +181,57 @@ export default {
         usercancel(event) {
             this.isshowdatetimepicker = false
         },
-        onConfirmBooking(event) {
-            const message = '预约已确认，并已通知相关用户！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
-        },
-        onClickIcon(event) {
-            const message = 'onClickIcon！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            })
+        afterRead(event) {
+            console.log(event)
+            const pics = event.mp.detail.file
+            var that = this
+            // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
+            for (let index = 0; index < pics.length; index++) {
+                const pic = pics[index]
+                wx.uploadFile({
+                    url:
+                        'http://localhost:1626/SignOrder/UploadPicture?signOrderSmallId=' +
+                        this.signOrder.id, // 仅为示例，非真实的接口地址
+                    filePath: pic.path,
+                    name: 'file',
+                    formData: { user: 'test' },
+                    success(res) {
+                        let resultJson = JSON.parse(res.data)
+                        console.log(resultJson)
+                        if (resultJson.code == 200) {
+                            // 上传完成需要更新 fileList
+                            var returnModel = resultJson.data
+                            console.log(returnModel)
+                            for (
+                                let index = 0;
+                                index <
+                                returnModel.RichText.attachmentList.length;
+                                index++
+                            ) {
+                                //const element = array[index];
+                                var attachment =
+                                    returnModel.RichText.attachmentList[index]
+                                that.fileList.push({
+                                    url:
+                                        'https://servicego.udesk.cn' +
+                                        attachment.docAddress,
+                                    name: attachment.name,
+                                })
+                            }
+                            // const { fileList = [] } = this.data
+                            // fileList.push({ ...file, url: res.data })
+                            // this.setData({ fileList })
+                        } else {
+                            const message = 'error'
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    },
+                })
+            }
+            console.log('file list is', this.fileList)
         },
     },
     //计算属性
@@ -191,8 +241,33 @@ export default {
         //return this.data;
         //}
     },
+    onLoad: function(options) {
+        this.signOrderId = this.$root.$mp.query.signOrderId
+        console.log('sign order id is:', this.signOrderId)
+        this.$http
+            .get({
+                url:
+                    '/SignOrder/GetBySignOrderId?signOrderId=' +
+                    this.signOrderId,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/SignOrder/GetBySignOrderId response', res)
+                    this.signOrder = res.data
+                    console.log('sign order data:', this.signOrder)
+                } else {
+                    const message = res.message
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    })
+                }
+            })
+    },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        console.log('est')
+    },
 }
 </script>
 
