@@ -55,6 +55,7 @@
                                         :value="CurrApplyOrder"
                                         :options="OrderTypes"
                                         @change="onChangeType"
+                                        required
                                     /> </van-dropdown-menu
                             ></span>
                         </div>
@@ -126,7 +127,7 @@
                         <van-datetime-picker
                             type="date"
                             :value="currentDate"
-                            :min-date="minDate"
+                            :max-date="minDate"
                             @confirm="userselectdate"
                             @cancel="usercancel"
                         />
@@ -202,7 +203,7 @@ export default {
             ],
             value1: 0,
             dtpName: 'xxxDTP药店',
-            CurrApplyOrder: '首次购买',
+            CurrApplyOrder: '首次预约',
             appointmentTime: '2019/12/31 11:00-12:00',
             openid: '',
             dtpid: 0,
@@ -246,7 +247,7 @@ export default {
                 ComfirmBy: 0,
                 ComfirmTime: "0001-01-01T00:00:00"
             },
-            Phone: '13900000000'
+            Phone: ''
         }
     },
     //方法
@@ -295,48 +296,48 @@ export default {
       } ,
       onChangeType ( event ) {
         var that = this;
-        that.ApplyOrder.Contact.OrderType =  event.mp.detail;
-        console.log('that.OrderType', that.ApplyOrder.Contact.OrderType)
+        that.ApplyOrder.OrderType =  event.mp.detail;
+        console.log('that.OrderType', that.ApplyOrder.OrderType)
       } ,
         onConfirmAppointment(event) {
-             var that = this;
+            var that = this;
             console.log('that.event', event)
 
-            that.$http.post({
-                            url:'/ApplyOrder/Add',
-                            data:that.ApplyOrder
-                        })
-                        .then(res => {
-                            console.log('/ApplyOrder/Add response', res)
-                            const message =
-                                '您将提交如下预约信息:\n' +
-                                '预约DTP：' +
-                                that.dtpName +
-                                '\n' +
-                                '预约类型：' +
-                                that.appointmentType +
-                                '\n' +
-                                '预约时间：' +
-                                that.appointmentTime +
-                                '\n'
-                            Dialog.confirm({
-                                messageAlign: 'left',
-                                title: '提交确认',
-                                message,
-                            })
-                                .then(() => {
-                                    const url = '../a-patienthome/main'
-                                    Dialog.alert({
-                                        title: ' 提交成功',
-                                        message: '已经将您的申请发送至DTP药房,请等待确认通知.',
-                                    }).then(() => {
-                                        wx.navigateBack({ url: url })
-                                    })
-                                })
-                                .catch(() => {
-                                    Dialog.close()
-                                });
-                        });
+            const message =
+                '您将提交如下预约信息:\n' +
+                '预约DTP：' +
+                that.ApplyOrder.DTP.Name +
+                '\n' +
+                '预约类型：' +
+                that.ApplyOrder.OrderType +
+                '\n' +
+                '预约时间：' +
+                that.appointmentTime +
+                '\n';
+            Dialog.confirm({
+                messageAlign: 'left',
+                title: '提交确认',
+                message,
+            })
+            .then(() => {
+                that.$http.post({
+                    url:'/ApplyOrder/Add',
+                    data:that.ApplyOrder
+                })
+                .then(res => {
+                    console.log('/ApplyOrder/Add response', res)
+                    const url = '../a-patienthome/main'
+                    Dialog.alert({
+                        title: ' 提交成功',
+                        message: '已经将您的申请发送至DTP药房,请等待确认通知.',
+                    }).then(() => {
+                        wx.navigateBack({ url: url })
+                    })
+                });
+            })
+            .catch(() => {
+                Dialog.close()
+            });
 
         },
         showdatetimepicker(event) {
@@ -381,6 +382,7 @@ export default {
     //生命周期(mounted)
     mounted() {
         var that = this;
+        that.ApplyOrder.OrderType =  that.CurrApplyOrder;
         this.dtpid = this.$root.$mp.query.dtpid;
         console.log('mounted this.dtpid', this.dtpid)
         console.log("that.globalData.openid",that.$globalData.openId)

@@ -20,7 +20,7 @@
                     <span>姓名</span>
                 </div>
                 <div class="van-cell__value">
-                    <input type="text" class="van-field__input" value="李斌" />
+                    <input type="text" class="van-field__input" :value="Contact.Name" />
                 </div>
             </div>
             <div class="van-cell">
@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <van-dropdown-menu>
-                        <van-dropdown-item :value="value1" :options="option1" />
+                        <van-dropdown-item :value="Contact.Sex" :options="optionSex" @change="selectSex"/>
                     </van-dropdown-menu>
                 </div>
             </div>
@@ -42,7 +42,6 @@
                         <van-datetime-picker
                             type="date"
                             :value="currentDate"
-                            :min-date="minDate"
                             @confirm="userselectdate"
                             @cancel="usercancel"
                         />
@@ -64,19 +63,7 @@
                     <input
                         type="text"
                         class="van-field__input"
-                        value="13XXXXXXXXX"
-                    />
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>确诊医院</span>
-                </div>
-                <div class="van-cell__value">
-                    <input
-                        type="text"
-                        class="van-field__input"
-                        value="xxx医院"
+                        :value="Contact.PhoneText"
                     />
                 </div>
             </div>
@@ -86,7 +73,7 @@
                 </div>
                 <div>
                     <van-dropdown-menu>
-                        <van-dropdown-item :value="value2" :options="option2" />
+                        <van-dropdown-item :value="Contact.IDType" :options="optionID" @change="onSelectIDType"/>
                     </van-dropdown-menu>
                 </div>
             </div>
@@ -98,7 +85,7 @@
                     <input
                         type="text"
                         class="van-field__input"
-                        value="3XXXXXXXXXX"
+                        :value="Contact.IDNum"
                     />
                 </div>
             </div>
@@ -128,24 +115,40 @@ export default {
     data() {
         return {
             //从0开始的
-            option1: [
-                { text: '男', value: 0 },
-                { text: '女', value: 1 },
+            optionSex: [
+                { text: '男', value: '男' },
+                { text: '女', value: '女' },
             ],
             value1: 0,
-            option2: [
-                { text: '身份证', value: 0 },
-                { text: '护照', value: 1 },
-                { text: '回乡证', value: 2 },
-                { text: '台胞证', value: 3 },
-                { text: '外国人永久居留身份证', value: 4 },
-                { text: '港澳台居民居住证', value: 5 },
+            optionID: [
+                { text: '身份证', value: '身份证' },
+                { text: '护照', value: '护照' },
+                { text: '回乡证', value: '回乡证' },
+                { text: '台胞证', value: '台胞证' },
+                { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
+                { text: '港澳台居民居住证', value: '港澳台居民居住证' },
             ],
             value2: 0,
             isshowdatetimepicker: false,
             selectedDate: new Date().toLocaleDateString(),
             currentDate: new Date().getTime(),
             minDate: new Date().getTime(),
+            Contact: {
+                    Id: 0,
+                    Name: "",
+                    Sex: "",
+                    Province: "",
+                    City: "",
+                    Address: "",
+                    IDType: "",
+                    IDNum: "",
+                    Birthday: "0001-01-01T00:00:00",
+                    Phone: "",
+                    PhoneText: "",
+                    OAOpenId: "",
+                    MPOpenId: "",
+                    UnionId: ""
+                },
         }
     },
     //方法
@@ -170,16 +173,56 @@ export default {
         usercancel(event) {
             this.isshowdatetimepicker = false
         },
+        onSelectIDType(event) {
+            this.Contact.IDType = event.mp.detail;
+        }, 
+        selectSex(event) {
+            this.Contact.Sex = event.mp.detail;
+        },
+        onLoadContact(){
+            var that = this;
+            var url = '/Contact/GetByOpenId?openid='+that.$globalData.openId;
+            that.$http.get({
+                url: url
+            })
+            .then(res => {
+                console.log(url, res);
+
+                if(res.data)
+               {
+                   that.Contact = null;
+                   that.Contact = res.data;
+               }
+               that.$forceUpdate();
+            });
+        },
         onSave(event) {
             const message = '保存成功！'
-
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            }).then(() => {
-                const url = '../a-patienthome/main'
-                wx.navigateBack({ url: url })
+            var that = this;
+            var url = '/Contact/Update';
+            that.$http.post({
+                url: url,
+                data:that.Contact
             })
+            .then(res => {
+                console.log(url, res);
+                that.applys = null;
+                if(res.code == 200)
+               {
+                    that.$forceUpdate();
+               
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    });
+               }else{
+                   Dialog.alert({
+                        title: '信息提示',
+                        message: '保存失败！'
+                    });
+               }
+            });
+
         },
     },
     //计算属性
@@ -190,7 +233,9 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        this.onLoadContact();
+    },
 }
 </script>
 
