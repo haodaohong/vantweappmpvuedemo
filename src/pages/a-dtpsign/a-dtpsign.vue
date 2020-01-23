@@ -19,27 +19,20 @@
       -->
             <div class="basicinfo">
                 <van-row>
-                    <van-col span="12"
+                    <van-col span="20"
                         >租赁药房：{{ signOrder.SignDTPName }}</van-col
                     >
                 </van-row>
                 <van-row>
-                    <van-col span="12"
+                    <van-col span="20"
                         >租赁用户：{{ signOrder.Contact.Name }}</van-col
                     >
-                    <van-col span="12"
-                        >租赁数量：{{ signOrder.ProductCount }}</van-col
-                    >
                 </van-row>
-                <!-- <van-row>
-                    <van-col span="12">产品名称：XXX仪器</van-col>
-                    <van-col span="12">
-                        <div class="flex-container-no-margin">
-                            <p>租赁数量：</p>
-                            <van-stepper :value="1" integer />
-                        </div>
+                <van-row>
+                    <van-col span="20">
+                        租赁数量：{{ signOrder.ProductCount }}
                     </van-col>
-                </van-row> -->
+                </van-row>
             </div>
             <div>
                 <!--每次加减为1，可以对组件设置step、min、max属性-->
@@ -71,15 +64,16 @@
                 clearable
                 required
             />
-            <van-cell title="上传协议"></van-cell>
+            <van-cell title="上传协议(最多三张)"></van-cell>
 
             <div style="margin:10px;">
                 <van-uploader
-                    :v-model="fileList"
+                    :file-list="fileList"
                     multiple
-                    :max-count="3"
+                    :max-count="maxCount"
                     required
                     preview-image="true"
+                    deletable="false"
                     @afterread="afterRead"
                 />
             </div>
@@ -146,20 +140,41 @@ export default {
                 ProductCount: '',
             },
             fileList: [],
+            maxCount: 3,
         }
     },
     //方法
     methods: {
         onConfirmSign(event) {
             const message = '已成功签约，并已通知相关用户！'
+            this.$http
+                .post({
+                    url:
+                        '/SignOrder/UpdateSignContract?signOrderId=' +
+                        this.signOrder.id +
+                        '&signDate=' +
+                        this.selectedDate +
+                        '&contractNumber=' +
+                        this.contractNumber,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            const url = '../a-dtphome/main?activeTabIndex=1'
+                            wx.navigateTo({ url: url })
+                        })
+                    } else {
+                        const message = '上传合同操作失败'
 
-            Dialog.alert({
-                title: '信息提示',
-                message,
-            }).then(() => {
-                const url = '../a-dtphome/main'
-                wx.navigateBack({ url: url })
-            })
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        })
+                    }
+                })
         },
         showdatetimepicker(event) {
             console.log('showdatetimepicker event', event)
@@ -182,15 +197,25 @@ export default {
             this.isshowdatetimepicker = false
         },
         afterRead(event) {
-            console.log(event)
+            wx.showLoading({
+                title: '加载中...', // 数据请求前loading
+            })
             const pics = event.mp.detail.file
+            if (pics.length > this.maxCount) {
+                const message = 'error'
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                })
+            }
             var that = this
             // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
             for (let index = 0; index < pics.length; index++) {
                 const pic = pics[index]
                 wx.uploadFile({
                     url:
-                        'http://localhost:1626/SignOrder/UploadPicture?signOrderSmallId=' +
+                        this.$globalData.host +
+                        '/SignOrder/UploadPicture?signOrderSmallId=' +
                         this.signOrder.id, // 仅为示例，非真实的接口地址
                     filePath: pic.path,
                     name: 'file',
@@ -201,7 +226,7 @@ export default {
                         if (resultJson.code == 200) {
                             // 上传完成需要更新 fileList
                             var returnModel = resultJson.data
-                            console.log(returnModel)
+                            that.fileList = []
                             for (
                                 let index = 0;
                                 index <
@@ -213,9 +238,10 @@ export default {
                                     returnModel.RichText.attachmentList[index]
                                 that.fileList.push({
                                     url:
-                                        'https://servicego.udesk.cn' +
+                                        that.$globalData.servicegoHost +
                                         attachment.docAddress,
                                     name: attachment.name,
+                                    isImage: true,
                                 })
                             }
                             // const { fileList = [] } = this.data
@@ -231,6 +257,7 @@ export default {
                     },
                 })
             }
+            wx.hideLoading()
             console.log('file list is', this.fileList)
         },
     },
@@ -243,6 +270,8 @@ export default {
     },
     onLoad: function(options) {
         this.signOrderId = this.$root.$mp.query.signOrderId
+        var date = new Date()
+        this.selectedDate = date.toLocaleDateString()
         console.log('sign order id is:', this.signOrderId)
         this.$http
             .get({
@@ -265,9 +294,7 @@ export default {
             })
     },
     //生命周期(mounted)
-    mounted() {
-        console.log('est')
-    },
+    mounted() {},
 }
 </script>
 

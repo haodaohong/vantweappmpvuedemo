@@ -209,7 +209,7 @@
                                 >提交使用协议</van-button
                             >
                             <van-button
-                                @click="onProductBind(signOrder.Id)"
+                                @click="onProductBind(signOrder.id)"
                                 size="small"
                                 type="primary"
                                 v-if="signOrder.ShowBindFooter"
@@ -773,16 +773,18 @@ export default {
             const url = '../a-dtpsign/main?signOrderId=' + signOrderId
             wx.navigateTo({ url: url })
         },
-        onProductBind(signOrderId) {
-            console.log('signOrderId is:', signOrderId)
-            // const url = '../a-dtpproductbind/main'
-            // wx.navigateTo({ url: url })
+        onProductBind(signOrderSmallId) {
+            console.log('signOrderSmallId is:', signOrderSmallId)
+            const url =
+                '../a-dtpproductbind/main?signOrderSmallId=' + signOrderSmallId
+            console.log(url)
+            wx.navigateTo({ url: url })
         },
         //变更DTP
         onDtpChange(signOrderId) {
             console.log('signOrderId is:', signOrderId)
-            // const url = '../a-dtpchange/main'
-            // wx.navigateTo({ url: url })
+            const url = '../a-dtpchange/main?signOrderId=' + signOrderId
+            wx.navigateTo({ url: url })
         },
         //用户归还后产品返厂
         onUserReturnCheckOut(productSNCode) {
@@ -825,74 +827,74 @@ export default {
         //}
     },
     onLoad: function(options) {
-        // wx.login({
-        //     success: res => {
-        //         // 调用接口获取openid
-        //         console.log('login result', res)
-        //         // 这里可以把code传给后台，后台用此获取openid及session_key
-        //         that.$http
-        //             .get({
-        //                 url: '/Users/GetBySessionCode?code=' + res.code,
-        //             })
-        //             .then(res => {
-        //                 console.log('/Users/GetBySessionCode response', res)
-        //                 var user = res.data
-        //                 var code = res.code
-        //                 if (code === 200) {
-        //                     if (user.Role == 'DTP') {
-        //                         const url = '../a-dtphome/main'
-        //                         that.$globalData.departId = user.DepartId
-        //                         console.log('url', user.Role + url)
-        //                         wx.navigateTo({ url: url })
-        //                     } else if (user.Role == 'COC') {
-        //                         const url = '../a-cochome/main'
-        //                         that.$globalData.departId = user.DepartId
-        //                         wx.navigateTo({ url: url })
-        //                         console.log('url', user.Role + url)
-        //                     }
-        //                 } else {
-        //                     that.isShowRegister = true
-        //                     that.isShowLoading = false
-        //                     console.log('未绑定过')
-        //                 }
-        //             })
-        //     },
-        // })
-    },
-    //生命周期(mounted)
-    mounted() {
-        this.activeUser.role = 'DTP'
-        this.activeUser.departId = this.$globalData.departId
-        this.activeUser.openId = this.$globalData.openId
-        this.activeUser.unionId = this.$globalData.unionId
-        console.log('active user data:', this.activeUser)
-        var openId = this.activeUser.openId
-        var activeTabIndex = this.$root.$mp.query.activeTabIndex
-        console.log('activeTabIndex is:', activeTabIndex)
-        if (activeTabIndex) {
-            this.activeTab = activeTabIndex
-            this.onLoadTabData(activeTabIndex)
+        console.log(this.$globalData.departId)
+        console.log(this.$globalData.openId)
+        var userOpenId = this.$globalData.openId
+        if (!userOpenId) {
+            var that = this
+            wx.login({
+                success: res => {
+                    // 调用接口获取openid
+                    console.log('wx login result', res)
+                    // 这里可以把code传给后台，后台用此获取openid及session_key
+                    that.$http
+                        .get({
+                            url: '/Users/GetBySessionCode?code=' + res.code,
+                        })
+                        .then(res => {
+                            console.log('/Users/GetBySessionCode response', res)
+                            var user = res.data
+                            if (res.code === 200) {
+                                that.$globalData.departId = user.DepartId
+                                that.$globalData.openId = user.MPOpenId
+                                that.$globalData.unionId = user.UnionId
+                                if (user.Role == 'DTP') {
+                                    const url = '../a-dtphome/main'
+                                    wx.navigateTo({ url: url })
+                                } else if (user.Role == 'COC') {
+                                    const url = '../a-cochome/main'
+                                    wx.navigateTo({ url: url })
+                                }
+                            } else {
+                                const url = '../a-registeruser/main'
+                                wx.navigateTo({ url: url })
+                            }
+                        })
+                },
+            })
         } else {
-            this.activeTab = 0
-            this.$http
-                .get({
-                    url:
-                        '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
-                        openId +
-                        '&filterStatus=' +
-                        this.applyOrderTypeActiveValueStr,
-                })
-                .then(res => {
-                    if (res.code == 200) {
-                        this.applyOrders = res.data
-                        console.log(
-                            '/ApplyOrder/GetByFilterStatus response',
-                            res
-                        )
-                    }
-                })
+            this.activeUser.role = 'DTP'
+            this.activeUser.departId = this.$globalData.departId
+            this.activeUser.openId = this.$globalData.openId
+            this.activeUser.unionId = this.$globalData.unionId
+            var activeTabIndex = this.$root.$mp.query.activeTabIndex
+            if (activeTabIndex) {
+                this.activeTab = activeTabIndex
+                this.onLoadTabData(activeTabIndex)
+            } else {
+                this.activeTab = 0
+                this.$http
+                    .get({
+                        url:
+                            '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
+                            this.activeUser.openId +
+                            '&filterStatus=' +
+                            this.applyOrderTypeActiveValueStr,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            this.applyOrders = res.data
+                            console.log(
+                                '/ApplyOrder/GetByFilterStatus response',
+                                res
+                            )
+                        }
+                    })
+            }
         }
     },
+    //生命周期(mounted)
+    mounted() {},
 }
 </script>
 

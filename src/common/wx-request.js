@@ -1,5 +1,4 @@
 const host = 'http://localhost:1626' //写自己的域名     https://oostest.zailaboratory.com      'http://localhost:1626'
-//const host = 'http://localhost' //写自己的域名
 
 function request(url, method, data, header = {}) {
     wx.showLoading({
