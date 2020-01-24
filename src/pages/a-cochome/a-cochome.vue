@@ -83,7 +83,7 @@
                         <table class="content">
                             <tr>
                                 <td>名称：{{ product.ProductName }}</td>
-                                <td>类别：{{ product.ProductCategory }}</td>
+                                <td>类别：{{ product.ProductType }}</td>
                                 <td>规格：{{ product.Specification }}</td>
                                 <td>
                                     生产日期：{{ product.ProductionDateFormat }}
@@ -234,6 +234,7 @@ export default {
         //}
     },
     onLoad: function(options) {
+        this.products = []
         var userOpenId = this.$globalData.openId
         if (!userOpenId) {
             var that = this

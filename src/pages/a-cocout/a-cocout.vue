@@ -24,14 +24,18 @@
                         <div class="van-cell__title">
                             <span>名称：{{ product.ProductName }}</span>
                         </div>
+                    </div>
+                    <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>类型：{{ product.ProductCategory }}</span>
+                            <span>类型：{{ product.ProductType }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
                         <div class="van-cell__title">
                             <span>规格：{{ product.Specification }}</span>
                         </div>
+                    </div>
+                    <div class="van-cell">
                         <div class="van-cell__title">
                             <span
                                 >生产日期：{{
@@ -106,7 +110,7 @@ export default {
             this.$http
                 .post({
                     url:
-                        '/Product/CheckOut?productId=' +
+                        '/Product/CheckOut?role=COC&productId=' +
                         this.product.Id +
                         '&currentStatus=' +
                         this.product.CurrentStatus +
@@ -121,7 +125,7 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-cochome/main'
-                            wx.navigateBack({ url: url })
+                            wx.navigateTo({ url: url })
                         })
                     } else {
                         const message = res.message
@@ -130,7 +134,7 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-cochome/main'
-                            wx.navigateBack({ url: url })
+                            wx.navigateTo({ url: url })
                         })
                     }
                 })
@@ -149,33 +153,26 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        this.snCode = this.$root.$mp.query.snCode
+        var snCode = this.$root.$mp.query.snCode
+        this.snCode = snCode
         console.log('snCode:', this.snCode)
-        this.snCode = 'SN00001001'
         var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url: '/Product/GetBySN?snCode=' + that.snCode,
+        this.$http
+            .get({
+                url: '/Product/GetBySN?snCode=' + this.snCode,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/Product/GetBySN response', res)
+                    this.product = res.data
+                } else {
+                    const message = res.message
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
                     })
-                    .then(res => {
-                        if (res.code == 200) {
-                            console.log('/Product/GetBySN response', res)
-                            that.product = res.data
-                        } else {
-                            const message = res.message
-                            Dialog.alert({
-                                title: '信息提示',
-                                message,
-                            })
-                        }
-                    })
-            },
-        })
+                }
+            })
     },
 }
 </script>
