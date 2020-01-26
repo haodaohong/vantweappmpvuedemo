@@ -75,7 +75,7 @@
             <div v-for="product in products" :key="product">
                 <van-panel
                     title="产品编号"
-                    :desc="product.SNCode"
+                    :desc="product.UDISN"
                     :status="product.TitleStatus"
                     use-footer-slot
                 >
@@ -83,7 +83,7 @@
                         <table class="content">
                             <tr>
                                 <td>名称：{{ product.ProductName }}</td>
-                                <td>类别：{{ product.ProductCategory }}</td>
+                                <td>类别：{{ product.ProductType }}</td>
                                 <td>规格：{{ product.Specification }}</td>
                                 <td>
                                     生产日期：{{ product.ProductionDateFormat }}
@@ -234,27 +234,53 @@ export default {
         //}
     },
     onLoad: function(options) {
-        var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url:
-                            '/Product/GetProductsByFilter?role=COC&statusFilter=' +
-                            that.statusFilterActiveValueStr +
-                            '&timeFilter=' +
-                            that.timeFilterActiveValueStr,
-                    })
-                    .then(res => {
-                        that.products = res.data
-                        //console.log('/COC/GetProductsByFilter response', res)
-                        console.log(that.products)
-                    })
-            },
-        })
+        this.products = []
+        var userOpenId = this.$globalData.openId
+        if (!userOpenId) {
+            var that = this
+            wx.login({
+                success: res => {
+                    // 调用接口获取openid
+                    console.log('wx login result', res)
+                    // 这里可以把code传给后台，后台用此获取openid及session_key
+                    that.$http
+                        .get({
+                            url: '/Users/GetBySessionCode?code=' + res.code,
+                        })
+                        .then(res => {
+                            console.log('/Users/GetBySessionCode response', res)
+                            var user = res.data
+                            if (res.code === 200) {
+                                that.$globalData.departId = user.DepartId
+                                that.$globalData.openId = user.MPOpenId
+                                that.$globalData.unionId = user.UnionId
+                                if (user.Role == 'DTP') {
+                                    const url = '../a-dtphome/main'
+                                    wx.navigateTo({ url: url })
+                                } else if (user.Role == 'COC') {
+                                    const url = '../a-cochome/main'
+                                    wx.navigateTo({ url: url })
+                                }
+                            } else {
+                                const url = '../a-registeruser/main'
+                                wx.navigateTo({ url: url })
+                            }
+                        })
+                },
+            })
+        } else {
+            this.$http
+                .get({
+                    url:
+                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+                        this.statusFilterActiveValueStr +
+                        '&timeFilter=' +
+                        this.timeFilterActiveValueStr,
+                })
+                .then(res => {
+                    this.products = res.data
+                })
+        }
     },
     //生命周期(mounted)
     mounted() {},

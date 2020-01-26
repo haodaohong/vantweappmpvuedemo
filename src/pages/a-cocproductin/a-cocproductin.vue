@@ -98,6 +98,7 @@
                         <van-dropdown-item
                             :value="checkInStatusActiveValue"
                             :options="checkInStatusOption"
+                            disabled
                             @change="onCheckInStatusChange"
                         />
                     </van-dropdown-menu>
@@ -196,28 +197,32 @@ export default {
         this.qrCode = this.$root.$mp.query.qrcode
         console.log('qrCode:', this.qrCode)
         this.qrCode = 'SN00001001'
+        console.log('globalData departId', this.$globalData.departId)
+        this.$http
+            .get({
+                url: '/Product/GetBySN?snCode=' + this.qrCode,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/Product/GetBySN response', res)
+                    this.product = res.data
+                    if (this.product.CurrentStatus == '出库到COC维修') {
+                        this.checkInStatusActiveValueStr = '维修入库'
+                    } else {
+                        this.checkInStatusActiveValueStr = '归还入库'
+                    }
+                } else {
+                    const message = res.message
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    })
+                }
+            })
         var that = this
         wx.login({
             success: res => {
                 // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url: '/Product/GetBySN?snCode=' + that.qrCode,
-                    })
-                    .then(res => {
-                        if (res.code == 200) {
-                            console.log('/Product/GetBySN response', res)
-                            that.product = res.data
-                        } else {
-                            const message = res.message
-                            Dialog.alert({
-                                title: '信息提示',
-                                message,
-                            })
-                        }
-                    })
             },
         })
     },

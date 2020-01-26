@@ -1,50 +1,50 @@
-.scanBtn{
+.scanBtn {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 20px;
 }
 
-.confirmBooking{
+.confirmBooking {
     margin-right: 10px;
     margin-left: 5px;
 }
 
-.content{
+.content {
     font-size: 14px;
     margin: 10px;
 }
 
-.basicinfo{
+.basicinfo {
     font-size: 15px;
     margin: 10px;
     color: dimgray;
 }
 
-.privacy{
+.privacy {
     font-size: 13px;
     margin: 15px;
     color: dimgray;
     margin-bottom: 30px;
 }
 
-.confirmsignbtn{
+.confirmsignbtn {
     margin-bottom: 15px 20px 30px 20px;
     text-align: center;
 }
 
-.flex-container-no-margin{
+.flex-container-no-margin {
     display: flex;
     justify-content: flex-start;
 }
 
 .footer-container {
-    position: absolute;
+    /* position: absolute; */
     bottom: 0;
     width: 100%;
 }
 
-.divLine{
-    background: #E0E3DA;
+.divLine {
+    background: #e0e3da;
     width: 100%;
     height: 5rpx;
 }
@@ -70,8 +70,13 @@
     background-color: #fff;
 }
 
-.van-cell__title, .van-cell__value {
+.van-cell__title,
+.van-cell__value {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     flex: 1;
+}
+
+.confirmProductCount {
+    margin-bottom: 20px;
 }

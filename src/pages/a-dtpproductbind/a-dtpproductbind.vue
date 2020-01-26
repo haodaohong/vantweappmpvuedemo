@@ -8,78 +8,49 @@
 
   collapse也有类似情况
   -->
-    <div>
+    <div v-if="showBind">
         <div class="basicinfo">
             <div>
                 <h2 class="van-doc-demo-block__title">第二步-添加产品</h2>
             </div>
-            <div>
-                <div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>产品编号：SNxxxxxxxxxxxx</span>
+            <div v-for="product in products" :key="product">
+                <van-panel
+                    title="产品编号"
+                    :desc="product.UDISN"
+                    use-footer-slot
+                >
+                    <div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>名称：{{ product.ProductName }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span>类型：{{ product.ProductCategory }}</span>
+                            </div>
+                        </div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>规格：{{ product.Specification }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span
+                                    >生产日期：{{
+                                        product.ProductionDateFormat
+                                    }}</span
+                                >
+                            </div>
                         </div>
                     </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>名称：XXX仪器</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>类型：产品主机</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>规格：20*30</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>单位：台</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>生产日期：2019-01-01</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>数量：1</span>
-                        </div>
-                    </div>
-                </div>
-                <view class="divLine"></view>
-            </div>
-            <div>
-                <div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>产品编号：SNxxxxxxxxxxxx</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>名称：XXX仪器</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>类型：产品主机</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>规格：20*30</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>单位：台</span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>生产日期：2019-01-01</span>
-                        </div>
-                        <div class="van-cell__title">
-                            <span>数量：1</span>
-                        </div>
-                    </div>
-                </div>
-                <view class="divLine"></view>
+                    <!--加个样式把按钮搞右边去-->
+                    <view style="text-align: right;" slot="footer">
+                        <van-button
+                            @click="onDeleteProduct(product.Id)"
+                            size="small"
+                            type="warning"
+                            >删除产品</van-button
+                        >
+                    </view>
+                </van-panel>
             </div>
         </div>
         <mybr />
@@ -90,17 +61,73 @@
         </div>
         <mybr />
         <div class="footer-container">
-            <div>
-                <text>出库件数：2</text>
+            <div class="confirmProductCount">
+                <text>出库件数：{{ productcount }}</text>
                 <view class="divLine"></view>
             </div>
-            <van-button type="primary" size="large" @click="onConfirmProductOut"
+            <van-button type="primary" size="large" @click="onGoToConfirmStep"
                 >第三步-确认提交</van-button
             >
         </div>
-        <!--
-    注意要配一个van-dialog,才会显示提示 ,默认id van-dialog
-    -->
+        <van-dialog id="van-dialog" />
+    </div>
+    <div v-else>
+        <div class="basicinfo">
+            <div>
+                <h2 class="van-doc-demo-block__title">第三步-出库确认提交</h2>
+            </div>
+            <div>
+                <div class="van-cell">
+                    <div class="van-cell__title">
+                        <span>DTP药房：{{ dtpname }}</span>
+                    </div>
+                </div>
+                <div class="van-cell">
+                    <div class="van-cell__title">
+                        <span>出库件数：{{ productcount }}</span>
+                    </div>
+                </div>
+            </div>
+            <div v-for="product in products" :key="product">
+                <van-panel
+                    title="产品编号"
+                    :desc="product.UDISN"
+                    use-footer-slot
+                >
+                    <div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>名称：{{ product.ProductName }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span>类型：{{ product.ProductCategory }}</span>
+                            </div>
+                        </div>
+                        <div class="van-cell">
+                            <div class="van-cell__title">
+                                <span>规格：{{ product.Specification }}</span>
+                            </div>
+                            <div class="van-cell__title">
+                                <span
+                                    >生产日期：{{
+                                        product.ProductionDateFormat
+                                    }}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </van-panel>
+            </div>
+            <mybr />
+            <div class="footer-container">
+                <van-button
+                    type="primary"
+                    size="large"
+                    @click="onConfirmProductBind"
+                    >确认提交</van-button
+                >
+            </div>
+        </div>
         <van-dialog id="van-dialog" />
     </div>
 </template>
@@ -119,28 +146,89 @@ export default {
     data() {
         return {
             //从0开始的
-            isshowdatetimepicker: false,
-            fileList: [],
-            contractfile: '',
-            selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date().getTime(),
-            minDate: new Date().getTime(),
-            selectedCount: 1,
+            showBind: true,
+            productcount: 0,
+            products: [],
+            productSnCodes: [],
+            productSnCode: {},
+            signOrderSmallId: '',
+            dtpname: '',
         }
     },
     //方法
     methods: {
         scanProduct(event) {
-            const message =
-                '暂未完成此功能设计；预期结果是识别产品条形码并添加到当前页面上并显示信息'
-            Dialog.alert({
-                title: '信息提示',
-                message,
+            // 允许从相机和相册扫码
+            var that = this
+            wx.scanCode({
+                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                success(res) {
+                    var newSnCode = 'SN00001014'
+                    console.log('all: ', res)
+                    that.$http
+                        .get({
+                            url: '/Product/GetBySN?snCode=' + newSnCode,
+                        })
+                        .then(res => {
+                            if (res.code == 200) {
+                                console.log('/Product/GetBySN response', res)
+                                that.products.push(res.data)
+                                that.productcount = that.products.length
+                            } else {
+                                const message = res.message
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
+                },
             })
         },
-        onConfirmProductOut(event) {
-            const url = '../a-dtpconfirmrentout/main'
-            wx.navigateTo({ url: url })
+        onDeleteProduct(productId) {
+            var index = this.products.findIndex(x => x.Id == productId)
+            this.products.splice(index, 1)
+            this.productcount = this.products.length
+        },
+        onGoToConfirmStep(event) {
+            this.showBind = false
+        },
+        onConfirmProductBind(event) {
+            this.productSnCodes = []
+            this.products.forEach(element => {
+                this.productSnCodes.push(element.UDISN)
+            })
+            console.log('product sncodes is', this.productSnCodes)
+            this.$http
+                .post({
+                    url:
+                        '/SignOrderDetail/SignAddProduct?signOrderSmallId=' +
+                        this.signOrderSmallId,
+                    data: {
+                        productSnCodes: this.productSnCodes,
+                    },
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        const url = '../a-dtphome/main?activeTabIndex=1'
+                        const message = '产品绑定成功！'
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            wx.navigateTo({ url: url })
+                        })
+                    } else {
+                        const message = '产品绑定操作失败'
+                        const url = '../a-dtphome/main?activeTabIndex=1'
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        }).then(() => {
+                            wx.navigateTo({ url: url })
+                        })
+                    }
+                })
         },
     },
     //计算属性
@@ -151,7 +239,36 @@ export default {
         //}
     },
     //生命周期(mounted)
-    mounted() {},
+    mounted() {
+        var signOrderSmallId = this.$root.$mp.query.signOrderSmallId
+        this.signOrderSmallId = signOrderSmallId
+        this.products = []
+        this.showBind = true
+        this.productSnCodes = []
+        this.productcount = 0
+        console.log('signOrderSmallId is ', this.signOrderSmallId)
+        this.$http
+            .get({
+                url:
+                    '/SignOrder/GetBySignOrderSmallId?signOrderSmallId=' +
+                    this.signOrderSmallId,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    var dtpName = res.data.SignDTPName
+                    this.dtpname = dtpName
+                } else {
+                    const message = '数据读取失败'
+                    const url = '../a-dtphome/main?activeTabIndex=1'
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    }).then(() => {
+                        wx.navigateTo({ url: url })
+                    })
+                }
+            })
+    },
 }
 </script>
 
