@@ -399,7 +399,12 @@ export default {
             ],
             applyOrderTypeActiveValue: 0,
             applyOrderTypeActiveValueStr: '所有申请',
-
+            signOrder:{
+                DTPId:0,
+                ContactId:0,
+                ApplyOrderId:0,
+                ProductCount:0
+            },
             signOrderTypeOption: [
                 { text: '所有类型', value: 0 },
                 { text: '已签约', value: 1 },
@@ -671,6 +676,10 @@ export default {
         },
         //确认预约
         onConfirmAppointment(applyOrderId, productCount, contactId, dtpId) {
+            console.log('applyOrderId:', applyOrderId);
+            console.log('productCount:', productCount);
+            console.log('contactId:', contactId);
+            console.log('dtpId:', dtpId);
             this.signOrder.DTPId = dtpId
             this.signOrder.ContactId = contactId
             this.signOrder.ApplyOrderId = applyOrderId
@@ -792,6 +801,36 @@ export default {
             const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
+        rebind(){
+            this.activeUser.role = 'DTP'
+            this.activeUser.departId = this.$globalData.departId
+            this.activeUser.openId = this.$globalData.openId
+            this.activeUser.unionId = this.$globalData.unionId
+            var activeTabIndex = this.$root.$mp.query.activeTabIndex
+            if (activeTabIndex) {
+                this.activeTab = activeTabIndex
+                this.onLoadTabData(activeTabIndex)
+            } else {
+                this.activeTab = 0
+                this.$http
+                    .get({
+                        url:
+                            '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
+                            this.activeUser.openId +
+                            '&filterStatus=' +
+                            this.applyOrderTypeActiveValueStr,
+                    })
+                    .then(res => {
+                        if (res.code == 200) {
+                            this.applyOrders = res.data
+                            console.log(
+                                '/ApplyOrder/GetByFilterStatus response',
+                                res
+                            )
+                        }
+                    })
+            }
+    },
         //用户维修归还后DTP员工操作更换产品
         onProductChange(productId, productOrderId) {
             console.log('productId is:', productId)
@@ -827,11 +866,11 @@ export default {
         //}
     },
     onLoad: function(options) {
+        var that = this;
         console.log(this.$globalData.departId)
         console.log(this.$globalData.openId)
         var userOpenId = this.$globalData.openId
         if (!userOpenId) {
-            var that = this
             wx.login({
                 success: res => {
                     // 调用接口获取openid
@@ -851,6 +890,7 @@ export default {
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     //wx.navigateTo({ url: url })
+                                
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
                                     wx.navigateTo({ url: url })
@@ -859,39 +899,16 @@ export default {
                                 const url = '../a-registeruser/main'
                                 wx.navigateTo({ url: url })
                             }
+                            that.rebind();
                         })
                 },
             })
+        }else{
+            that.rebind();
         }
-            this.activeUser.role = 'DTP'
-            this.activeUser.departId = this.$globalData.departId
-            this.activeUser.openId = this.$globalData.openId
-            this.activeUser.unionId = this.$globalData.unionId
-            var activeTabIndex = this.$root.$mp.query.activeTabIndex
-            if (activeTabIndex) {
-                this.activeTab = activeTabIndex
-                this.onLoadTabData(activeTabIndex)
-            } else {
-                this.activeTab = 0
-                this.$http
-                    .get({
-                        url:
-                            '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
-                            this.activeUser.openId +
-                            '&filterStatus=' +
-                            this.applyOrderTypeActiveValueStr,
-                    })
-                    .then(res => {
-                        if (res.code == 200) {
-                            this.applyOrders = res.data
-                            console.log(
-                                '/ApplyOrder/GetByFilterStatus response',
-                                res
-                            )
-                        }
-                    })
-            }
+
     },
+
     //生命周期(mounted)
     mounted() {},
 }
