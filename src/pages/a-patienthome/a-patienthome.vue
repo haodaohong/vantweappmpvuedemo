@@ -202,7 +202,7 @@ export default {
         return {
             //从0开始的
             imageURL: '/static/img/yaodian.png',
-            touxiang: '/static/img/touxiang.jpg',
+            touxiang: 'https://servicego.udesk.cn/backend/storage/resource?req=183642',
             active: 0,
             Cities: [
                 { text: '上海', value: '上海' },
@@ -355,29 +355,36 @@ export default {
             const url = '../a-patientorder/main?dtpid=' + dtpid
             wx.navigateTo({ url: url });
         },
-        onCancelAppointment(dtpid,contactname) {
+        onCancelAppointment(event,dtpid,contactname) {
+            console.log('onCancelAppointment current event:', event);
             console.log('onCancelAppointment current dtpid:', dtpid + '|' + contactname);
-            const message = '已成功取消此预约'
             //CancelApplyOrderByContact
             var that = this;
-            console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
-            that.$http.get({
-                url:'/ApplyOrder/CancelApplyOrderByContact?applyOrderId='+dtpid+'&contactName='+contactname
-            })
-            .then(res => {
-                that.dtps = null;
-                
-               if(res.code == 200)
-               {
-                    that.dtps = res.data;
-                    Dialog.alert({
-                        title: '信息提示',
-                        message,
-                    });
-                    that.onLoadApplys();
-               }
-                
+            const cancelmessage = '您确认取消此预约吗？';
+              Dialog.confirm({
+                messageAlign: 'left',
+                title: '提交确认',
+                message: cancelmessage,
+            }).then(()=>{
+                    that.$http.get({
+                        url:'/ApplyOrder/CancelApplyOrderByContact?applyOrderId='+dtpid+'&contactName='+contactname
+                    })
+                    .then(res => {
+                        const message = '已成功取消此预约'
+                        console.log("CancelApplyOrderByContact result",res);
+                        if(res.code == 200)
+                        {
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            }).then(res => {
+                                that.onLoadApplys();
+                            });
+                        
+                        }
+                });
             });
+
         },
          onSearchDTP (event) {
             var that = this;
