@@ -41,7 +41,7 @@
                             <span>预约数量：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span><van-stepper :value="ApplyOrder.ProductCount" integer/></span>
+                            <span><van-stepper :value="ProductCount" integer :change="onSelectProductCount"/></span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -67,25 +67,23 @@
                         <div class="van-cell__value">
                             <span
                                 ><van-popup
-                                    :show="isshowdatetimepicker"
+                                    :show="isShowApplyDatePicker"
                                     position="bottom"
                                 >
                                     <van-datetime-picker
-                                        type="datetime"
-                                        :value="currentDate"
+                                        type="date"
                                         :min-date="minDate"
-                                        :min-Hour="minHour"
-                                        :max-Hour="maxHour"
-                                        @confirm="userselectdate"
-                                        @cancel="usercancel"
+                                        :max-date="maxDate"
+                                        @confirm="selectApplyDatePicker"
+                                        @cancel="cancelApplyDatePicker"
                                     />
                                 </van-popup>
                                 <van-field
-                                    :value="selectedDate"
+                                    :value="minDateStr"
                                     icon="calender-o"
                                     icon-class="icon"
                                     required
-                                    @clickicon="showdatetimepicker"
+                                    @clickicon="showApplyDatePicker"
                                     @input="dateFormat"
                             /></span>
                         </div>
@@ -123,21 +121,22 @@
                     <span>出生日期</span>
                 </div>
                 <div  class="van-cell__value">
-                    <van-popup :show="isshowdatetimepicker" position="bottom">
+                    <van-popup :show="isShowBirthdayPicker" position="bottom">
                         <van-datetime-picker
                             type="date"
-                            :value="currentDate"
-                            :max-date="minDate"
-                            @confirm="userselectdate"
-                            @cancel="usercancel"
+                            :value="currentBirthDate"
+                            :min-date="minBirthDate"
+                            :max-date="maxBirthDate"
+                            @confirm="selectBirthdayPicker"
+                            @cancel="cancelBirthdayPicker"
                         />
                     </van-popup>
                     <van-field
-                        :value="selectedDate"
+                        :value="currentBirthDateStr"
                         icon="calender-o"
                         icon-class="icon"
                         required
-                        @clickicon="showdatetimepicker"
+                        @clickicon="showBirthdayPicker"
                     />
                 </div>
             </div>
@@ -146,6 +145,7 @@
                     label="手机号"
                     placeholder="请输入手机号"
                     @change="onChangePhone"
+                    required
                     error-message="手机号格式错误"
                 />
 
@@ -184,15 +184,22 @@ export default {
             //从0开始的
             dateString: new Date().toLocaleDateString(),
             hour: new Date().getHours().toString,
-            isshowdatetimepicker: false,
+            isShowBirthdayPicker: false,
+            isShowApplyDatePicker: false,
             selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date().getTime(),
-            minDate: new Date().getTime(),
+            currentDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
+            currentBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*50).getTime(),
+            currentBirthDateStr: new Date(new Date().getTime() - 24*60*60*1000*30*12*50).toLocaleDateString(),
+            minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*100).getTime(),
+            maxBirthDate: new Date(new Date().getTime()).getTime(),
+            minDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
+            minDateStr: new Date(new Date().getTime() + 24*60*60*1000*2).toLocaleDateString(),
+            maxDate: new Date(new Date().getTime() + 24*60*60*1000*30*3).getTime(),
             minHour: 9,
             maxHour: 17,
             OrderTypes: [
-                { text: '首次预约', value: '首次预约' },
-                { text: '购买贴片', value: '购买贴片' },
+                { text: '设备预约', value: '首次预约' },
+                { text: '购买贴片预约', value: '购买贴片预约' },
                 // { text: '产品维修', value: 2 },
             ],
             CurrSex: '',
@@ -247,7 +254,8 @@ export default {
                 ComfirmBy: 0,
                 ComfirmTime: "0001-01-01T00:00:00"
             },
-            Phone: ''
+            Phone: '',
+            ProductCount: 1,
         }
     },
     //方法
@@ -287,7 +295,13 @@ export default {
       onChangePhone ( event ) {
         var that = this;
         that.ApplyOrder.Contact.Phone =  event.mp.detail;
+        that.ApplyOrder.Contact.PhoneText =  event.mp.detail;
         console.log('that.Phone', that.ApplyOrder.Contact.Phone)
+      } ,
+      onSelectProductCount ( event ) {
+        var that = this;
+        that.ApplyOrder.ProductCount =  event.mp.detail;
+        console.log('event.mp.detail', event.mp.detail)
       } ,
       onChangeSex ( event ) {
         var that = this;
@@ -301,8 +315,17 @@ export default {
       } ,
         onConfirmAppointment(event) {
             var that = this;
-            console.log('that.event', event)
-
+            console.log('that.event', event);
+            that.ApplyOrder.OrderType =  that.CurrApplyOrder;
+            if(that.ApplyOrder.Contact.Phone.length < 11){
+                 Dialog.alert({
+                        title: ' 提交失败',
+                        message: '请填写合法的手机号码.',
+                    });
+                    return;
+            }
+            that.ApplyOrder.ProductCount =  that.ProductCount;
+            console.log('that.ApplyOrder', that.ApplyOrder)
             const message =
                 '您将提交如下预约信息:\n' +
                 '预约DTP：' +
@@ -340,24 +363,40 @@ export default {
             });
 
         },
-        showdatetimepicker(event) {
-            console.log('showdatetimepicker event', event)
-            this.isshowdatetimepicker = true
-            console.log('this.isshowdatetimepicker', this.isshowdatetimepicker)
+        showApplyDatePicker(event) {
+            console.log('isShowApplyDatePicker event', event)
+            this.isShowApplyDatePicker = true
+            console.log('this.isShowApplyDatePicker', this.isShowApplyDatePicker)
         },
-        userselectdate(event) {
+        selectBirthdayPicker(event){
+            const { detail, currentTarget } = event.mp
+            // console.log( detail )
+            // console.log( currentTarget )
+            const date = new Date(detail)
+
+            this.ApplyOrder.Contact.Birthday = this.dateFormat(date);
+            this.isShowBirthdayPicker = false;
+        },
+        showBirthdayPicker(event){
+            this.isShowBirthdayPicker = true;
+        },
+        cancelBirthdayPicker(event) {
+            this.isShowBirthdayPicker = false
+        },
+        selectApplyDatePicker(event) {
             //console.log( 'onconfirm2' , event )
             const { detail, currentTarget } = event.mp
             // console.log( detail )
             // console.log( currentTarget )
             const date = new Date(detail)
 
-            this.selectedDate = this.dateFormat(date)
-            this.ApplyOrder.ApplyDate = this.selectedDate;
-            this.isshowdatetimepicker = false;
+            this.ApplyOrder.ApplyDate = this.dateFormat(date);
+            this.currentDate = this.dateFormat(date);
+            console.log('this.ApplyOrder', this.ApplyOrder)
+            this.isShowApplyDatePicker = false;
         },
-        usercancel(event) {
-            this.isshowdatetimepicker = false
+        cancelApplyDatePicker(event) {
+            this.isShowApplyDatePicker = false
         },
         onCreate(){
             var that = this;
@@ -368,7 +407,10 @@ export default {
                         .then(res => {
                             console.log('/ApplyOrder/Create response', res)
                             that.ApplyOrder = res.data;
-                            that.currentDate = Date.parse(that.ApplyOrder.Contact.Birthday);
+                            that.Phone = that.ApplyOrder.Contact.Phone;
+                            const date = new Date(that.currentDate)
+                            that.ApplyOrder.ApplyDate = that.dateFormat(date);
+                            that.currentBirthDate = Date.parse(that.ApplyOrder.Contact.Birthday);
                         });
         }
     },
@@ -387,6 +429,8 @@ export default {
         console.log('mounted this.dtpid', this.dtpid)
         console.log("that.globalData.openid",that.$globalData.openId)
         that.onCreate();
+        console.log("minDate:",that.minDate);
+        console.log("minDate:",new Date(new Date().getTime() + 70*60*60*1000));
     },
 }
 </script>

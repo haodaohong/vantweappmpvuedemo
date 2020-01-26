@@ -75,6 +75,13 @@
 					"id": -1,
 					"name": "pages/a-registeruser/main",
 					"pathName": "pages/a-registeruser/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/a-patientorder/main",
+					"pathName": "pages/a-patientorder/main",
 					"scene": null
 				}
 			]
