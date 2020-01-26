@@ -862,7 +862,7 @@ export default {
                         })
                 },
             })
-        } else {
+        }
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
@@ -891,7 +891,6 @@ export default {
                         }
                     })
             }
-        }
     },
     //生命周期(mounted)
     mounted() {},
