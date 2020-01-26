@@ -355,8 +355,7 @@ export default {
             const url = '../a-patientorder/main?dtpid=' + dtpid
             wx.navigateTo({ url: url });
         },
-        onCancelAppointment(event,dtpid,contactname) {
-            console.log('onCancelAppointment current event:', event);
+        onCancelAppointment(dtpid,contactname) {
             console.log('onCancelAppointment current dtpid:', dtpid + '|' + contactname);
             //CancelApplyOrderByContact
             var that = this;

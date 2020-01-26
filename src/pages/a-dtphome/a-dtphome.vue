@@ -722,7 +722,7 @@ export default {
             const confirmCancelAppointmentMessage = '是否确认取消该预约申请'
             Dialog.confirm({
                 title: '信息提示',
-                confirmCancelAppointmentMessage,
+                message: confirmCancelAppointmentMessage,
             })
                 .then(() => {
                     // on confirm
