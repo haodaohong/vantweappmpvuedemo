@@ -155,7 +155,7 @@ export default {
             const successMessage = '已成功入库产品!'
             const errorMessage = '产品入库失败!'
             this.$http
-                .get({
+                .post({
                     url:
                         '/Product/CocCheckIn?snCode=' +
                         this.product.UDISN +
@@ -166,19 +166,22 @@ export default {
                 })
                 .then(res => {
                     if (res.code == 200) {
-                        console.log('/Product/GetBySN response', res)
+                        console.log('/Product/CocCheckIn response', res)
                         Dialog.alert({
                             title: '信息提示',
-                            successMessage,
+                            message: successMessage,
                         }).then(() => {
                             const url = '../a-cochome/main'
-                            wx.navigateBack({ url: url })
+                            wx.navigateTo({ url: url })
                         })
                     } else {
-                        const message = res.message
+                        const message = '入库操作失败'
                         Dialog.alert({
                             title: '信息提示',
-                            message,
+                            message: errorMessage,
+                        }).then(() => {
+                            const url = '../a-cochome/main'
+                            wx.navigateTo({ url: url })
                         })
                     }
                 })
