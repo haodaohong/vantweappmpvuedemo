@@ -198,7 +198,7 @@ export default {
             minHour: 9,
             maxHour: 17,
             OrderTypes: [
-                { text: '设备预约', value: '首次预约' },
+                { text: '设备预约', value: '设备预约' },
                 { text: '购买贴片预约', value: '购买贴片预约' },
                 // { text: '产品维修', value: 2 },
             ],
@@ -210,7 +210,7 @@ export default {
             ],
             value1: 0,
             dtpName: 'xxxDTP药店',
-            CurrApplyOrder: '首次预约',
+            CurrApplyOrder: '设备预约',
             appointmentTime: '2019/12/31 11:00-12:00',
             openid: '',
             dtpid: 0,
