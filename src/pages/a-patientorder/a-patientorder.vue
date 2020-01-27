@@ -79,7 +79,7 @@
                                     />
                                 </van-popup>
                                 <van-field
-                                    :value="minDateStr"
+                                    :value="currentDateStr"
                                     icon="calender-o"
                                     icon-class="icon"
                                     required
@@ -188,13 +188,14 @@ export default {
             isShowApplyDatePicker: false,
             selectedDate: new Date().toLocaleDateString(),
             currentDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
-            currentBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*50).getTime(),
-            currentBirthDateStr: new Date(new Date().getTime() - 24*60*60*1000*30*12*50).toLocaleDateString(),
-            minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*100).getTime(),
+            currentDateStr: new Date(new Date().getTime() + 24*60*60*1000*2).toLocaleDateString(),
+            currentBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).getTime(),
+            currentBirthDateStr: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).toLocaleDateString(),
+            minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
             maxBirthDate: new Date(new Date().getTime()).getTime(),
             minDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
             minDateStr: new Date(new Date().getTime() + 24*60*60*1000*2).toLocaleDateString(),
-            maxDate: new Date(new Date().getTime() + 24*60*60*1000*30*3).getTime(),
+            maxDate: new Date(new Date().getTime() + 24*60*60*1000*3*30).getTime(),
             minHour: 9,
             maxHour: 17,
             OrderTypes: [
@@ -317,7 +318,7 @@ export default {
             var that = this;
             console.log('that.event', event);
             that.ApplyOrder.OrderType =  that.CurrApplyOrder;
-            if(that.ApplyOrder.Contact.Phone.length < 11){
+            if(that.ApplyOrder.Contact.PhoneText.length < 11){
                  Dialog.alert({
                         title: ' 提交失败',
                         message: '请填写合法的手机号码.',
@@ -376,6 +377,8 @@ export default {
 
             this.ApplyOrder.Contact.Birthday = this.dateFormat(date);
             this.isShowBirthdayPicker = false;
+            this.currentBirthDateStr = date.toLocaleDateString();
+            this.currentBirthDate = detail;
         },
         showBirthdayPicker(event){
             this.isShowBirthdayPicker = true;
@@ -389,9 +392,13 @@ export default {
             // console.log( detail )
             // console.log( currentTarget )
             const date = new Date(detail)
+            console.log('event.mp.detail', detail);
+            console.log('this.currentDate old', this.currentDate);
 
             this.ApplyOrder.ApplyDate = this.dateFormat(date);
-            this.currentDate = this.dateFormat(date);
+            this.currentDate = detail;
+            this.currentDateStr = date.toLocaleDateString();
+            console.log('this.currentDate new', this.currentDate);
             console.log('this.ApplyOrder', this.ApplyOrder)
             this.isShowApplyDatePicker = false;
         },
@@ -407,10 +414,18 @@ export default {
                         .then(res => {
                             console.log('/ApplyOrder/Create response', res)
                             that.ApplyOrder = res.data;
-                            that.Phone = that.ApplyOrder.Contact.Phone;
-                            const date = new Date(that.currentDate)
-                            that.ApplyOrder.ApplyDate = that.dateFormat(date);
-                            that.currentBirthDate = Date.parse(that.ApplyOrder.Contact.Birthday);
+                            that.Phone = that.ApplyOrder.Contact.PhoneText;
+                            that.ApplyOrder.Contact.Phone =  that.Phone;
+                            that.ApplyOrder.Contact.PhoneText =  that.Phone;
+                            console.log('that.Phone', that.Phone)
+
+                            if(that.ApplyOrder.Contact.Birthday){
+                                that.currentBirthDate = Date.parse(that.ApplyOrder.Contact.Birthday).getTime();
+                                that.currentBirthDateStr = Date.parse(that.ApplyOrder.Contact.Birthday).toLocaleDateString();
+                                console.log('currentBirthDate', currentBirthDate)
+                                console.log('currentBirthDateStr', currentBirthDateStr)
+                            }
+
                         });
         }
     },

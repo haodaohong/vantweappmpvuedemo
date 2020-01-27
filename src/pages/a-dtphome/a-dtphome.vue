@@ -680,55 +680,64 @@ export default {
             console.log('productCount:', productCount);
             console.log('contactId:', contactId);
             console.log('dtpId:', dtpId);
-            this.signOrder.DTPId = dtpId
-            this.signOrder.ContactId = contactId
-            this.signOrder.ApplyOrderId = applyOrderId
-            this.signOrder.ProductCount = productCount
-            console.log('SignOrder data:', this.signOrder)
-            var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
-            var applyOrder = this.applyOrders[index]
-            this.$http
-                .post({
-                    url:
-                        '/SignOrder/AddSignOrder?applyOrderId=' +
-                        this.signOrder.ApplyOrderId +
-                        '&productCount=' +
-                        this.signOrder.ProductCount +
-                        '&contactId=' +
-                        this.signOrder.ContactId +
-                        '&dtpId=' +
-                        this.signOrder.DTPId,
-                })
-                .then(res => {
-                    if (res != null && res.code == 200) {
-                        console.log('/SignOrder/AddSignOrder response', res)
-                        const message = '确认预约成功'
-                        Dialog.alert({
-                            title: '信息提示',
-                            message,
-                        }).then(() => {
-                            applyOrder.ShowConfirmApplyFooter = false
-                            applyOrder.ShowCancelApplyFooter = false
-                            applyOrder.ShowFooter =
-                                applyOrder.ShowSignWithVendorFooter ||
-                                applyOrder.ShowConfirmApplyFooter ||
-                                applyOrder.ShowCancelApplyFooter
-                        })
-                    } else {
-                        const message = '确认预约失败'
-                        Dialog.alert({
-                            title: '信息提示',
-                            message,
-                        })
-                    }
-                })
+            const confirmCancelAppointmentMessage = '是否确认该预约申请？'
+            Dialog.confirm({
+                title: '信息提示',
+                message: confirmCancelAppointmentMessage,
+            })
+            .then(() => {
+                // on confirm
+                this.signOrder.DTPId = dtpId
+                this.signOrder.ContactId = contactId
+                this.signOrder.ApplyOrderId = applyOrderId
+                this.signOrder.ProductCount = productCount
+                console.log('SignOrder data:', this.signOrder)
+                var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
+                var applyOrder = this.applyOrders[index]
+                this.$http
+                    .post({
+                        url:
+                            '/SignOrder/AddSignOrder?applyOrderId=' +
+                            this.signOrder.ApplyOrderId +
+                            '&productCount=' +
+                            this.signOrder.ProductCount +
+                            '&contactId=' +
+                            this.signOrder.ContactId +
+                            '&dtpId=' +
+                            this.signOrder.DTPId,
+                    })
+                    .then(res => {
+                        if (res != null && res.code == 200) {
+                            console.log('/SignOrder/AddSignOrder response', res)
+                            const message = '确认预约成功'
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            }).then(() => {
+                                applyOrder.ShowConfirmApplyFooter = false
+                                applyOrder.ShowCancelApplyFooter = false
+                                applyOrder.ShowFooter =
+                                    applyOrder.ShowSignWithVendorFooter ||
+                                    applyOrder.ShowConfirmApplyFooter ||
+                                    applyOrder.ShowCancelApplyFooter
+                            })
+                        } else {
+                            const message = '确认预约失败'
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            });
+            
         },
         //取消预约
         onCancelAppointment(applyOrderId) {
             console.log(applyOrderId)
             var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
             var applyOrder = this.applyOrders[index]
-            const confirmCancelAppointmentMessage = '是否确认取消该预约申请'
+            const confirmCancelAppointmentMessage = '是否确认取消该预约申请？'
             Dialog.confirm({
                 title: '信息提示',
                 message: confirmCancelAppointmentMessage,
