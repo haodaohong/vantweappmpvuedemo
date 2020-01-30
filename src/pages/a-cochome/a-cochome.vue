@@ -154,18 +154,43 @@ export default {
                 { text: '近一个月', value: 2 },
             ],
             products: [],
+            testCheckInProductSnCode: 0,
         }
     },
     //方法
     methods: {
         scanProduct(event) {
             // 允许从相机和相册扫码
+            var that = this
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    console.log('all: ', res)
-                    const url = '../a-cocproductin/main?qrcode=' + res.result
-                    wx.navigateTo({ url: url })
+                    console.log('scan data is: ', res)
+                    that.$http
+                        .get({
+                            url: '/Product/TestCheckInProductForCOC',
+                        })
+                        .then(res => {
+                            console.log(
+                                '/Product/TestCheckInProductForCOC response data is',
+                                res
+                            )
+                            if (res.code === 200) {
+                                that.testCheckInProductSnCode = res.data.UDISN
+                                //that.testCheckInProductSnCode = 'SN00002020130224828'
+                                const url =
+                                    '../a-cocproductin/main?sncode=' +
+                                    that.testCheckInProductSnCode
+                                console.log(url)
+                                wx.navigateTo({ url: url })
+                            } else {
+                                const message = '产品获取信息失败'
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
                 },
             })
         },
@@ -175,6 +200,7 @@ export default {
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('all: ', res)
+
                     const url =
                         '../a-cocproductsearch/main?qrcode=' + res.result
                     wx.navigateTo({ url: url })

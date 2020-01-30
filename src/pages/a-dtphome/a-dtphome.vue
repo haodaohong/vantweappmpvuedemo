@@ -399,11 +399,11 @@ export default {
             ],
             applyOrderTypeActiveValue: 0,
             applyOrderTypeActiveValueStr: '所有申请',
-            signOrder:{
-                DTPId:0,
-                ContactId:0,
-                ApplyOrderId:0,
-                ProductCount:0
+            signOrder: {
+                DTPId: 0,
+                ContactId: 0,
+                ApplyOrderId: 0,
+                ProductCount: 0,
             },
             signOrderTypeOption: [
                 { text: '所有类型', value: 0 },
@@ -433,6 +433,7 @@ export default {
             signOrders: [],
             products: [],
             maintenanceProducts: [],
+            testCheckInProductSnCode: ''
         }
     },
     //方法
@@ -617,12 +618,36 @@ export default {
         //扫码入库产品
         scanProduct(event) {
             // 允许从相机和相册扫码
+            var that = this
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('all: ', res)
-                    // const url = '../a-dtpproductin/main?qrcode=' + res.result
-                    // wx.navigateTo({ url: url })
+                    that.$http
+                        .get({
+                            url: '/Product/TestCheckInProductForDTP',
+                        })
+                        .then(res => {
+                            console.log(
+                                '/Product/TestCheckInProductForDTP response data is',
+                                res
+                            )
+                            if (res.code === 200) {
+                                that.testCheckInProductSnCode = res.data.UDISN
+                                //that.testCheckInProductSnCode = 'SN00002020130224828'
+                                const url =
+                                    '../a-dtpproductin/main?sncode=' +
+                                    that.testCheckInProductSnCode
+                                console.log(url)
+                                wx.navigateTo({ url: url })
+                            } else {
+                                const message = '产品获取信息失败'
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
                 },
             })
         },
@@ -633,9 +658,9 @@ export default {
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('all: ', res)
-                    // const url =
-                    //     '../a-dtpproductsearch/main?qrcode=' + res.result
-                    // wx.navigateTo({ url: url })
+                    const url =
+                        '../a-dtpproductsearch/main?qrcode=' + res.result
+                    wx.navigateTo({ url: url })
                 },
             })
         },
@@ -676,23 +701,24 @@ export default {
         },
         //确认预约
         onConfirmAppointment(applyOrderId, productCount, contactId, dtpId) {
-            console.log('applyOrderId:', applyOrderId);
-            console.log('productCount:', productCount);
-            console.log('contactId:', contactId);
-            console.log('dtpId:', dtpId);
+            console.log('applyOrderId:', applyOrderId)
+            console.log('productCount:', productCount)
+            console.log('contactId:', contactId)
+            console.log('dtpId:', dtpId)
             const confirmCancelAppointmentMessage = '是否确认该预约申请？'
             Dialog.confirm({
                 title: '信息提示',
                 message: confirmCancelAppointmentMessage,
-            })
-            .then(() => {
+            }).then(() => {
                 // on confirm
                 this.signOrder.DTPId = dtpId
                 this.signOrder.ContactId = contactId
                 this.signOrder.ApplyOrderId = applyOrderId
                 this.signOrder.ProductCount = productCount
                 console.log('SignOrder data:', this.signOrder)
-                var index = this.applyOrders.findIndex(x => x.Id == applyOrderId)
+                var index = this.applyOrders.findIndex(
+                    x => x.Id == applyOrderId
+                )
                 var applyOrder = this.applyOrders[index]
                 this.$http
                     .post({
@@ -729,8 +755,7 @@ export default {
                             })
                         }
                     })
-            });
-            
+            })
         },
         //取消预约
         onCancelAppointment(applyOrderId) {
@@ -810,7 +835,7 @@ export default {
             const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
-        rebind(){
+        rebind() {
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
@@ -839,7 +864,7 @@ export default {
                         }
                     })
             }
-    },
+        },
         //用户维修归还后DTP员工操作更换产品
         onProductChange(productId, productOrderId) {
             console.log('productId is:', productId)
@@ -875,7 +900,7 @@ export default {
         //}
     },
     onLoad: function(options) {
-        var that = this;
+        var that = this
         console.log(this.$globalData.departId)
         console.log(this.$globalData.openId)
         var userOpenId = this.$globalData.openId
@@ -899,7 +924,6 @@ export default {
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     //wx.navigateTo({ url: url })
-                                
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
                                     wx.navigateTo({ url: url })
@@ -908,14 +932,13 @@ export default {
                                 const url = '../a-registeruser/main'
                                 wx.navigateTo({ url: url })
                             }
-                            that.rebind();
+                            that.rebind()
                         })
                 },
             })
-        }else{
-            that.rebind();
+        } else {
+            that.rebind()
         }
-
     },
 
     //生命周期(mounted)

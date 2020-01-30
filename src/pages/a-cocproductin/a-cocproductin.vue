@@ -137,7 +137,7 @@ export default {
                 { text: '归还入库', value: 1 },
             ],
             checkInStatusActiveValue: 0,
-            qrCode: '',
+            snCode: '',
             product: {},
         }
     },
@@ -196,26 +196,26 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        //console.log('qrcode', this.$root.$mp.query.qrcode)
-        this.qrCode = this.$root.$mp.query.qrcode
-        console.log('qrCode:', this.qrCode)
-        this.qrCode = 'SN00001001'
+        var snCode = this.$root.$mp.query.sncode
+        this.snCode = snCode
+        console.log('snCode:', this.snCode)
+        //this.qrCode = 'SN00001001'
         console.log('globalData departId', this.$globalData.departId)
         this.$http
             .get({
-                url: '/Product/GetBySN?snCode=' + this.qrCode,
+                url: '/Product/GetBySN?snCode=' + this.snCode,
             })
             .then(res => {
                 if (res.code == 200) {
                     console.log('/Product/GetBySN response', res)
                     this.product = res.data
                     if (this.product.CurrentStatus == '出库到COC维修') {
-                        this.checkInStatusActiveValueStr = '维修入库'
+                        this.checkInStatusActiveValue = 0
                     } else {
-                        this.checkInStatusActiveValueStr = '归还入库'
+                        this.checkInStatusActiveValue = 1
                     }
                 } else {
-                    const message = res.message
+                    const message = '产品获取信息失败'
                     Dialog.alert({
                         title: '信息提示',
                         message,

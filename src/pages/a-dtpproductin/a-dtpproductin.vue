@@ -133,45 +133,44 @@ export default {
             ],
             checkInStatusActiveValue: 0,
             snCode: '',
-            //qrcode产品二维码扫描结果
-            qrCode: '',
             product: {},
         }
     },
     //方法
     methods: {
         onProductCheckIn(event) {
-            var that = this
-            const message = '该产品已成功录入系统!'
-            wx.login({
-                success: res => {
-                    // 调用接口获取openid
-                    console.log('res:', res)
-                    that.$http
-                        .post({
-                            url: '/dtp/Add',
-                            data: {
-                                product: this.product,
-                                code: res.code,
-                            },
+            const successMessage = '已成功入库产品!'
+            const errorMessage = '产品入库失败!'
+            this.$http
+                .post({
+                    url:
+                        '/Product/DtpCheckIn?snCode=' +
+                        this.product.UDISN +
+                        '&departId=' +
+                        this.$globalData.departId +
+                        '&status=' +
+                        this.checkInStatusActiveValueStr,
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        console.log('/Product/DtpCheckIn response', res)
+                        Dialog.alert({
+                            title: '信息提示',
+                            message: successMessage,
+                        }).then(() => {
+                            const url = '../a-dtphome/main'
+                            wx.navigateTo({ url: url })
                         })
-                        .then(res => {
-                            console.log('/COC/GetAll response', res)
+                    } else {
+                        Dialog.alert({
+                            title: '信息提示',
+                            message: errorMessage,
+                        }).then(() => {
+                            const url = '../a-dtphome/main'
+                            wx.navigateTo({ url: url })
                         })
-                },
-            })
-
-            Dialog.alert({
-                title: '入库成功',
-                message,
-            }).then(() => {
-                const url = '../a-dtphome/main'
-                wx.navigateBack({ url: url })
-            })
-        },
-        onConfirmProductOut(event) {
-            const url = '../a-dtphome/main'
-            wx.navigateTo({ url: url })
+                    }
+                })
         },
     },
     //计算属性
@@ -183,33 +182,26 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        console.log('qrcode', this.$root.$mp.query.qrcode)
-        this.product.qrcode = this.$root.$mp.query.qrcode
-        this.snCode = 'SN00001001'
-        var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url: '/Product/GetBySN?snCode=' + that.snCode,
+        console.log('sncode', this.$root.$mp.query.sncode)
+        console.log('departId', this.$globalData.departId)
+        var snCode = this.$root.$mp.query.sncode
+        this.snCode = snCode
+        this.$http
+            .get({
+                url: '/Product/GetBySN?snCode=' + this.snCode,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/Product/GetBySN response', res)
+                    this.product = res.data
+                } else {
+                    const message = '产品获取信息失败'
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
                     })
-                    .then(res => {
-                        if (res.code == 200) {
-                            console.log('/Product/GetBySN response', res)
-                            that.product = res.data
-                        } else {
-                            const message = res.message
-                            Dialog.alert({
-                                title: '信息提示',
-                                message,
-                            })
-                        }
-                    })
-            },
-        })
+                }
+            })
     },
 }
 </script>
