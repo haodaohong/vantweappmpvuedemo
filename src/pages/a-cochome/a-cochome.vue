@@ -260,6 +260,7 @@ export default {
         //}
     },
     onLoad: function(options) {
+        console.log('departId is:', this.$globalData.departId)
         this.products = []
         var userOpenId = this.$globalData.openId
         if (!userOpenId) {

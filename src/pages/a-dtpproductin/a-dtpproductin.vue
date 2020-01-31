@@ -90,6 +90,7 @@
                         <van-dropdown-item
                             :value="checkInStatusActiveValue"
                             :options="checkInStatusOption"
+                            @change="onCheckInStatusChange"
                         />
                     </van-dropdown-menu>
                 </div>
@@ -138,6 +139,14 @@ export default {
     },
     //方法
     methods: {
+        onCheckInStatusChange(event) {
+            this.checkInStatusActiveValue = event.mp.detail
+            this.checkInStatusActiveValueStr = this.checkInStatusOption[
+                this.checkInStatusActiveValue
+            ].text
+            console.log(this.checkInStatusActiveValue)
+            console.log(this.checkInStatusActiveValueStr)
+        },
         onProductCheckIn(event) {
             const successMessage = '已成功入库产品!'
             const errorMessage = '产品入库失败!'
@@ -182,6 +191,7 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
+        this.checkInStatusActiveValue = 0
         console.log('sncode', this.$root.$mp.query.sncode)
         console.log('departId', this.$globalData.departId)
         var snCode = this.$root.$mp.query.sncode

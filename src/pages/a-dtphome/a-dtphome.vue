@@ -433,7 +433,7 @@ export default {
             signOrders: [],
             products: [],
             maintenanceProducts: [],
-            testCheckInProductSnCode: ''
+            testCheckInProductSnCode: '',
         }
     },
     //方法
@@ -625,7 +625,9 @@ export default {
                     console.log('all: ', res)
                     that.$http
                         .get({
-                            url: '/Product/TestCheckInProductForDTP',
+                            url:
+                                '/Product/TestCheckInProductForDTP?departId=' +
+                                that.$globalData.departId,
                         })
                         .then(res => {
                             console.log(
