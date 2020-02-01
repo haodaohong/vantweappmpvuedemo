@@ -103,7 +103,7 @@
                     <span>姓名</span>
                 </div>
                 <div class="van-cell__value">
-                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" />
+                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" @change="onChangeName"/>
                 </div>
             </div>
             <div class="van-cell">
@@ -298,6 +298,11 @@ export default {
         that.ApplyOrder.Contact.PhoneText =  event.mp.detail;
         console.log('that.Phone', that.ApplyOrder.Contact.Phone)
       } ,
+      onChangeName ( event ) {
+        var that = this;
+        that.ApplyOrder.Contact.Name =  event.mp.detail.value;
+        console.log('that.ApplyOrder.Contact.Name', that.ApplyOrder.Contact.Name)
+      } ,
       onSelectProductCount ( event ) {
         var that = this;
         that.ApplyOrder.ProductCount =  event.mp.detail;
@@ -321,6 +326,13 @@ export default {
                  Dialog.alert({
                         title: ' 提交失败',
                         message: '请填写合法的手机号码.',
+                    });
+                    return;
+            }
+            if(that.ApplyOrder.Contact.Name.length <= 0){
+                 Dialog.alert({
+                        title: ' 提交失败',
+                        message: '请填写您的姓名.',
                     });
                     return;
             }

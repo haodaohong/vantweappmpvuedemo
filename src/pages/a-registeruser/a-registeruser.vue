@@ -202,6 +202,24 @@ export default {
         onSmsCodeFieldChange(event) {
             this.smsCode = event.mp.detail
         },
+        onCreateContactInfo(){
+            var that = this;
+            //登陆验证用户是否已经绑定过，绑定过则直接跳转
+            wx.login({
+                success (res) {
+                    if (res.code){
+                        console.log("login result",res)
+                        // 这里可以把code传给后台，后台用此获取openid及session_key
+                        that.$http.post({
+                            url:'/Users/UpdateBySessionCode?code='+res.code
+                        })
+                        .then(res => {
+                            console.log('/Users/UpdateBySessionCode response', res)
+                        });
+                    }
+                }
+            });
+        },
         onConfirmRegister(event) {
             if (this.errorMessagePhoneField !== '') {
                 Dialog.alert({
@@ -315,7 +333,15 @@ export default {
                             if (code === 200) {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
-                                that.$globalData.unionId = user.UnionId
+                                that.$globalData.unionId = user.UnionId;
+                                if(user.UnionId == ''){
+                                    const message = '请先搜索关注公众号【Zailab】即可正常使用'
+                                    Dialog.alert({
+                                        title: '信息提示',
+                                        message,
+                                    });
+                                    return;
+                                }
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     console.log('url', user.Role + url)

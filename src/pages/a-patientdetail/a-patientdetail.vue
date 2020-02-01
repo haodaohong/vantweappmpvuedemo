@@ -220,6 +220,10 @@ export default {
                {
                    that.Contact = null;
                    that.Contact = res.data;
+                   if(that.Contact.IDType.length <= 0)
+                   {
+                       that.Contact.IDType = '身份证'
+                   }
                     that.selectedDate = that.Contact.Birthday.replace(" 00:00:00","");
                     that.currentDate = new Date(that.Contact.Birthday).getTime();
                     console.log("that.selectedDate", that.selectedDate);
