@@ -67,7 +67,7 @@
                     </view>
                 </van-card>
             </van-tab>
-            <van-tab title="历史记录">
+            <van-tab title="预约记录">
                 <van-panel v-for="(apply, index) in applys" :key="index"
                     :title="apply.DTP.Name"
                     :desc="apply.DTP.Address"
