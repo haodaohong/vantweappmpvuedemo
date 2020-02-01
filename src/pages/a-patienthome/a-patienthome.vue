@@ -252,8 +252,7 @@ export default {
                     that.onLoadApplys();
              }
              else if (tabIndex == '2') {
-                    that.onLoadSignOrders();
-                    that.onLoadConfirmApplys();
+    
                     that.onLoadContact();
              }
         },
@@ -369,6 +368,7 @@ export default {
                    that.Contact = null;
                    that.Contact = res.data;
                }
+                that.onLoadSignOrders();
                that.$forceUpdate();
             });
         },
@@ -389,6 +389,7 @@ export default {
                 //         that.applys.push(res.data[i]);
                 //     }
                }
+                that.onLoadConfirmApplys();
                that.$forceUpdate();
             });
         },
