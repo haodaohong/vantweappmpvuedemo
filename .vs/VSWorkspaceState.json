@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    "\\src"
+    "",
+    "\\src",
+    "\\src\\common"
   ],
+  "SelectedNode": "\\src\\common\\wx-request.js",
   "PreviewInSolutionExplorer": false
 }

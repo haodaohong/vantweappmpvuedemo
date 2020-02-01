@@ -146,7 +146,6 @@
                     placeholder="请输入手机号"
                     @change="onChangePhone"
                     required
-                    error-message="手机号格式错误"
                 />
 
                 </div>
@@ -336,7 +335,7 @@ export default {
                 that.ApplyOrder.OrderType +
                 '\n' +
                 '预约时间：' +
-                that.appointmentTime +
+                that.currentDateStr +
                 '\n';
             Dialog.confirm({
                 messageAlign: 'left',
@@ -408,6 +407,7 @@ export default {
         onCreate(){
             var that = this;
             //ApplyOrder/Create
+            console.log("url",'https://oostest.zailaboratory.com/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.$globalData.openId)
             that.$http.get({
                             url:'/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.$globalData.openId
                         })
@@ -418,12 +418,15 @@ export default {
                             that.ApplyOrder.Contact.Phone =  that.Phone;
                             that.ApplyOrder.Contact.PhoneText =  that.Phone;
                             console.log('that.Phone', that.Phone)
+                            console.log('that.ApplyOrder.Contact.Birthday', that.ApplyOrder.Contact.Birthday)
 
-                            if(that.ApplyOrder.Contact.Birthday){
-                                that.currentBirthDate = Date.parse(that.ApplyOrder.Contact.Birthday).getTime();
-                                that.currentBirthDateStr = Date.parse(that.ApplyOrder.Contact.Birthday).toLocaleDateString();
-                                console.log('currentBirthDate', currentBirthDate)
-                                console.log('currentBirthDateStr', currentBirthDateStr)
+                            if(that.ApplyOrder.Contact.Birthday.length > 0){
+                                that.currentBirthDateStr = that.ApplyOrder.Contact.Birthday.replace(" 00:00:00","");
+                                // console.log('currentBirthDateStr', that.currentBirthDateStr);
+                                // console.log('Date.parse(that.ApplyOrder.Contact.Birthday)', new Date(Date.parse(that.ApplyOrder.Contact.Birthday)));
+                                // console.log('new Date(that.ApplyOrder.Contact.Birthday)', new Date(that.ApplyOrder.Contact.Birthday));
+                                that.currentBirthDate = new Date(that.ApplyOrder.Contact.Birthday).getTime();
+                                console.log('currentBirthDate', that.currentBirthDate);
                             }
 
                         });
