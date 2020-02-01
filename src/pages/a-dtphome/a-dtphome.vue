@@ -393,9 +393,9 @@ export default {
 
             applyOrderTypeOption: [
                 { text: '所有申请', value: 0 },
-                { text: '首次购买', value: 1 },
-                { text: '购买贴片', value: 2 },
-                { text: '产品维修', value: 3 },
+                { text: '设备预约', value: 1 },
+                { text: '购买贴片预约', value: 2 },
+                { text: '产品维修预约', value: 3 },
             ],
             applyOrderTypeActiveValue: 0,
             applyOrderTypeActiveValueStr: '所有申请',
@@ -433,7 +433,7 @@ export default {
             signOrders: [],
             products: [],
             maintenanceProducts: [],
-            testCheckInProductSnCode: '',
+            checkinProductSnCode: '',
         }
     },
     //方法
@@ -622,24 +622,26 @@ export default {
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    console.log('all: ', res)
+                    console.log('qrcode is: ', res.result)
+                    var qrCode = res.result
                     that.$http
                         .get({
                             url:
-                                '/Product/TestCheckInProductForDTP?departId=' +
+                                '/Product/AddProductFromDTPScanQrCode?qrCode=' +
+                                qrCode +
+                                '&departId=' +
                                 that.$globalData.departId,
                         })
                         .then(res => {
                             console.log(
-                                '/Product/TestCheckInProductForDTP response data is',
+                                '/Product/AddProductFromDTPScanQrCode response data is',
                                 res
                             )
                             if (res.code === 200) {
-                                that.testCheckInProductSnCode = res.data.UDISN
-                                //that.testCheckInProductSnCode = 'SN00002020130224828'
+                                that.checkinProductSnCode = res.data.UDISN
                                 const url =
                                     '../a-dtpproductin/main?sncode=' +
-                                    that.testCheckInProductSnCode
+                                    that.checkinProductSnCode
                                 console.log(url)
                                 wx.navigateTo({ url: url })
                             } else {
@@ -656,13 +658,37 @@ export default {
         //扫码查询产品
         scanSearchProduct(event) {
             // 允许从相机和相册扫码
+            var that = this
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    console.log('all: ', res)
-                    const url =
-                        '../a-dtpproductsearch/main?qrcode=' + res.result
-                    wx.navigateTo({ url: url })
+                    console.log('qrcode is: ', res.result)
+                    var qrCode = res.result
+                    that.$http
+                        .get({
+                            url:
+                                '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
+                        })
+                        .then(res => {
+                            console.log(
+                                '/Product/GetSnCodeFromQrCode response data is',
+                                res
+                            )
+                            if (res.code === 200) {
+                                that.checkinProductSnCode = res.data
+                                const url =
+                                    '../a-dtpproductsearch/main?sncode=' +
+                                    that.checkinProductSnCode
+                                console.log(url)
+                                wx.navigateTo({ url: url })
+                            } else {
+                                const message = '产品获取信息失败'
+                                Dialog.alert({
+                                    title: '信息提示',
+                                    message,
+                                })
+                            }
+                        })
                 },
             })
         },

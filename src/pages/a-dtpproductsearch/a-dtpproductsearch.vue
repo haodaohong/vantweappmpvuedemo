@@ -36,7 +36,7 @@
                             <span>产品类别</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>{{ product.ProductCategory }}</span>
+                            <span>{{ product.ProductType }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -87,8 +87,6 @@ export default {
     data() {
         return {
             snCode: '',
-            //qrcode产品二维码扫描结果
-            qrCode: '',
             product: {},
         }
     },
@@ -103,33 +101,26 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        console.log('qrcode', this.$root.$mp.query.qrcode)
-        this.product.qrcode = this.$root.$mp.query.qrcode
-        this.snCode = 'SN00001001'
-        var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url: '/Product/GetBySN?snCode=' + that.snCode,
+        console.log('sncode', this.$root.$mp.query.sncode)
+        var snCode = this.$root.$mp.query.sncode
+        this.product = {}
+        this.snCode = snCode
+        this.$http
+            .get({
+                url: '/Product/GetBySN?snCode=' + this.snCode,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/Product/GetBySN response', res)
+                    this.product = res.data
+                } else {
+                    const message = '产品获取信息失败'
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
                     })
-                    .then(res => {
-                        if (res.code == 200) {
-                            console.log('/Product/GetBySN response', res)
-                            that.product = res.data
-                        } else {
-                            const message = res.message
-                            Dialog.alert({
-                                title: '信息提示',
-                                message,
-                            })
-                        }
-                    })
-            },
-        })
+                }
+            })
     },
 }
 </script>
