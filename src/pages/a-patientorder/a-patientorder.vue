@@ -417,6 +417,7 @@ export default {
                             that.Phone = that.ApplyOrder.Contact.PhoneText;
                             that.ApplyOrder.Contact.Phone =  that.Phone;
                             that.ApplyOrder.Contact.PhoneText =  that.Phone;
+                            that.ApplyOrder.ApplyDate = that.currentDateStr;
                             console.log('that.Phone', that.Phone)
                             console.log('that.ApplyOrder.Contact.Birthday', that.ApplyOrder.Contact.Birthday)
 

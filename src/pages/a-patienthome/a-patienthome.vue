@@ -351,6 +351,7 @@ export default {
             wx.navigateTo({ url: url })
         },
         onSelectTab(event){
+            var that = this;
              console.log(event)
             var tabIndex = event.mp.detail['index']
              if (tabIndex == '0') {
@@ -561,10 +562,10 @@ export default {
                             that.$globalData.openId = res;
                             that.onCreateContactInfo();
                             that.onLoadDtps();
-                            that.onLoadApplys();
-                            that.onLoadSignOrders();
-                            that.onLoadConfirmApplys();
-                            that.onLoadContact();
+                            // that.onLoadApplys();
+                            // that.onLoadSignOrders();
+                            // that.onLoadConfirmApplys();
+                            // that.onLoadContact();
                         });
                     }
                 }
@@ -580,6 +581,7 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
+        console.log("host",this.$http.host);
         this.onGetOpenId();
     },
 }
