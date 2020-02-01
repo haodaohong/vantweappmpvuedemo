@@ -212,120 +212,12 @@ export default {
                 { text: '深圳', value: '深圳' },
             ],
             selectedCity: '',
-            dtps: [{
-                    Id: 0,
-                    Code: "",
-                    Name: "",
-                    Address: "",
-                    Phone: "",
-                    PhoneText: "",
-                    City: "",
-                    Note: ""
-                }],
-            applys:[
-                {
-                DTP: {
-                    Id: 0,
-                    Code: "",
-                    Name: "",
-                    Address: "",
-                    Phone: "",
-                    PhoneText: "",
-                    City: "",
-                    Note: ""
-                },
-                Contact: {
-                    Id: 0,
-                    Name: "",
-                    Sex: "",
-                    Province: "",
-                    City: "",
-                    Address: "",
-                    IDType: "",
-                    IDNum: "",
-                    Birthday: "0001-01-01T00:00:00",
-                    Phone: "",
-                    PhoneText: "",
-                    OAOpenId: "",
-                    MPOpenId: "",
-                    UnionId: ""
-                },
-                Id: 0,
-                ContactId: 0,
-                OrderType: "",
-                DTPId: 0,
-                LastDTPId: 0,
-                ProductCount: 0,
-                ApplyStatus: "",
-                ApplyDate: "0001-01-01T00:00:00",
-                IsConfirmedWithVendor: false,
-                CreateTime: "0001-01-01T00:00:00",
-                ComfirmBy: 0,
-                ComfirmTime: "0001-01-01T00:00:00"
-                }
-            ],
+            dtps: [],
+            applys:[],
             openid: '',
             MyOrder:{Products:[{qrcode:null,ProductionDateFormat:null,DTPCheckInDateFormat:null,DTPCheckOutDateFormat:null,COCCheckInDateFormat:null,COCCheckOutDateFormat:null,ExpiredYearFormat:null,TitleStatus:null,ShowReturnFooter:false,ShowChangeProductFooter:false,ShowCOCCheckOutFooter:false,Id:0,Specification:"",ProductionDate:"",DTPId:0,COCId:0,UDICode:"",UDISN:"",UDIDate:"",ProductName:"",Manufacturer:"",Vendor:"",CertificateNumber:"",ExpiredYears:0,ProductCategory:"",CurrentOrderId:0,CurrentStatus:"",CheckInFromRentalDate:"0001-01-01 00:00:00",CheckInFromReturnDate:"0001-01-01 00:00:00",CheckInFromMaintenanceDate:"0001-01-01 00:00:00",CheckOutToUserDate:"0001-01-01 00:00:00",CheckOutFromReturnDate:"0001-01-01 00:00:00",CheckOutFromMaintenanceDate:"0001-01-01 00:00:00",COCCheckInDate:"0001-01-01 00:00:00",COCCheckOutDate:"0001-01-01 00:00:00",DTPCheckOutShipCode:"",COCCheckOutShipCode:""}],OrderDetails:[{Id:0,ApplyOrderId:0,OrderId:0,ProductId:0,RepairApplyStatus:""}],Id:0,ApplyOrderId:0,ContactId:0,DTPId:0,ProductCount:0,SignStatus:"",SignNo:"",SignSubmitDate:"0001-01-01 00:00:00",SignPhotos:"",CreateBy:0,CreateTime:"0001-01-01 00:00:00"},
-            ConfrimedApplyOrders: [{
-                DTP: {
-                    Id: 0,
-                    Code: "",
-                    Name: "",
-                    Address: "",
-                    Phone: "",
-                    PhoneText: "",
-                    City: "",
-                    Note: ""
-                },
-                Contact: {
-                    Id: 0,
-                    Name: "",
-                    Sex: "",
-                    Province: "",
-                    City: "",
-                    Address: "",
-                    IDType: "",
-                    IDNum: "",
-                    Birthday: "0001-01-01T00:00:00",
-                    Phone: "",
-                    PhoneText: "",
-                    OAOpenId: "",
-                    MPOpenId: "",
-                    UnionId: ""
-                },
-                Id: 0,
-                ContactId: 0,
-                OrderType: "暂无",
-                DTPId: 0,
-                LastDTPId: 0,
-                ProductCount: 0,
-                ApplyStatus: "",
-                ApplyDate: "0001-01-01T00:00:00",
-                IsConfirmedWithVendor: false,
-                CreateTime: "0001-01-01T00:00:00",
-                ComfirmBy: 0,
-                ComfirmTime: "0001-01-01T00:00:00"
-            }],
-           SignOrders:[{
-               SignNo: "暂无",
-               DTP: {
-                    Id: 0,
-                    Code: "",
-                    Name: "暂无",
-                    Address: "",
-                    Phone: "",
-                    PhoneText: "",
-                    City: "",
-                    Note: ""
-                },
-              Products:[
-               {
-                    ProductName: "暂无",
-                    ProductCategory: '暂无',
-                    UDISN: '暂无'
-               }
-             ]
-           }],
+            ConfrimedApplyOrders: [],
+           SignOrders:[],
            Contact: {
                     Id: 0,
                     Name: "访客",
@@ -430,7 +322,7 @@ export default {
                 url: url
             })
             .then(res => {
-                console.log(url, res);
+                console.log("onLoadApplys", res);
                 that.applys = null;
                 if(res.data)
                {
@@ -441,7 +333,6 @@ export default {
                 //     }
                }
                that.$forceUpdate();
-               console.log('that.applys', that.applys);
             });
         },
         onLoadConfirmApplys(){
@@ -451,7 +342,7 @@ export default {
                 url: url
             })
             .then(res => {
-                console.log(url, res);
+                console.log("onLoadConfirmApplys", res);
                 that.ConfrimedApplyOrders = null;
                 if(res.data)
                {
@@ -462,7 +353,6 @@ export default {
                 //     }
                }
                that.$forceUpdate();
-               console.log('that.applys', that.applys);
             });
         },
         onLoadContact(){
@@ -472,7 +362,7 @@ export default {
                 url: url
             })
             .then(res => {
-                console.log(url, res);
+                console.log("onLoadContact", res);
 
                 if(res.data)
                {
@@ -489,7 +379,7 @@ export default {
                 url: url
             })
             .then(res => {
-                console.log(url, res);
+                console.log("onLoadSignOrders", res);
                 that.SignOrders = null;
                 if(res.data)
                {
@@ -500,7 +390,6 @@ export default {
                 //     }
                }
                that.$forceUpdate();
-               console.log('that.applys', that.applys);
             });
         },
         onCreateContactInfo(){
