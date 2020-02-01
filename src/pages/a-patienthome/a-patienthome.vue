@@ -42,7 +42,7 @@
             <van-tab title="预约服务">
             <mybr/>
             <van-search :value="selectedCity"
-                        placeholder="请输入药店代码"
+                        placeholder="请输入药店代码或名称"
                         use-action-slot
                         @change="onchange2"
                         @search="onSearch2">
@@ -81,15 +81,15 @@
                             </tr>
                             <tr>
                                 <td>预约数量：{{apply.ProductCount}}</td>
-                                <td>预约日期：{{apply.ApplyDate}}</td>
+                                <td>预约日期：{{apply.ApplyOrderDateTimeFormat}}</td>
                             </tr>
                             <tr>
                                 <td>姓名：{{apply.Contact.Name}}</td>
                                 <td>性别：{{apply.Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>出生日期：{{apply.Contact.Birthday}}</td>
-                                <td>手机号码：{{apply.Contact.Phone}}</td>
+                                <td>出生日期：{{apply.Contact.BirthDayFormat}}</td>
+                                <td>手机号码：{{apply.Contact.PhoneText}}</td>
                             </tr>
                             <tr>
                                 <td>身份证号：{{apply.Contact.IDNum}}</td>
@@ -115,7 +115,7 @@
                                 <td>性别：{{Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>出生日期：{{Contact.Birthday}}</td>
+                                <td>出生日期：{{Contact.BirthDayFormat}}</td>
                                 <td>手机号码：{{Contact.PhoneText}}</td>
                             </tr>
                             <tr>
@@ -132,14 +132,14 @@
                             </tr>
                             <tr>
                                 <td>预约数量：{{ApplyOrder.ProductCount}}</td>
-                                <td>预约日期：{{ApplyOrder.ApplyDate}}</td>
+                                <td>预约日期：{{ApplyOrder.ApplyOrderDateTimeFormat}}</td>
                             </tr>
                             <tr>
                                 <td>姓名：{{ApplyOrder.Contact.Name}}</td>
                                 <td>性别：{{ApplyOrder.Contact.Sex}}</td>
                             </tr>
                             <tr>
-                                <td>出生日期：{{ApplyOrder.Contact.Birthday}}</td>
+                                <td>出生日期：{{ApplyOrder.Contact.BirthDayFormat}}</td>
                                 <td>手机号码：{{ApplyOrder.Contact.PhoneText}}</td>
                             </tr>
                             <tr>
@@ -350,6 +350,21 @@ export default {
             const url = '../a-patientdetail/main'
             wx.navigateTo({ url: url })
         },
+        onSelectTab(event){
+            var that = this;
+             console.log(event)
+            var tabIndex = event.mp.detail['index']
+             if (tabIndex == '0') {
+                    that.onLoadDtps();
+             }else if (tabIndex == '1') {
+                    that.onLoadApplys();
+             }
+             else if (tabIndex == '2') {
+                    that.onLoadSignOrders();
+                    that.onLoadConfirmApplys();
+                    that.onLoadContact();
+             }
+        },
         onMakeAppointment(dtpid) {
             console.log("onMakeAppointment event",dtpid);
             const url = '../a-patientorder/main?dtpid=' + dtpid
@@ -547,10 +562,10 @@ export default {
                             that.$globalData.openId = res;
                             that.onCreateContactInfo();
                             that.onLoadDtps();
-                            that.onLoadApplys();
-                            that.onLoadSignOrders();
-                            that.onLoadConfirmApplys();
-                            that.onLoadContact();
+                            // that.onLoadApplys();
+                            // that.onLoadSignOrders();
+                            // that.onLoadConfirmApplys();
+                            // that.onLoadContact();
                         });
                     }
                 }
@@ -566,6 +581,7 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
+        console.log("host",this.$http.host);
         this.onGetOpenId();
     },
 }

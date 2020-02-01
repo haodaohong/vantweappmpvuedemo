@@ -20,7 +20,7 @@
                     <span>姓名</span>
                 </div>
                 <div class="van-cell__value">
-                    <input type="text" class="van-field__input" :value="Contact.Name" />
+                    <input type="text" class="van-field__input" :value="Contact.Name" @change="onChangeName"/>
                 </div>
             </div>
             <div class="van-cell">
@@ -42,6 +42,8 @@
                         <van-datetime-picker
                             type="date"
                             :value="currentDate"
+                            :min-date="minBirthDate"
+                            :max-date="maxBirthDate"
                             @confirm="userselectdate"
                             @cancel="usercancel"
                         />
@@ -63,6 +65,7 @@
                     <input
                         type="text"
                         class="van-field__input"
+                         @change="onChangePhone"
                         :value="Contact.PhoneText"
                     />
                 </div>
@@ -85,6 +88,7 @@
                     <input
                         type="text"
                         class="van-field__input"
+                        @change="onChangeIDNum"
                         :value="Contact.IDNum"
                     />
                 </div>
@@ -128,6 +132,8 @@ export default {
                 { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
                 { text: '港澳台居民居住证', value: '港澳台居民居住证' },
             ],
+            minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
+            maxBirthDate: new Date(new Date().getTime()).getTime(),
             value2: 0,
             isshowdatetimepicker: false,
             selectedDate: new Date().toLocaleDateString(),
@@ -142,7 +148,7 @@ export default {
                     Address: "",
                     IDType: "",
                     IDNum: "",
-                    Birthday: "0001-01-01T00:00:00",
+                    Birthday: "0001-01-01",
                     Phone: "",
                     PhoneText: "",
                     OAOpenId: "",
@@ -167,31 +173,57 @@ export default {
             console.log('date', date)
             console.log('date.toLocaleDateString()', date.toLocaleDateString())
 
-            this.selectedDate = date.toLocaleDateString()
-            this.isshowdatetimepicker = false
+            this.selectedDate = date.toLocaleDateString();
+            this.isshowdatetimepicker = false;
+            this.Contact.Birthday = date.toLocaleDateString();
+            this.currentDate = detail;
         },
         usercancel(event) {
             this.isshowdatetimepicker = false
         },
         onSelectIDType(event) {
             this.Contact.IDType = event.mp.detail;
+            console.log('this.Contact.IDType', this.Contact.IDType)
         }, 
         selectSex(event) {
             this.Contact.Sex = event.mp.detail;
+            console.log('this.Contact.Sex', this.Contact.Sex)
         },
+        onChangePhone ( event ) {
+            var that = this;
+            that.Contact.Phone =  event.mp.detail.value;
+            that.Contact.PhoneText =  event.mp.detail.value;
+            console.log('that.Phone', that.Contact.Phone)
+        } ,
+        onChangeIDNum ( event ) {
+            var that = this;
+            that.Contact.IDNum =  event.mp.detail.value;
+            console.log('that.IDNum', that.Contact.IDNum)
+        } ,
+        onChangeName ( event ) {
+            var that = this;
+            that.Contact.Name =  event.mp.detail.value;
+            console.log('that.Name', that.Contact.Name)
+        } ,
         onLoadContact(){
             var that = this;
+            console.log("that contact", that.Contact);
             var url = '/Contact/GetByOpenId?openid='+that.$globalData.openId;
             that.$http.get({
                 url: url
             })
             .then(res => {
-                console.log(url, res);
+                console.log(url);
+                console.log("contact", res);
 
                 if(res.data)
                {
                    that.Contact = null;
                    that.Contact = res.data;
+                    that.selectedDate = that.Contact.Birthday.replace(" 00:00:00","");
+                    that.currentDate = new Date(that.Contact.Birthday).getTime();
+                    console.log("that.selectedDate", that.selectedDate);
+                    console.log("that.currentDate", that.currentDate);
                }
                that.$forceUpdate();
             });
@@ -199,6 +231,7 @@ export default {
         onSave(event) {
             const message = '保存成功！'
             var that = this;
+            console.log("contact", that.Contact);
             var url = '/Contact/Update';
             that.$http.post({
                 url: url,
