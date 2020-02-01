@@ -1,4 +1,5 @@
 const host = 'http://localhost:1626' //写自己的域名     https://oostest.zailaboratory.com      'http://localhost:1626'
+const servicegoHost = 'https://servicego.udesk.cn'
 
 function request(url, method, data, header = {}) {
     wx.showLoading({
@@ -41,4 +42,5 @@ export default {
     get,
     post,
     host,
+    servicegoHost,
 }

@@ -222,12 +222,6 @@ export default {
                     })
                 }
             })
-        var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-            },
-        })
     },
 }
 </script>

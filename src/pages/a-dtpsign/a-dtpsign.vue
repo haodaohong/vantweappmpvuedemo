@@ -214,7 +214,7 @@ export default {
                 const pic = pics[index]
                 wx.uploadFile({
                     url:
-                        this.$globalData.host +
+                        this.$http.host +
                         '/SignOrder/UploadPicture?signOrderSmallId=' +
                         this.signOrder.id, // 仅为示例，非真实的接口地址
                     filePath: pic.path,
@@ -238,7 +238,7 @@ export default {
                                     returnModel.RichText.attachmentList[index]
                                 that.fileList.push({
                                     url:
-                                        that.$globalData.servicegoHost +
+                                        that.$http.servicegoHost +
                                         attachment.docAddress,
                                     name: attachment.name,
                                     isImage: true,
