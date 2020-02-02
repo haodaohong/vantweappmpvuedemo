@@ -370,7 +370,7 @@ export default {
             if(that.SignOrders.length > 0 && that.SignOrders[0].SignDTPName != that.ApplyOrder.DTP.Name)
             {
                 newDTP = "签约药店：" + that.SignOrders[0].SignDTPName + "\n";
-                that.ApplyOrder.LastDTPId = that.SignOrders[0].DTPId;
+                that.ApplyOrder.LastDTPId = that.SignOrders[0].DTP.Id;
             }
             console.log('that.ApplyOrder request', that.ApplyOrder)
             const message =
