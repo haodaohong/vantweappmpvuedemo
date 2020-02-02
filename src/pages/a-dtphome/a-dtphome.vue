@@ -703,7 +703,7 @@ export default {
                 })
                 .then(res => {
                     if (res != null && res.code == 200) {
-                        console.log('/SignOrder/AddSignOrder response', res)
+                        console.log('/ApplyOrder/ConfirmWithVendor?applyOrderId=' + applyOrderId + ' response', res)
                         const message = '已确认与租赁商签约'
 
                         Dialog.alert({

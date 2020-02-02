@@ -33,7 +33,7 @@
                             <span>预约产品：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>XXX产品</span>
+                            <span>医疗产品</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -153,6 +153,34 @@
             </div>
         </div>
         <mybr />
+        <div class="basicinfo" v-for="(SignOrder, index) in SignOrders" :key="index">
+            <div>
+                <h2 class="van-doc-demo-block__title">签约信息</h2>
+            </div>
+            <div>
+                <div>
+                    <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>签约药店</span>
+                </div>
+                <div class="van-cell__value">
+                    {{SignOrder.DTP.Name}}
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>签约编号</span>
+                </div>
+                <div class="van-cell__value">
+                    {{SignOrder.SignNo}}
+                </div>
+            </div>
+
+                </div>
+                <view class="divLine"></view>
+            </div>
+        </div>
+        <mybr />
         <div class="confirmsignbtn">
             <van-button
                 square
@@ -254,6 +282,7 @@ export default {
                 ComfirmBy: 0,
                 ComfirmTime: "0001-01-01T00:00:00"
             },
+            SignOrders: [],
             Phone: '',
             ProductCount: 1,
         }
@@ -316,7 +345,8 @@ export default {
       onChangeType ( event ) {
         var that = this;
         that.ApplyOrder.OrderType =  event.mp.detail;
-        console.log('that.OrderType', that.ApplyOrder.OrderType)
+        that.CurrApplyOrder =  event.mp.detail;
+        console.log('that.ApplyOrder.OrderType', that.ApplyOrder.OrderType)
       } ,
         onConfirmAppointment(event) {
             var that = this;

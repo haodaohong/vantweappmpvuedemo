@@ -63,6 +63,7 @@
                 placeholder="请输入协议编号"
                 clearable
                 required
+                @change="onChangeContractNumber"
             />
             <van-cell title="上传协议(最多三张)"></van-cell>
 
@@ -150,7 +151,7 @@ export default {
             this.$http
                 .post({
                     url:
-                        '/SignOrder/UpdateSignContract?signOrderId=' +
+                        '/SignOrder/UpdateSignContract?signOrderSmallId=' +
                         this.signOrder.id +
                         '&signDate=' +
                         this.selectedDate +
@@ -158,6 +159,7 @@ export default {
                         this.contractNumber,
                 })
                 .then(res => {
+                    console.log("UpdateSignContract", res)
                     if (res.code == 200) {
                         Dialog.alert({
                             title: '信息提示',
@@ -175,6 +177,11 @@ export default {
                         })
                     }
                 })
+        },
+        onChangeContractNumber(event){
+            console.log("contractNumber", this.contractNumber)
+            console.log('onChangeContractNumber event', event.mp.detail)
+            this.contractNumber = event.mp.detail;
         },
         showdatetimepicker(event) {
             console.log('showdatetimepicker event', event)
@@ -292,6 +299,9 @@ export default {
                     })
                 }
             })
+    },
+    onShow: function(){
+        this.fileList = [];
     },
     //生命周期(mounted)
     mounted() {},
