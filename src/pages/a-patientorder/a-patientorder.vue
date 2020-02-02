@@ -33,7 +33,7 @@
                             <span>预约产品：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>XXX产品</span>
+                            <span>医疗产品</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -316,7 +316,8 @@ export default {
       onChangeType ( event ) {
         var that = this;
         that.ApplyOrder.OrderType =  event.mp.detail;
-        console.log('that.OrderType', that.ApplyOrder.OrderType)
+        that.CurrApplyOrder =  event.mp.detail;
+        console.log('that.ApplyOrder.OrderType', that.ApplyOrder.OrderType)
       } ,
         onConfirmAppointment(event) {
             var that = this;

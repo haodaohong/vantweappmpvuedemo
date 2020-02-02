@@ -456,6 +456,20 @@ export default {
                             // that.onLoadSignOrders();
                             // that.onLoadConfirmApplys();
                             // that.onLoadContact();
+                            var urlcontact = '/Contact/GetByOpenId?openid='+that.openid;
+                                that.$http.get({
+                                    url: urlcontact
+                                })
+                                .then(res => {
+
+                                    if(res.data)
+                                    {
+                                    console.log("onLoadContact", res);
+                                        that.Contact = null;
+                                        that.Contact = res.data;
+                                    }
+                                    that.$forceUpdate();
+                                });
                         });
                     }
                 }
@@ -474,6 +488,11 @@ export default {
         console.log("host",this.$http.host);
         this.onGetOpenId();
     },
+    onShow(){
+        console.log("onShow");
+        var that = this;
+        this.onGetOpenId();
+    }
 }
 </script>
 
