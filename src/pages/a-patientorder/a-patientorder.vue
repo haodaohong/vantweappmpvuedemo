@@ -41,7 +41,7 @@
                             <span>预约数量：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span><van-stepper :value="ProductCount" integer :change="onSelectProductCount"/></span>
+                            <span><van-stepper :value="ProductCount" integer @change="onSelectProductCount"/></span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -152,7 +152,6 @@
                 <view class="divLine"></view>
             </div>
         </div>
-        <mybr />
         <div class="basicinfo" v-for="(SignOrder, index) in SignOrders" :key="index">
             <div>
                 <h2 class="van-doc-demo-block__title">签约信息</h2>
@@ -163,8 +162,8 @@
                 <div class="van-cell__title">
                     <span>签约药店</span>
                 </div>
-                <div class="van-cell__value">
-                    {{SignOrder.DTP.Name}}
+                <div class="van-cell__value signed">
+                    {{SignOrder.SignDTPName}}
                 </div>
             </div>
             <div class="van-cell">
@@ -334,7 +333,7 @@ export default {
       } ,
       onSelectProductCount ( event ) {
         var that = this;
-        that.ApplyOrder.ProductCount =  event.mp.detail;
+        that.ProductCount =  parseInt(event.mp.detail);
         console.log('event.mp.detail', event.mp.detail)
       } ,
       onChangeSex ( event ) {
@@ -368,11 +367,16 @@ export default {
             }
             that.ApplyOrder.ProductCount =  that.ProductCount;
             console.log('that.ApplyOrder', that.ApplyOrder)
+            var newDTP = "";
+            if(that.SignOrders.length > 0 && that.SignOrders[0].SignDTPName != that.ApplyOrder.DTP.Name)
+            {
+                newDTP = "签约药店：" + that.SignOrders[0].SignDTPName + "\n";
+            }
             const message =
                 '您将提交如下预约信息:\n' +
-                '预约DTP：' +
+                '预约药店：' +
                 that.ApplyOrder.DTP.Name +
-                '\n' +
+                '\n' + newDTP +
                 '预约类型：' +
                 that.ApplyOrder.OrderType +
                 '\n' +
@@ -427,6 +431,24 @@ export default {
         cancelBirthdayPicker(event) {
             this.isShowBirthdayPicker = false
         },
+        getSignOrders(){
+            var that = this;
+            var openId = that.$globalData.openId;
+            that.$http
+                .get({
+                    url:
+                        '/SignOrder/GetByFilterStatus?mpOpenId=' + openId + '&filterStatus=已签约',
+                })
+                .then(res => {
+                    if (res.code == 200) {
+                        that.SignOrders = res.data
+                        console.log(
+                            '/SignOrder/GetByFilterStatus response',
+                            that.SignOrders
+                        );
+                    }
+                })
+        },
         selectApplyDatePicker(event) {
             //console.log( 'onconfirm2' , event )
             const { detail, currentTarget } = event.mp
@@ -471,7 +493,7 @@ export default {
                                 that.currentBirthDate = new Date(that.ApplyOrder.Contact.Birthday).getTime();
                                 console.log('currentBirthDate', that.currentBirthDate);
                             }
-
+                            that.getSignOrders();
                         });
         }
     },

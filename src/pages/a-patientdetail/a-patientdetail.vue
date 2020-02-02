@@ -198,7 +198,7 @@ export default {
         onChangeIDNum ( event ) {
             var that = this;
             that.Contact.IDNum =  event.mp.detail.value;
-            console.log('that.IDNum', that.Contact.IDNum)
+            console.log('that.Contact.IDNum', that.Contact.IDNum)
         } ,
         onChangeName ( event ) {
             var that = this;
@@ -235,7 +235,7 @@ export default {
         onSave(event) {
             const message = '保存成功！'
             var that = this;
-            console.log("contact", that.Contact);
+            console.log("contact request", that.Contact);
             var url = '/Contact/Update';
             that.$http.post({
                 url: url,

@@ -486,7 +486,7 @@ export default {
     //生命周期(mounted)
     mounted() {
         console.log("host",this.$http.host);
-        this.onGetOpenId();
+        // this.onGetOpenId();
     },
     onShow(){
         console.log("onShow");
