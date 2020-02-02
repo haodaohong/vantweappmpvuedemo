@@ -159,7 +159,7 @@ export default {
                         this.contractNumber,
                 })
                 .then(res => {
-                    console.log("UpdateSignContract", res)
+                    console.log('UpdateSignContract', res)
                     if (res.code == 200) {
                         Dialog.alert({
                             title: '信息提示',
@@ -178,10 +178,10 @@ export default {
                     }
                 })
         },
-        onChangeContractNumber(event){
-            console.log("contractNumber", this.contractNumber)
+        onChangeContractNumber(event) {
+            console.log('contractNumber', this.contractNumber)
             console.log('onChangeContractNumber event', event.mp.detail)
-            this.contractNumber = event.mp.detail;
+            this.contractNumber = event.mp.detail
         },
         showdatetimepicker(event) {
             console.log('showdatetimepicker event', event)
@@ -278,6 +278,8 @@ export default {
     onLoad: function(options) {
         this.signOrderId = this.$root.$mp.query.signOrderId
         var date = new Date()
+        this.fileList = []
+        this.contractNumber = ''
         this.selectedDate = date.toLocaleDateString()
         console.log('sign order id is:', this.signOrderId)
         this.$http
@@ -290,7 +292,24 @@ export default {
                 if (res.code == 200) {
                     console.log('/SignOrder/GetBySignOrderId response', res)
                     this.signOrder = res.data
-                    console.log('sign order data:', this.signOrder)
+                    for (
+                        let index = 0;
+                        index < this.signOrder.RichText.attachmentList.length;
+                        index++
+                    ) {
+                        //const element = array[index];
+                        var attachment = this.signOrder.RichText.attachmentList[
+                            index
+                        ]
+                        this.fileList.push({
+                            url:
+                                this.$http.servicegoHost +
+                                attachment.docAddress,
+                            name: attachment.name,
+                            isImage: true,
+                        })
+                    }
+                    console.log(this.fileList)
                 } else {
                     const message = res.message
                     Dialog.alert({
@@ -300,9 +319,7 @@ export default {
                 }
             })
     },
-    onShow: function(){
-        this.fileList = [];
-    },
+    onShow: function() {},
     //生命周期(mounted)
     mounted() {},
 }

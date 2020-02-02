@@ -25,7 +25,7 @@
                                 <span>名称：{{ product.ProductName }}</span>
                             </div>
                             <div class="van-cell__title">
-                                <span>类型：{{ product.ProductCategory }}</span>
+                                <span>类型：{{ product.ProductType }}</span>
                             </div>
                         </div>
                         <div class="van-cell">
@@ -163,19 +163,40 @@ export default {
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    var newSnCode = 'SN00001014'
-                    console.log('all: ', res)
+                    console.log('qrcode is: ', res.result)
+                    var qrCode = res.result
                     that.$http
                         .get({
-                            url: '/Product/GetBySN?snCode=' + newSnCode,
+                            url:
+                                '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
                         })
                         .then(res => {
                             if (res.code == 200) {
-                                console.log('/Product/GetBySN response', res)
-                                that.products.push(res.data)
-                                that.productcount = that.products.length
+                                console.log(
+                                    '/Product/GetSnCodeFromQrCode response',
+                                    res
+                                )
+                                var snCode = res.data
+                                that.$http
+                                    .get({
+                                        url:
+                                            '/Product/GetBySN?snCode=' + snCode,
+                                    })
+                                    .then(res => {
+                                        if (res.code == 200) {
+                                            that.products.push(res.data)
+                                            that.productcount =
+                                                that.products.length
+                                        } else {
+                                            const message = '该产品不存在'
+                                            Dialog.alert({
+                                                title: '信息提示',
+                                                message,
+                                            })
+                                        }
+                                    })
                             } else {
-                                const message = res.message
+                                const message = '读取二维码失败'
                                 Dialog.alert({
                                     title: '信息提示',
                                     message,

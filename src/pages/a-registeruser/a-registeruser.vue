@@ -17,7 +17,10 @@
         <div v-show="isShowLoading"></div>
         <div class="flex-container" v-show="isShowRegister">
             <div class="selectRole">
-                <van-button type="default" @click="onShowRoles"
+                <van-button
+                    type="default"
+                    @click="onShowRoles"
+                    :disabled="isDisabledSelectedRole"
                     >选择角色：
                     <span
                         :class="[
@@ -98,6 +101,7 @@ export default {
     //数据模型
     data() {
         return {
+            isDisabledSelectedRole: false,
             isShowLoading: true,
             isShowRegister: false,
             //从0开始的
@@ -130,6 +134,9 @@ export default {
             this.radio = event.mp.detail
         },
         onShowRoles(event) {
+            if (this.isDisabledSelectedRole) {
+                return
+            }
             this.isShowRole = true
         },
         onCloseRoles(event) {
@@ -181,6 +188,7 @@ export default {
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
                     if (res.code == 200) {
+                        this.isDisabledSelectedRole = true
                         this.BtnSendSmsCodeContent =
                             this.countdownTime + 's后重新发送'
                         this.isBtnSmsCodeDisabled = true
@@ -203,7 +211,7 @@ export default {
                         var errorMessage = res.message
                         Dialog.alert({
                             title: '信息提示',
-                            errorMessage,
+                            message: errorMessage,
                         })
                     }
                 })
@@ -330,6 +338,7 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
+        this.isDisabledSelectedRole = false
         var that = this
         //登陆验证用户是否已经绑定过，绑定过则直接跳转
         wx.login({

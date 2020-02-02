@@ -446,6 +446,7 @@ export default {
         onLoadTabData(tabIndex) {
             if (tabIndex == '0') {
                 this.activeTab = 0
+                this.applyOrders = []
                 var openId = this.activeUser.openId
                 this.$http
                     .get({
@@ -467,6 +468,7 @@ export default {
             }
             if (tabIndex == '1') {
                 this.activeTab = 1
+                this.signOrders = []
                 var openId = this.activeUser.openId
                 this.$http
                     .get({
@@ -488,6 +490,7 @@ export default {
             }
             if (tabIndex == '2') {
                 this.activeTab = 2
+                this.products = []
                 this.$http
                     .get({
                         url:
@@ -506,6 +509,7 @@ export default {
             }
             if (tabIndex == '3') {
                 this.activeTab = 3
+                this.maintenanceProducts = []
                 this.$http
                     .get({
                         url: '/Product/GetMaintenanceProducts',
