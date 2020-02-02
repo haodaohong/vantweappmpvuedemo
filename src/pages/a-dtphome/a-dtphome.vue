@@ -772,6 +772,7 @@ export default {
                                 title: '信息提示',
                                 message,
                             }).then(() => {
+                                applyOrder.TitleStatus = '已确认'
                                 applyOrder.ShowConfirmApplyFooter = false
                                 applyOrder.ShowCancelApplyFooter = false
                                 applyOrder.ShowFooter =
