@@ -300,6 +300,9 @@ export default {
                 }
             })
     },
+    onShow: function(){
+        this.fileList = [];
+    },
     //生命周期(mounted)
     mounted() {},
 }
