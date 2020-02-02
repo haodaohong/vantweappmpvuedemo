@@ -180,45 +180,60 @@ export default {
                 })
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
-                    this.selectedDepartId = res.data
-                    this.$globalData.departId = res.data
+                    if (res.code == 200) {
+                        this.BtnSendSmsCodeContent =
+                            this.countdownTime + 's后重新发送'
+                        this.isBtnSmsCodeDisabled = true
+                        const _this = this
+                        this.timer = setInterval(function() {
+                            _this.countdownTime--
+                            _this.BtnSendSmsCodeContent =
+                                _this.countdownTime + 's后重新发送'
+                            if (_this.countdownTime < 0) {
+                                //当倒计时小于0时清除定时器
+                                clearInterval(_this.timer)
+                                _this.BtnSendSmsCodeContent = '重新发送验证码'
+                                _this.countdownTime = 5
+                                _this.isBtnSmsCodeDisabled = false
+                            }
+                        }, 1000)
+                        this.selectedDepartId = res.data
+                        this.$globalData.departId = res.data
+                    } else {
+                        var errorMessage = res.message
+                        Dialog.alert({
+                            title: '信息提示',
+                            errorMessage,
+                        })
+                    }
                 })
-            this.BtnSendSmsCodeContent = this.countdownTime + 's后重新发送'
-            this.isBtnSmsCodeDisabled = true
-            const _this = this
-            this.timer = setInterval(function() {
-                _this.countdownTime--
-                _this.BtnSendSmsCodeContent =
-                    _this.countdownTime + 's后重新发送'
-                if (_this.countdownTime < 0) {
-                    //当倒计时小于0时清除定时器
-                    clearInterval(_this.timer)
-                    _this.BtnSendSmsCodeContent = '重新发送验证码'
-                    _this.countdownTime = 5
-                    _this.isBtnSmsCodeDisabled = false
-                }
-            }, 1000)
         },
         onSmsCodeFieldChange(event) {
             this.smsCode = event.mp.detail
         },
-        onCreateContactInfo(){
-            var that = this;
+        onCreateContactInfo() {
+            var that = this
             //登陆验证用户是否已经绑定过，绑定过则直接跳转
             wx.login({
-                success (res) {
-                    if (res.code){
-                        console.log("login result",res)
+                success(res) {
+                    if (res.code) {
+                        console.log('login result', res)
                         // 这里可以把code传给后台，后台用此获取openid及session_key
-                        that.$http.post({
-                            url:'/Users/UpdateBySessionCode?code='+res.code
-                        })
-                        .then(res => {
-                            console.log('/Users/UpdateBySessionCode response', res)
-                        });
+                        that.$http
+                            .post({
+                                url:
+                                    '/Users/UpdateBySessionCode?code=' +
+                                    res.code,
+                            })
+                            .then(res => {
+                                console.log(
+                                    '/Users/UpdateBySessionCode response',
+                                    res
+                                )
+                            })
                     }
-                }
-            });
+                },
+            })
         },
         onConfirmRegister(event) {
             if (this.errorMessagePhoneField !== '') {
@@ -333,14 +348,15 @@ export default {
                             if (code === 200) {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
-                                that.$globalData.unionId = user.UnionId;
-                                if(user.UnionId == ''){
-                                    const message = '请先搜索关注公众号【Zailab】即可正常使用'
+                                that.$globalData.unionId = user.UnionId
+                                if (user.UnionId == '') {
+                                    const message =
+                                        '请先搜索关注公众号【Zailab】即可正常使用'
                                     Dialog.alert({
                                         title: '信息提示',
                                         message,
-                                    });
-                                    return;
+                                    })
+                                    return
                                 }
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
