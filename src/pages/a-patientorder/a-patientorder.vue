@@ -366,12 +366,13 @@ export default {
                     return;
             }
             that.ApplyOrder.ProductCount =  that.ProductCount;
-            console.log('that.ApplyOrder', that.ApplyOrder)
             var newDTP = "";
             if(that.SignOrders.length > 0 && that.SignOrders[0].SignDTPName != that.ApplyOrder.DTP.Name)
             {
                 newDTP = "签约药店：" + that.SignOrders[0].SignDTPName + "\n";
+                that.ApplyOrder.LastDTPId = that.SignOrders[0].DTPId;
             }
+            console.log('that.ApplyOrder request', that.ApplyOrder)
             const message =
                 '您将提交如下预约信息:\n' +
                 '预约药店：' +
