@@ -17,7 +17,7 @@
                 <div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>产品编号</span>
+                            <span>产品SN</span>
                         </div>
                         <div class="van-cell__value">
                             <span>{{ product.UDISN }}</span>

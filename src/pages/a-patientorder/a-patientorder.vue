@@ -438,14 +438,14 @@ export default {
             that.$http
                 .get({
                     url:
-                        '/SignOrder/GetByFilterStatus?mpOpenId=' + openId + '&filterStatus=已签约',
+                        '/SignOrder/GetByFilterStatusAndContact?contactMPOpenId=' + openId + '&filterStatus=已签约',
                 })
                 .then(res => {
                     if (res.code == 200) {
                         that.SignOrders = res.data
                         console.log(
                             '/SignOrder/GetByFilterStatus response',
-                            that.SignOrders
+                            res
                         );
                     }
                 })
