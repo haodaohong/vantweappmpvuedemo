@@ -754,6 +754,7 @@ export default {
                 message: confirmCancelAppointmentMessage,
             }).then(() => {
                 // on confirm
+                var that = this;
                 this.signOrder.DTPId = dtpId
                 this.signOrder.ContactId = contactId
                 this.signOrder.ApplyOrderId = applyOrderId
@@ -791,7 +792,8 @@ export default {
                                 applyOrder.ShowFooter =
                                     applyOrder.ShowSignWithVendorFooter ||
                                     applyOrder.ShowConfirmApplyFooter ||
-                                    applyOrder.ShowCancelApplyFooter
+                                    applyOrder.ShowCancelApplyFooter;
+                                    that.rebind();
                             })
                         } else {
                             const message = '确认预约失败'
