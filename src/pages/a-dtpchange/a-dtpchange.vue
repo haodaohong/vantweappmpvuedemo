@@ -124,6 +124,7 @@ export default {
             signOrder: {
                 SignDTPName: '',
                 LastSignDTPName: '',
+                LastSignDTPSmallId: 0,
                 Contact: { Name: '' },
                 ProductCount: '',
             },
@@ -143,7 +144,9 @@ export default {
                         '&signDate=' +
                         this.selectedDate +
                         '&contractNumber=' +
-                        this.newcontractnumber,
+                        this.newcontractnumber +
+                        '&lastDtpSmallId=' +
+                        this.signOrder.LastSignDTPSmallId,
                 })
                 .then(res => {
                     if (res.code == 200) {

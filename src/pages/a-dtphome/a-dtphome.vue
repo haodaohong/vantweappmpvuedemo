@@ -762,7 +762,9 @@ export default {
                             '&contactId=' +
                             this.signOrder.ContactId +
                             '&dtpId=' +
-                            this.signOrder.DTPId,
+                            this.signOrder.DTPId +
+                            '&openId=' +
+                            this.$globalData.openId,
                     })
                     .then(res => {
                         if (res != null && res.code == 200) {

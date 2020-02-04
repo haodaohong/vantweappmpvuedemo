@@ -77,7 +77,7 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约产品：xxx仪器</td>
+                                <td>预约产品：医疗仪器</td>
                             </tr>
                             <tr>
                                 <td>预约数量：{{apply.ProductCount}}</td>
@@ -134,7 +134,7 @@
                                 <td>预约数量：{{ApplyOrder.ProductCount}}</td>
                                 <td>预约日期：{{ApplyOrder.ApplyOrderDateTimeFormat}}</td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <td>姓名：{{ApplyOrder.Contact.Name}}</td>
                                 <td>性别：{{ApplyOrder.Contact.Sex}}</td>
                             </tr>
@@ -145,7 +145,7 @@
                             <tr>
                                 <td>证件类型：{{ApplyOrder.Contact.IDType}}</td>
                                 <td>身份证号：{{ApplyOrder.Contact.IDNum}}</td>
-                            </tr>
+                            </tr> -->
                         </table>
                     </div>
                 </van-panel>
@@ -154,7 +154,7 @@
                         <div>
                             <table class="content">
                                 <tr>
-                                    <td>已签约DTP：{{SignOrder.DTP.Name}}</td>
+                                    <td>签约药店：{{SignOrder.DTP.Name}}</td>
                                     <td>协议编号：{{SignOrder.SignNo}}</td>
                                 </tr>
                             </table>
@@ -374,7 +374,7 @@ export default {
         },
         onLoadSignOrders(){
             var that = this;
-            var url = '/SignOrder/GetByOpenId?openid='+that.openid;
+            var url = '/SignOrder/GetByOpenId?signStatus=已签约&openid='+that.openid;
             that.$http.get({
                 url: url
             })
