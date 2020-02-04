@@ -4,10 +4,13 @@ const servicegoHost = 'https://servicego.udesk.cn'
 function request(url, method, data, header = {}) {
     wx.showLoading({
         title: '加载中...', // 数据请求前loading
-    })
+    });
+    console.log(method, host + url)
+    if(data)
+    {
+        console.log(data);
+    }
     return new Promise((resolve, reject) => {
-        console.log(method, host + url)
-        console.log(data)
         wx.request({
             url: host + url, // 仅为示例，并非真实的接口地址
             method: method,
