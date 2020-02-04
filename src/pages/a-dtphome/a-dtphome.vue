@@ -441,7 +441,7 @@ export default {
         onChangeTab(event) {
             console.log(event)
             var tabIndex = event.mp.detail['index']
-            this.onLoadTabData(tabIndex)
+            this.onLoadTabData(tabIndex)   
         },
         onLoadTabData(tabIndex) {
             if (tabIndex == '0') {
@@ -933,6 +933,9 @@ export default {
         //代码搞这里
         //return this.data;
         //}
+    },
+    onShow: function(){
+        this.onLoadTabData(this.activeTab);
     },
     onLoad: function(options) {
         var that = this

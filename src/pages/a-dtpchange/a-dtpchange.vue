@@ -148,36 +148,49 @@ export default {
                 });
                 return;
             }
-            this.$http
-                .post({
-                    url:
-                        '/SignOrder/ChangeDtpSignNewOrder?signOrderSmallId=' +
-                        this.signOrder.id +
-                        '&signDate=' +
-                        this.selectedDate +
-                        '&contractNumber=' +
-                        this.newcontractnumber +
-                        '&lastDtpSmallId=' +
-                        this.signOrder.LastSignDTPSmallId,
-                })
-                .then(res => {
-                    if (res.code == 200) {
-                        Dialog.alert({
-                            title: '信息提示',
-                            message,
-                        }).then(() => {
-                            const url = '../a-dtphome/main?activeTabIndex=1'
-                            wx.navigateTo({ url: url })
-                        })
-                    } else {
-                        const message = '上传合同操作失败'
 
-                        Dialog.alert({
-                            title: '信息提示',
-                            message,
-                        })
-                    }
-                })
+            Dialog.confirm({
+                title: '信息提示',
+                message: '确认提交变更药店协议吗？',
+            })
+            .then(() => {
+                    this.$http.post({
+                        url:
+                            '/SignOrder/ChangeDtpSignNewOrder?signOrderSmallId=' +
+                            this.signOrder.id +
+                            '&signDate=' +
+                            this.selectedDate +
+                            '&contractNumber=' +
+                            this.newcontractnumber +
+                            '&lastDtpSmallId=' +
+                            this.signOrder.LastSignDTPSmallId,
+                    })
+                    .then(res => {
+                        console.log("ChangeDtpSignNewOrder", res);
+                        if (res.code == 200) {
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            }).then(() => {
+                                const url = '../a-dtphome/main?activeTabIndex=1'
+                                wx.navigateBack({
+                                    delta: 1
+                                })
+                            })
+                        } else {
+                            const message = '上传合同操作失败'
+
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    })
+            })
+            .catch(() => {
+                Dialog.close()
+            });
+
         },
         afterRead(event) {
             wx.showLoading({
