@@ -441,7 +441,7 @@ export default {
         onChangeTab(event) {
             console.log(event)
             var tabIndex = event.mp.detail['index']
-            this.onLoadTabData(tabIndex)   
+            this.onLoadTabData(tabIndex)
         },
         onLoadTabData(tabIndex) {
             if (tabIndex == '0') {
@@ -494,7 +494,9 @@ export default {
                 this.$http
                     .get({
                         url:
-                            '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                            '/Product/GetProductsByFilter?role=DTP&departId=' +
+                            this.$globalData.departId +
+                            '&statusFilter=' +
                             this.statusFilterActiveValueStr +
                             '&timeFilter=' +
                             this.timeFilterActiveValueStr,
@@ -588,7 +590,9 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                        '/Product/GetProductsByFilter?role=DTP&departId=' +
+                        this.$globalData.departId +
+                        '&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -609,7 +613,9 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?role=DTP&statusFilter=' +
+                        '/Product/GetProductsByFilter?role=DTP&departId=' +
+                        this.$globalData.departId +
+                        '&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -707,7 +713,12 @@ export default {
                 })
                 .then(res => {
                     if (res != null && res.code == 200) {
-                        console.log('/ApplyOrder/ConfirmWithVendor?applyOrderId=' + applyOrderId + ' response', res)
+                        console.log(
+                            '/ApplyOrder/ConfirmWithVendor?applyOrderId=' +
+                                applyOrderId +
+                                ' response',
+                            res
+                        )
                         const message = '已确认与租赁商签约'
 
                         Dialog.alert({
@@ -934,8 +945,8 @@ export default {
         //return this.data;
         //}
     },
-    onShow: function(){
-        this.onLoadTabData(this.activeTab);
+    onShow: function() {
+        this.onLoadTabData(this.activeTab)
     },
     onLoad: function(options) {
         var that = this

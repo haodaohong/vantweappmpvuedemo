@@ -243,7 +243,9 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+                        '/Product/GetProductsByFilter?role=COC&departId=' +
+                        this.$globalData.departId +
+                        '&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -262,7 +264,9 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+                        '/Product/GetProductsByFilter?role=COC&departId=' +
+                        this.$globalData.departId +
+                        '&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
@@ -325,7 +329,9 @@ export default {
             this.$http
                 .get({
                     url:
-                        '/Product/GetProductsByFilter?role=COC&statusFilter=' +
+                        '/Product/GetProductsByFilter?role=COC&departId=' +
+                        this.$globalData.departId +
+                        '&statusFilter=' +
                         this.statusFilterActiveValueStr +
                         '&timeFilter=' +
                         this.timeFilterActiveValueStr,
