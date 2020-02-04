@@ -52,6 +52,7 @@
                 placeholder="请输入协议编号"
                 clearable
                 required
+                @change="onChangenewcontractnumber"
             />
             <div>
                 <van-popup :show="isshowdatetimepicker" position="bottom">
@@ -127,6 +128,7 @@ export default {
                 LastSignDTPSmallId: 0,
                 Contact: { Name: '' },
                 ProductCount: '',
+                id: 0
             },
             fileList: [],
             maxCount: 3,
@@ -136,10 +138,20 @@ export default {
     methods: {
         onConfirmSign(event) {
             const message = '已成功签约，并已通知相关用户！'
+            if(this.newcontractnumber.length <= 0)
+            {
+                const message = '请输入新协议编号'
+
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                });
+                return;
+            }
             this.$http
                 .post({
                     url:
-                        '/SignOrder/ChangeDtpSignNewOrder?signOrderId=' +
+                        '/SignOrder/ChangeDtpSignNewOrder?signOrderSmallId=' +
                         this.signOrder.id +
                         '&signDate=' +
                         this.selectedDate +
@@ -167,10 +179,78 @@ export default {
                     }
                 })
         },
+        afterRead(event) {
+            wx.showLoading({
+                title: '加载中...', // 数据请求前loading
+            })
+            const pics = event.mp.detail.file
+            if (pics.length > this.maxCount) {
+                const message = 'error'
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                })
+            }
+            var that = this
+            // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
+            for (let index = 0; index < pics.length; index++) {
+                const pic = pics[index]
+                wx.uploadFile({
+                    url:
+                        this.$http.host +
+                        '/SignOrder/UploadPicture?signOrderSmallId=' +
+                        this.signOrder.id, // 仅为示例，非真实的接口地址
+                    filePath: pic.path,
+                    name: 'file',
+                    formData: { user: 'test' },
+                    success(res) {
+                        let resultJson = JSON.parse(res.data)
+                        console.log(resultJson)
+                        if (resultJson.code == 200) {
+                            // 上传完成需要更新 fileList
+                            var returnModel = resultJson.data
+                            that.fileList = []
+                            for (
+                                let index = 0;
+                                index <
+                                returnModel.RichText.attachmentList.length;
+                                index++
+                            ) {
+                                //const element = array[index];
+                                var attachment =
+                                    returnModel.RichText.attachmentList[index]
+                                that.fileList.push({
+                                    url:
+                                        that.$http.servicegoHost +
+                                        attachment.docAddress,
+                                    name: attachment.name,
+                                    isImage: true,
+                                })
+                            }
+                            // const { fileList = [] } = this.data
+                            // fileList.push({ ...file, url: res.data })
+                            // this.setData({ fileList })
+                        } else {
+                            const message = 'error'
+                            Dialog.alert({
+                                title: '信息提示',
+                                message,
+                            })
+                        }
+                    },
+                })
+            }
+            wx.hideLoading()
+            console.log('file list is', this.fileList)
+        },
         showdatetimepicker(event) {
             console.log('showdatetimepicker event', event)
             this.isshowdatetimepicker = true
             console.log('this.isshowdatetimepicker', this.isshowdatetimepicker)
+        },
+        onChangenewcontractnumber(event) {
+            console.log('onChangenewcontractnumber event', event)
+            this.newcontractnumber = event.mp.detail;
         },
         userselectdate(event) {
             //console.log( 'onconfirm2' , event )
