@@ -951,7 +951,7 @@ export default {
                             console.log('/DTP/GetById response', res)
                             if (res.code === 200) {
                                 wx.setNavigationBarTitle({
-                                    title: res.data.Name
+                                    title: "产品管理"+"("+res.data.Name+")"
                                 });
                             }
                         });
