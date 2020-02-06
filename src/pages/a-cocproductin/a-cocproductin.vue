@@ -214,6 +214,9 @@ export default {
                     } else {
                         this.checkInStatusActiveValue = 1
                     }
+                    this.checkInStatusActiveValueStr = this.checkInStatusOption[
+                        this.checkInStatusActiveValue
+                    ].text
                 } else {
                     const message = '产品获取信息失败'
                     Dialog.alert({
