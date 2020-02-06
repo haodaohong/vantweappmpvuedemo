@@ -167,7 +167,7 @@ export default {
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     console.log('qrcode is: ', res)
-                    var qrCode = res.result
+                    that.qrCode = res.result
                     that.$http
                         .get({
                             url:
@@ -190,7 +190,7 @@ export default {
                                 const message = '产品获取信息失败'
                                 Dialog.alert({
                                     title: '信息提示',
-                                    message,
+                                    message: res.message,
                                 })
                             }
                         })
