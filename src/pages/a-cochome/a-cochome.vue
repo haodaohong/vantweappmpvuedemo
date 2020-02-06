@@ -313,14 +313,14 @@ export default {
                                 that.$globalData.unionId = user.UnionId
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
-                                    wx.navigateTo({ url: url })
+                                    //wx.navigateTo({ url: url })
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
-                                    wx.navigateTo({ url: url })
+                                    //wx.navigateTo({ url: url })
                                 }
                             } else {
                                 const url = '../a-registeruser/main'
-                                wx.navigateTo({ url: url })
+                                //wx.navigateTo({ url: url })
                             }
                         })
                 },
@@ -338,6 +338,7 @@ export default {
                 })
                 .then(res => {
                     this.products = res.data
+                    console("GetProductsByFilter",res)
                 })
         }
     },

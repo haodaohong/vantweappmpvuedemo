@@ -884,6 +884,7 @@ export default {
             wx.navigateTo({ url: url })
         },
         rebind() {
+            this.onLoadDTP();
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
@@ -939,6 +940,22 @@ export default {
             const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
+        onLoadDTP(){
+            //DTP/GetByOpenId
+            var that = this;
+             that.$http
+                        .get({
+                            url: '/DTP/GetById?dtpId=' + that.$globalData.departId,
+                        })
+                        .then(res => {
+                            console.log('/DTP/GetById response', res)
+                            if (res.code === 200) {
+                                wx.setNavigationBarTitle({
+                                    title: res.data.Name
+                                });
+                            }
+                        });
+        }
     },
     //计算属性
     computed: {
@@ -972,19 +989,20 @@ export default {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
                                 that.$globalData.unionId = user.UnionId
+                       
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     //wx.navigateTo({ url: url })
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
-                                    wx.navigateTo({ url: url })
+                                    //wx.navigateTo({ url: url })
                                 }
                             } else {
                                 const url = '../a-registeruser/main'
-                                wx.navigateTo({ url: url })
+                                //wx.navigateTo({ url: url })
                             }
                             that.rebind()
-                        })
+                        });
                 },
             })
         } else {
