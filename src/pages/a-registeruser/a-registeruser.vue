@@ -306,10 +306,10 @@ export default {
                                                 'url',
                                                 that.selectedRole + url
                                             )
-                                            wx.navigateTo({ url: url })
+                                            wx.redirectTo({ url: url })
                                         } else if (that.selectedRole == 'COC') {
                                             const url = '../a-cochome/main'
-                                            wx.navigateTo({ url: url })
+                                            wx.redirectTo({ url: url })
                                             console.log(
                                                 'url',
                                                 that.selectedRole + url
@@ -358,22 +358,22 @@ export default {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
                                 that.$globalData.unionId = user.UnionId
-                                if (user.UnionId == '') {
-                                    const message =
-                                        '请先搜索关注公众号【Zailab】即可正常使用'
-                                    Dialog.alert({
-                                        title: '信息提示',
-                                        message,
-                                    })
-                                    return
-                                }
+                                // if (user.UnionId == '') {
+                                //     const message =
+                                //         '请先搜索关注公众号【Zailab】即可正常使用'
+                                //     Dialog.alert({
+                                //         title: '信息提示',
+                                //         message,
+                                //     })
+                                //     return
+                                // }
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     console.log('url', user.Role + url)
-                                    wx.navigateTo({ url: url })
+                                    wx.redirectTo({ url: url })
                                 } else if (user.Role == 'COC') {
                                     const url = '../a-cochome/main'
-                                    wx.navigateTo({ url: url })
+                                    wx.redirectTo({ url: url })
                                     console.log('url', user.Role + url)
                                 }
                             } else {

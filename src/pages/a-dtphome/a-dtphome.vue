@@ -885,6 +885,7 @@ export default {
         },
         rebind() {
             this.onLoadDTP();
+            console.log("this globalData departId",this.$globalData.departId);
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
