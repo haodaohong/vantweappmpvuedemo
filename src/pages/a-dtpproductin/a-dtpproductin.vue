@@ -79,6 +79,14 @@
                             <span>{{ product.CertificateNumber }}</span>
                         </div>
                     </div>
+                    <div v-if="isShowBindContact" class="van-cell">
+                        <div class="van-cell__title">
+                            <span>绑定患者</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>{{ product.ContactName }}</span>
+                        </div>
+                    </div>
                 </div>
                 <view class="divLine"></view>
             </div>
@@ -133,8 +141,10 @@ export default {
                 { text: '归还入库', value: 2 },
             ],
             checkInStatusActiveValue: 0,
+            qrCode: '',
             snCode: '',
             product: {},
+            isShowBindContact: false,
         }
     },
     //方法
@@ -149,12 +159,12 @@ export default {
         },
         onProductCheckIn(event) {
             const successMessage = '已成功入库产品!'
-            const errorMessage = '产品入库失败!'
+            var errorMessage = '产品入库失败!'
             this.$http
                 .post({
                     url:
-                        '/Product/DtpCheckIn?snCode=' +
-                        this.product.UDISN +
+                        '/Product/DtpCheckIn?qrCode=' +
+                        this.qrCode +
                         '&departId=' +
                         this.$globalData.departId +
                         '&status=' +
@@ -171,12 +181,12 @@ export default {
                             wx.navigateTo({ url: url })
                         })
                     } else {
+                        if (res.message != '') {
+                            errorMessage = res.message
+                        }
                         Dialog.alert({
                             title: '信息提示',
                             message: errorMessage,
-                        }).then(() => {
-                            const url = '../a-dtphome/main'
-                            wx.navigateTo({ url: url })
                         })
                     }
                 })
@@ -192,17 +202,24 @@ export default {
     //生命周期(mounted)
     mounted() {
         this.checkInStatusActiveValue = 0
-        console.log('sncode', this.$root.$mp.query.sncode)
+        console.log('qrcode', this.$root.$mp.query.qrcode)
         console.log('departId', this.$globalData.departId)
-        var snCode = this.$root.$mp.query.sncode
-        this.snCode = snCode
+        var qrCode = this.$root.$mp.query.qrcode
+        this.qrCode = qrCode
         this.$http
             .get({
-                url: '/Product/GetBySN?snCode=' + this.snCode,
+                url:
+                    '/Product/GetProductInfoFromDTPScanQrCode?qrCode=' +
+                    this.qrCode,
             })
             .then(res => {
                 if (res.code == 200) {
-                    console.log('/Product/GetBySN response', res)
+                    console.log(
+                        '/Product/GetProductInfoFromDTPScanQrCode response',
+                        res
+                    )
+                    this.snCode = res.data.UDISN
+                    this.isShowBindContact = res.data.ContactName != undefined
                     this.product = res.data
                 } else {
                     const message = '产品获取信息失败'

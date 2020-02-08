@@ -27,7 +27,9 @@
                     </div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>类型：{{ product.ProductType }}</span>
+                            <span
+                                >类型：{{ product.ProductType.PartsName }}</span
+                            >
                         </div>
                     </div>
                     <div class="van-cell">

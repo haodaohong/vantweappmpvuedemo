@@ -36,7 +36,7 @@
                             <span>产品类别</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>{{ product.ProductType }}</span>
+                            <span>{{ product.ProductType.PartsName }}</span>
                         </div>
                     </div>
                     <div class="van-cell">

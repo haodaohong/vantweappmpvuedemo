@@ -83,7 +83,9 @@
                         <table class="content">
                             <tr>
                                 <td>名称：{{ product.ProductName }}</td>
-                                <td>类别：{{ product.ProductType }}</td>
+                                <td>
+                                    类别：{{ product.ProductType.PartsName }}
+                                </td>
                                 <td>规格：{{ product.Specification }}</td>
                                 <td>
                                     生产日期：{{ product.ProductionDateFormat }}
@@ -338,7 +340,7 @@ export default {
                 })
                 .then(res => {
                     this.products = res.data
-                    console("GetProductsByFilter",res)
+                    console('GetProductsByFilter', res)
                 })
         }
     },
