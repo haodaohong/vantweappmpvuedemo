@@ -270,7 +270,7 @@
                             <table class="content">
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
-                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>类别：{{ product.ProductType.PartsName }}</td>
                                     <td>规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
@@ -324,7 +324,7 @@
                             <table class="content">
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
-                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>类别：{{ product.ProductType.PartsName }}</td>
                                     <td>规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
@@ -444,6 +444,7 @@ export default {
             this.onLoadTabData(tabIndex)
         },
         onLoadTabData(tabIndex) {
+            console.log("curr tab", tabIndex);
             if (tabIndex == '0') {
                 this.activeTab = 0
                 this.applyOrders = []
@@ -1007,7 +1008,7 @@ export default {
                 },
             })
         } else {
-            that.rebind()
+            //that.rebind()
         }
     },
 
