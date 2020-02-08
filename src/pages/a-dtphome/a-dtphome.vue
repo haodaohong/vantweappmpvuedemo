@@ -270,7 +270,11 @@
                             <table class="content">
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
-                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>
+                                        类别：{{
+                                            product.ProductType.PartsName
+                                        }}
+                                    </td>
                                     <td>规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
@@ -324,7 +328,11 @@
                             <table class="content">
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
-                                    <td>类别：{{ product.ProductCategory }}</td>
+                                    <td>
+                                        类别：{{
+                                            product.ProductType.PartsName
+                                        }}
+                                    </td>
                                     <td>规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
@@ -632,36 +640,39 @@ export default {
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    console.log('qrcode is: ', res.result)
-                    var qrCode = res.result
-                    that.$http
-                        .get({
-                            url:
-                                '/Product/AddProductFromDTPScanQrCode?qrCode=' +
-                                qrCode +
-                                '&departId=' +
-                                that.$globalData.departId,
-                        })
-                        .then(res => {
-                            console.log(
-                                '/Product/AddProductFromDTPScanQrCode response data is',
-                                res
-                            )
-                            if (res.code === 200) {
-                                that.checkinProductSnCode = res.data.UDISN
-                                const url =
-                                    '../a-dtpproductin/main?sncode=' +
-                                    that.checkinProductSnCode
-                                console.log(url)
-                                wx.navigateTo({ url: url })
-                            } else {
-                                const message = '产品获取信息失败'
-                                Dialog.alert({
-                                    title: '信息提示',
-                                    message,
-                                })
-                            }
-                        })
+                    var qrCode = String(res.result)
+                    console.log('qrcode is: ', qrCode)
+                    if (qrCode) {
+                        console.log(qrCode)
+                        const url = '../a-dtpproductin/main?qrcode=' + qrCode
+                        console.log(url)
+                        wx.navigateTo({ url: url })
+                    }
+                    // that.$http
+                    //     .get({
+                    //         url:
+                    //             '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
+                    //     })
+                    //     .then(res => {
+                    //         console.log(
+                    //             '/Product/GetSnCodeFromQrCode response data is',
+                    //             res
+                    //         )
+                    //         if (res.code === 200) {
+                    //             that.checkinProductSnCode = res.data
+                    //             const url =
+                    //                 '../a-dtpproductin/main?sncode=' +
+                    //                 that.checkinProductSnCode
+                    //             console.log(url)
+                    //             wx.navigateTo({ url: url })
+                    //         } else {
+                    //             const message = '产品获取信息失败'
+                    //             Dialog.alert({
+                    //                 title: '信息提示',
+                    //                 message,
+                    //             })
+                    //         }
+                    //     })
                 },
             })
         },
@@ -754,7 +765,7 @@ export default {
                 message: confirmCancelAppointmentMessage,
             }).then(() => {
                 // on confirm
-                var that = this;
+                var that = this
                 this.signOrder.DTPId = dtpId
                 this.signOrder.ContactId = contactId
                 this.signOrder.ApplyOrderId = applyOrderId
@@ -792,8 +803,8 @@ export default {
                                 applyOrder.ShowFooter =
                                     applyOrder.ShowSignWithVendorFooter ||
                                     applyOrder.ShowConfirmApplyFooter ||
-                                    applyOrder.ShowCancelApplyFooter;
-                                    that.rebind();
+                                    applyOrder.ShowCancelApplyFooter
+                                that.rebind()
                             })
                         } else {
                             const message = '确认预约失败'
@@ -884,8 +895,8 @@ export default {
             wx.navigateTo({ url: url })
         },
         rebind() {
-            this.onLoadDTP();
-            console.log("this globalData departId",this.$globalData.departId);
+            this.onLoadDTP()
+            console.log('this globalData departId', this.$globalData.departId)
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
@@ -908,7 +919,7 @@ export default {
                         if (res.code == 200) {
                             this.applyOrders = res.data
                             console.log(
-                                '/ApplyOrder/GetByFilterStatus response',
+                                '/ApplyOrder/GetByFilterStatus response rebind',
                                 res
                             )
                         }
@@ -941,22 +952,22 @@ export default {
             const url = '../a-dtpcheckout/main?snCode=' + productSNCode
             wx.navigateTo({ url: url })
         },
-        onLoadDTP(){
+        onLoadDTP() {
             //DTP/GetByOpenId
-            var that = this;
-             that.$http
-                        .get({
-                            url: '/DTP/GetById?dtpId=' + that.$globalData.departId,
+            var that = this
+            that.$http
+                .get({
+                    url: '/DTP/GetById?dtpId=' + that.$globalData.departId,
+                })
+                .then(res => {
+                    console.log('/DTP/GetById response', res)
+                    if (res.code === 200) {
+                        wx.setNavigationBarTitle({
+                            title: '产品管理' + '(' + res.data.Name + ')',
                         })
-                        .then(res => {
-                            console.log('/DTP/GetById response', res)
-                            if (res.code === 200) {
-                                wx.setNavigationBarTitle({
-                                    title: "产品管理"+"("+res.data.Name+")"
-                                });
-                            }
-                        });
-        }
+                    }
+                })
+        },
     },
     //计算属性
     computed: {
@@ -966,7 +977,7 @@ export default {
         //}
     },
     onShow: function() {
-        this.onLoadTabData(this.activeTab)
+        //this.onLoadTabData(this.activeTab)
     },
     onLoad: function(options) {
         var that = this
@@ -990,7 +1001,7 @@ export default {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
                                 that.$globalData.unionId = user.UnionId
-                       
+
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     //wx.navigateTo({ url: url })
@@ -1003,7 +1014,7 @@ export default {
                                 //wx.navigateTo({ url: url })
                             }
                             that.rebind()
-                        });
+                        })
                 },
             })
         } else {
