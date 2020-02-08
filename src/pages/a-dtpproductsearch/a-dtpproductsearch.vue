@@ -87,7 +87,11 @@ export default {
     data() {
         return {
             snCode: '',
-            product: {},
+            product: {
+                ProductType: {
+                    PartsName: '',
+                },
+            },
         }
     },
     //方法
@@ -103,7 +107,11 @@ export default {
     mounted() {
         console.log('sncode', this.$root.$mp.query.sncode)
         var snCode = this.$root.$mp.query.sncode
-        this.product = {}
+        this.product = {
+            ProductType: {
+                PartsName: '',
+            },
+        }
         this.snCode = snCode
         this.$http
             .get({

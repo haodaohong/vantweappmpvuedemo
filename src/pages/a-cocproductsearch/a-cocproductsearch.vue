@@ -86,7 +86,12 @@ export default {
     //数据模型
     data() {
         return {
-            product: {},
+            snCode: '',
+            product: {
+                ProductType: {
+                    PartsName: '',
+                },
+            },
         }
     },
     //方法
@@ -101,33 +106,30 @@ export default {
     //生命周期(mounted)
     mounted() {
         //console.log('qrcode', this.$root.$mp.query.qrcode)
-        this.qrCode = this.$root.$mp.query.qrcode
-        console.log('qrCode:', this.qrCode)
-        this.qrCode = 'SN00001001'
-        var that = this
-        wx.login({
-            success: res => {
-                // 调用接口获取openid
-                console.log('globalData departId', that.$globalData.departId)
-                console.log('res:', res)
-                this.$http
-                    .get({
-                        url: '/Product/GetBySN?snCode=' + that.qrCode,
-                    })
-                    .then(res => {
-                        if (res.code == 200) {
-                            console.log('/Product/GetBySN response', res)
-                            that.product = res.data
-                        } else {
-                            const message = res.message
-                            Dialog.alert({
-                                title: '信息提示',
-                                message,
-                            })
-                        }
-                    })
+        console.log('sncode', this.$root.$mp.query.sncode)
+        var snCode = this.$root.$mp.query.sncode
+        this.product = {
+            ProductType: {
+                PartsName: '',
             },
-        })
+        }
+        this.snCode = snCode
+        this.$http
+            .get({
+                url: '/Product/GetBySN?snCode=' + this.snCode,
+            })
+            .then(res => {
+                if (res.code == 200) {
+                    console.log('/Product/GetBySN response', res)
+                    this.product = res.data
+                } else {
+                    const message = '产品获取信息失败'
+                    Dialog.alert({
+                        title: '信息提示',
+                        message,
+                    })
+                }
+            })
     },
 }
 </script>

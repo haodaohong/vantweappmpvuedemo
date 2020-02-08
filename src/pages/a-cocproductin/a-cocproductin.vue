@@ -199,7 +199,7 @@ export default {
         var snCode = this.$root.$mp.query.sncode
         this.snCode = snCode
         console.log('snCode:', this.snCode)
-        //this.qrCode = 'SN00001001'
+        this.product = {}
         console.log('globalData departId', this.$globalData.departId)
         this.$http
             .get({
