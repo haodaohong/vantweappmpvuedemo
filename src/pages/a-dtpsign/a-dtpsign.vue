@@ -166,7 +166,8 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-dtphome/main?activeTabIndex=1'
-                            wx.navigateTo({ url: url })
+                            //wx.navigateTo({ url: url })
+                            wx.navigateBack();
                         })
                     } else {
                         const message = '上传合同操作失败'

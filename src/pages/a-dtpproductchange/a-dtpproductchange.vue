@@ -104,8 +104,8 @@ export default {
         return {
             //从0开始的
             products: [],
-            oldProductId: '',
-            oldProductOrderId: '',
+            oldProductid: '',
+            oldSignOrderid: '',
             newProductSNCode: '',
         }
     },
@@ -125,35 +125,39 @@ export default {
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    var newSnCode = 'SN00001012'
                     console.log('all: ', res)
-                    that.$http
-                        .get({
-                            url: '/Product/GetBySN?snCode=' + newSnCode,
-                        })
-                        .then(res => {
-                            if (res.code == 200) {
-                                console.log('/Product/GetBySN response', res)
-                                that.products.push(res.data)
-                                that.newProductSNCode = res.data.UDISN
-                                console.log(
-                                    'old product product Id is:',
-                                    that.oldProductId
-                                )
-                                console.log(
-                                    'new product sn code is:',
-                                    that.newProductSNCode
-                                )
-                            } else {
-                                const message = res.message
-                                Dialog.alert({
-                                    title: '信息提示',
-                                    message,
-                                })
-                            }
-                        })
+                    var newSnCode = res.result
+                    that.onLoadNewProduct(newSnCode);
                 },
             })
+        },
+        onLoadNewProduct(newSnCode){
+            console.log('onLoadNewProduct newSnCode', newSnCode)
+            var that = this;
+              that.$http.get({
+                    url: '/Product/GetByQRCode?qrCode=' + newSnCode,
+                })
+                .then(res => {
+                    console.log('/Product/GetByQRCode response', res)
+                    if (res.code == 200) {
+                        that.products.push(res.data)
+                        that.newProductSNCode = res.data.UDISN
+                        console.log(
+                            'old product product Id is:',
+                            that.oldProductid
+                        )
+                        console.log(
+                            'new product sn code is:',
+                            that.newProductSNCode
+                        )
+                    } else {
+                        const message = res.message
+                        Dialog.alert({
+                            title: '信息提示',
+                            message,
+                        })
+                    }
+                })
         },
         onDeleteProduct(productId) {
             var index = this.products.findIndex(x => x.Id == productId)
@@ -170,10 +174,10 @@ export default {
                 this.$http
                     .post({
                         url:
-                            '/SignOrderDetail/ProductChange?oldProductId=' +
-                            this.oldProductId +
-                            '&oldProductOrderId=' +
-                            this.oldProductOrderId +
+                            '/SignOrderDetail/ProductChange?oldProductid=' +
+                            this.oldProductid +
+                            '&oldSignOrderid=' +
+                            this.oldSignOrderid +
                             '&newProductSnCode=' +
                             this.newProductSNCode,
                     })
@@ -185,11 +189,10 @@ export default {
                                 title: '信息提示',
                                 message,
                             }).then(() => {
-                                wx.navigateTo({ url: url })
+                                wx.navigateBack()
                             })
                         } else {
                             const message = '产品更换绑定操作失败'
-
                             Dialog.alert({
                                 title: '信息提示',
                                 message,
@@ -208,12 +211,14 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        var oldProductId = this.$root.$mp.query.oldProductId
-        var oldProductOrderId = this.$root.$mp.query.oldProductOrderId
-        this.oldProductId = oldProductId
-        this.oldProductOrderId = oldProductOrderId
-        console.log('productId is:', this.oldProductId)
-        console.log('productOrderId is:', this.oldProductOrderId)
+        var oldProductid = this.$root.$mp.query.oldProductid
+        var oldSignOrderid = this.$root.$mp.query.oldSignOrderid
+        this.oldProductid = oldProductid
+        this.oldSignOrderid = oldSignOrderid
+        console.log('this.$root.$mp.query:', this.$root.$mp.query)
+        var newSnCode = this.$root.$mp.query.newSnCode;
+        this.products = [];
+        this.onLoadNewProduct(newSnCode);
     },
 }
 </script>

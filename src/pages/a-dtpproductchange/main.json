@@ -18,5 +18,5 @@
     "van-image": "/static/vant/image/index",
     "van-checkbox-group": "/static/vant/checkbox-group/index"
   },
-  "navigationBarTitleText": "产品出库"
+  "navigationBarTitleText": "产品更换"
 }

@@ -66,7 +66,7 @@
         <mybr />
         <div class="footer-container">
             <div class="confirmProductCount">
-                <text>出库件数：{{ productcount }}</text>
+                <text>出库件数：{{ productcount }} / {{SignOrder.ProductCount}}</text>
                 <view class="divLine"></view>
             </div>
             <van-button type="primary" size="large" @click="onGoToConfirmStep"
@@ -157,13 +157,22 @@ export default {
             productSnCode: {},
             signOrderSmallId: '',
             dtpname: '',
+            SignOrder: {}
         }
     },
     //方法
     methods: {
         scanProduct(event) {
             // 允许从相机和相册扫码
-            var that = this
+            var that = this;
+            if(that.productcount >= that.SignOrder.ProductCount){
+                const message = '绑定产品数量到上限'
+                Dialog.alert({
+                    title: '信息提示',
+                    message,
+                })
+                return;
+            }
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
@@ -188,9 +197,18 @@ export default {
                                     })
                                     .then(res => {
                                         if (res.code == 200) {
-                                            that.products.push(res.data)
-                                            that.productcount =
-                                                that.products.length
+                                            var findprod = that.products.find(x => x.id === res.data.id);
+                                            if(findprod){
+                                                const message = '该产品已添加'
+                                                Dialog.alert({
+                                                    title: '信息提示',
+                                                    message,
+                                                });
+                                            }else{
+                                                that.products.push(res.data)
+                                                that.productcount = that.products.length
+                                            }
+                                 
                                         } else {
                                             const message = '该产品不存在'
                                             Dialog.alert({
@@ -241,7 +259,8 @@ export default {
                             title: '信息提示',
                             message,
                         }).then(() => {
-                            wx.navigateTo({ url: url })
+                            //wx.navigateTo({ url: url })
+                            wx.navigateBack();
                         })
                     } else {
                         const message = '产品绑定操作失败'
@@ -250,7 +269,8 @@ export default {
                             title: '信息提示',
                             message,
                         }).then(() => {
-                            wx.navigateTo({ url: url })
+                            //wx.navigateTo({ url: url })
+                            wx.navigateBack();
                         })
                     }
                 })
@@ -279,7 +299,9 @@ export default {
                     this.signOrderSmallId,
             })
             .then(res => {
+                console.log("GetBySignOrderSmallId", res);
                 if (res.code == 200) {
+                    this.SignOrder = res.data
                     var dtpName = res.data.SignDTPName
                     this.dtpname = dtpName
                 } else {
@@ -290,7 +312,7 @@ export default {
                         message,
                     }).then(() => {
                         wx.navigateTo({ url: url })
-                    })
+                    }) 
                 }
             })
     },

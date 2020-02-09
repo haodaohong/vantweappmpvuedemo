@@ -56,6 +56,7 @@
                 placeholder="请输入物流单号"
                 clearable
                 required
+                @change="onChangeTrackingNumber"
             />
         </van-panel>
         <mybr />
@@ -96,10 +97,21 @@ export default {
     },
     //方法
     methods: {
+        onChangeTrackingNumber(event){
+            console.log('onChangeTrackingNumber', event.mp.detail)
+            this.trackingNumber = event.mp.detail;
+        },
         onConfirmCheckOut(event) {
             const message = '已成功出库产品！'
             console.log('product data is', this.product)
             console.log('trackingNumber is', this.trackingNumber)
+            if(this.trackingNumber.length == 0){
+                Dialog.alert({
+                            title: '信息提示',
+                            message: '请输入物流单号',
+                        });
+                return;
+            }
             this.$http
                 .post({
                     url:
@@ -120,7 +132,8 @@ export default {
                             const url =
                                 '../a-dtphome/main?activeTabIndex=' +
                                 this.returnDTPHomeTabIndex
-                            wx.navigateTo({ url: url })
+                            //wx.navigateTo({ url: url })
+                             wx.navigateBack();
                         })
                     } else {
                         const message = res.message
@@ -129,7 +142,8 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-dtphome/main'
-                            wx.navigateTo({ url: url })
+                            //wx.navigateTo({ url: url })
+                            wx.navigateBack();
                         })
                     }
                 })

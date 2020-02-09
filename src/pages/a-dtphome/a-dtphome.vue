@@ -352,7 +352,7 @@
                                 class="confirmBooking"
                                 @click="
                                     onProductChange(
-                                        product.Id,
+                                        product.id,
                                         product.CurrentOrderId
                                     )
                                 "
@@ -928,19 +928,22 @@ export default {
             }
         },
         //用户维修归还后DTP员工操作更换产品
-        onProductChange(productId, productOrderId) {
-            console.log('productId is:', productId)
-            console.log('productOrderId is:', productOrderId)
+        onProductChange(oldProductid, oldSignOrderid) {
+            console.log('oldProductid is:', oldProductid)
+            console.log('oldSignOrderid is:', oldSignOrderid)
             // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
             wx.scanCode({
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
-                    console.log('all: ', res)
+                    console.log('scanCode: ', res)
                     const url =
-                        '../a-dtpproductchange/main?oldProductId=' +
-                        productId +
-                        '&oldProductOrderId=' +
-                        productOrderId
+                        '../a-dtpproductchange/main?oldProductid=' +
+                        oldProductid +
+                        '&newSnCode=' + 
+                        res.result +
+                        '&oldSignOrderid=' +
+                        oldSignOrderid
+                    console.log('dtpproductchange url: ', url)
                     wx.navigateTo({ url: url })
                 },
             })

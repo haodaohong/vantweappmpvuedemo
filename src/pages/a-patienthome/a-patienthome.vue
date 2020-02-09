@@ -168,7 +168,7 @@
                                     <td>产品名称：{{product.ProductName}}</td>
                                 </tr>
                                 <tr>
-                                    <td>产品类别：{{product.ProductCategory}}</td>
+                                    <!-- <td>产品类别：{{product.ProductCategory}}</td> -->
                                     <td>产品编码：{{product.UDISN}}</td>
                                 </tr>
                             </table>
@@ -245,7 +245,8 @@ export default {
         onSelectTab(event){
             var that = this;
              console.log(event)
-            var tabIndex = event.mp.detail['index']
+            var tabIndex = event.mp.detail['index'];
+            that.active = tabIndex;
              if (tabIndex == '0') {
                     that.onLoadDtps();
              }else if (tabIndex == '1') {
