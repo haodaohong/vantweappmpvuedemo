@@ -419,8 +419,8 @@ export default {
                 { text: '待签约', value: 2 },
                 { text: '待变更', value: 3 },
             ],
-            signOrderTypeActiveValue: 2,
-            signOrderTypeActiveValueStr: '待签约',
+            signOrderTypeActiveValue: 0,
+            signOrderTypeActiveValueStr: '所有类型',
 
             statusFilterOption: [
                 { text: '入库', value: 0 },
