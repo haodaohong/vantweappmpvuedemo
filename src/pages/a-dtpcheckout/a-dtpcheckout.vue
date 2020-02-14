@@ -25,7 +25,7 @@
                             <span>名称：{{ product.ProductName }}</span>
                         </div>
                         <div class="van-cell__title">
-                            <span>类型：{{ product.ProductCategory }}</span>
+                            <span>类型：{{ product.ProductType.PartsName }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -91,7 +91,7 @@ export default {
         return {
             trackingNumber: '',
             snCode: '',
-            product: {},
+            product: {ProductType:{PartsName:''}},
             returnDTPHomeTabIndex: 0,
         }
     },

@@ -208,15 +208,9 @@ export default {
                     console.log('qrcode is: ', res.result)
                     var qrCode = res.result
                     that.$http
-                        .get({
-                            url:
-                                '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
-                        })
+                        .get({url:'/Product/GetSnCodeFromQrCode?qrCode=' + qrCode})
                         .then(res => {
-                            console.log(
-                                '/Product/GetSnCodeFromQrCode response data is',
-                                res
-                            )
+                            console.log('/Product/GetSnCodeFromQrCode response data is',res);
                             if (res.code === 200) {
                                 that.checkinProductSnCode = res.data
                                 const url =

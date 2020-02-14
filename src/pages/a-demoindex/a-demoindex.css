@@ -8,12 +8,13 @@
   /*设置这个 就是设置其的背景颜色*/
   .dark {
     text-align: center;
-    margin: 45px 10px 20px 10px;
   }
   
   .demoindex{
     text-align: center;
-    margin: 15px;
+    width:300px;
+    margin: 0 auto;
+    margin-top: 150px;
   }
   .demoindex h1{
     margin: 20px;;

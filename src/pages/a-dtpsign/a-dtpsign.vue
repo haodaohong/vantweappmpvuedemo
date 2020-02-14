@@ -147,7 +147,21 @@ export default {
     //方法
     methods: {
         onConfirmSign(event) {
-            const message = '已成功签约，并已通知相关用户！'
+            if (this.contractNumber.length == 0) {
+                        Dialog.alert({
+                            title: '信息提示',
+                            message: '请填写签约协议编号',
+                        });
+                        return;
+            }
+            if (this.fileList.length == 0) {
+                        Dialog.alert({
+                            title: '信息提示',
+                            message: '请上传协议照片',
+                        });
+                        return;
+            }
+            const message = '恭喜，已成功签约！'
             this.$http
                 .post({
                     url:
@@ -165,9 +179,12 @@ export default {
                             title: '信息提示',
                             message,
                         }).then(() => {
-                            const url = '../a-dtphome/main?activeTabIndex=1'
+                            const url = '../a-dtphome/main?activeTabIndex=1&r=1'
+                            this.$globalData.refresh = true;
                             //wx.navigateTo({ url: url })
-                            wx.navigateBack();
+                           wx.navigateBack({
+                                delta: 1
+                            })
                         })
                     } else {
                         const message = '上传合同操作失败'

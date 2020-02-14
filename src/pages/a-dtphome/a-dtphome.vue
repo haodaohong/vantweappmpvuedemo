@@ -352,13 +352,29 @@
                                 class="confirmBooking"
                                 @click="
                                     onProductChange(
-                                        product.id,
-                                        product.CurrentOrderId
+                                        product
                                     )
                                 "
                                 size="small"
                                 type="primary"
-                                >产品更换</van-button
+                                >{{product.TitleStatus}}</van-button
+                            >
+                        </view>
+                        <view
+                            style="text-align: right;"
+                            slot="footer"
+                            v-else-if="product.ShowChecInForRepairFooter"
+                        >
+                            <van-button
+                                class="confirmBooking"
+                                @click="
+                                    onProductChange(
+                                        product
+                                    )
+                                "
+                                size="small"
+                                type="primary"
+                                >{{product.TitleStatus}}</van-button
                             >
                         </view>
                         <view style="text-align: right;" slot="footer" v-else>
@@ -398,7 +414,7 @@ export default {
             activeUser: { role: '', departId: '', openId: '', unionId: '' },
             //从0开始的
             activeTab: 0,
-
+            refresh: false,
             applyOrderTypeOption: [
                 { text: '所有申请', value: 0 },
                 { text: '设备预约', value: 1 },
@@ -442,6 +458,7 @@ export default {
             products: [],
             maintenanceProducts: [],
             checkinProductSnCode: '',
+            DTP: {}
         }
     },
     //方法
@@ -523,7 +540,7 @@ export default {
                 this.maintenanceProducts = []
                 this.$http
                     .get({
-                        url: '/Product/GetMaintenanceProducts',
+                        url: '/Product/GetMaintenanceProducts?dtpid='+this.DTP.id,
                     })
                     .then(res => {
                         this.maintenanceProducts = res.data
@@ -642,38 +659,37 @@ export default {
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     var qrCode = String(res.result)
-                    console.log('qrcode is: ', qrCode)
-                    if (qrCode) {
-                        console.log(qrCode)
-                        const url = '../a-dtpproductin/main?qrcode=' + qrCode
-                        console.log(url)
-                        wx.navigateTo({ url: url })
-                    }
-                    // that.$http
-                    //     .get({
-                    //         url:
-                    //             '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
-                    //     })
-                    //     .then(res => {
-                    //         console.log(
-                    //             '/Product/GetSnCodeFromQrCode response data is',
-                    //             res
-                    //         )
-                    //         if (res.code === 200) {
-                    //             that.checkinProductSnCode = res.data
-                    //             const url =
-                    //                 '../a-dtpproductin/main?sncode=' +
-                    //                 that.checkinProductSnCode
-                    //             console.log(url)
-                    //             wx.navigateTo({ url: url })
-                    //         } else {
-                    //             const message = '产品获取信息失败'
-                    //             Dialog.alert({
-                    //                 title: '信息提示',
-                    //                 message,
-                    //             })
-                    //         }
-                    //     })
+                    console.log('qrcode is: ', qrCode);
+                    that.$http
+                        .get({
+                            url:
+                                '/Product/GetByQRCode?qrCode=' + qrCode,
+                        })
+                        .then(res => {
+                            console.log(
+                                '/Product/GetByQRCode response data is',
+                                res
+                            )
+                            if (res.code === 200) {
+                                if(event.UDISN){
+                                    if(event.UDISN != res.data.UDISN){
+                                          const message = '待入库的产品' + event.UDISN + '和已扫描的产品' + res.data.UDISN + '不一致，请检查'
+                                            Dialog.alert({
+                                                title: '信息提示',
+                                                message,
+                                            })      
+                                            return;                        
+                                    }
+                                }
+                                
+                            }
+                            if (qrCode) {
+                                    console.log(qrCode)
+                                    const url = '../a-dtpproductin/main?qrcode=' + qrCode
+                                    console.log(url)
+                                    wx.navigateTo({ url: url })
+                            }
+                        })
                 },
             })
         },
@@ -702,7 +718,7 @@ export default {
                                     '../a-dtpproductsearch/main?sncode=' +
                                     that.checkinProductSnCode
                                 console.log(url)
-                                wx.navigateTo({ url: url })
+                                wx.navigateBack();
                             } else {
                                 const message = '产品获取信息失败'
                                 Dialog.alert({
@@ -902,7 +918,7 @@ export default {
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
             this.activeUser.unionId = this.$globalData.unionId
-            var activeTabIndex = this.$root.$mp.query.activeTabIndex
+            var activeTabIndex = this.activeTab
             if (activeTabIndex) {
                 this.activeTab = activeTabIndex
                 this.onLoadTabData(activeTabIndex)
@@ -928,27 +944,39 @@ export default {
             }
         },
         //用户维修归还后DTP员工操作更换产品
-        onProductChange(oldProductid, oldSignOrderid) {
+        onProductChange(product) {
+            var oldProductid =  product.id;
+            var oldSignOrderid = product.CurrentOrderId;
+            var SignOrderId = product.SignOrderId;
+            var IsSameDTP = product.IsSameDTP;
             console.log('oldProductid is:', oldProductid)
             console.log('oldSignOrderid is:', oldSignOrderid)
-            // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
-            wx.scanCode({
-                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
-                success(res) {
-                    console.log('scanCode: ', res)
-                    const url =
-                        '../a-dtpproductchange/main?oldProductid=' +
-                        oldProductid +
-                        '&newSnCode=' + 
-                        res.result +
-                        '&oldSignOrderid=' +
-                        oldSignOrderid
-                    console.log('dtpproductchange url: ', url)
-                    wx.navigateTo({ url: url })
-                },
-            })
-            // const url = '../a-dtpproductchange/main'
-            // wx.navigateTo({ url: url })
+            //如果是待维修入库，则显示扫描入库按钮，然后进行产品更换
+            if(product.ShowChecInForRepairFooter){
+                this.scanProduct(product);
+                return;
+            }
+            if(IsSameDTP){
+                // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
+                wx.scanCode({
+                    scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
+                    success(res) {
+                        console.log('scanCode: ', res)
+                        const url =
+                            '../a-dtpproductchange/main?oldProductid=' +
+                            oldProductid +
+                            '&newSnCode=' + 
+                            res.result +
+                            '&oldSignOrderid=' +
+                            oldSignOrderid
+                        console.log('dtpproductchange url: ', url)
+                        wx.navigateTo({ url: url })
+                    },
+                })
+            }else{
+                const signurl = '../a-dtpsign/main?signOrderId=' + signOrderId
+                wx.navigateTo({ url: signurl })
+            }
         },
         //维修更换完后原产品进行出库到COC维修操作
         onUserMaintenanceCheckOut(productSNCode) {
@@ -966,8 +994,9 @@ export default {
                 .then(res => {
                     console.log('/DTP/GetById response', res)
                     if (res.code === 200) {
+                        that.DTP = res.data;
                         wx.setNavigationBarTitle({
-                            title: '产品管理' + '(' + res.data.Name + ')',
+                            title: res.data.Name + '-产品管理',
                         })
                     }
                 })
@@ -981,10 +1010,17 @@ export default {
         //}
     },
     onShow: function() {
-        this.onLoadTabData(this.activeTab)
+        console.log('refresh:', this.$globalData.refresh)
+        if(this.$globalData.refresh)
+        {
+            console.log('refresh this.rebind();')
+            this.onLoadTabData(this.activeTab )
+            this.$globalData.refresh = false;
+        }
     },
     onLoad: function(options) {
-        var that = this
+        var that = this;
+        this.$globalData.refresh = false;
         console.log(this.$globalData.departId)
         console.log(this.$globalData.openId)
         var userOpenId = this.$globalData.openId
@@ -1022,7 +1058,8 @@ export default {
                 },
             })
         } else {
-            //that.rebind()
+            that.rebind()
+            //this.onLoadDTP();
         }
     },
 

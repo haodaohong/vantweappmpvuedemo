@@ -68,6 +68,21 @@
             </div>
         </div>
         <mybr />
+        <div class="basicinfo">
+            <div>
+                <h2 class="van-doc-demo-block__title">当前状态</h2>
+            </div>
+            <div>
+                <div>
+                    <div class="van-cell">
+                        <div class="van-cell__value">
+                            <span>{{ product.CurrentStatus }}</span>
+                        </div>
+                    </div>
+                </div>
+                <view class="divLine"></view>
+            </div>
+        </div>
         <!--注意要配一个van-dialog,才会显示提示 ,默认id van-dialog-->
         <van-dialog id="van-dialog" />
     </div>

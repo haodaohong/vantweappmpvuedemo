@@ -173,6 +173,7 @@ export default {
                                 message,
                             }).then(() => {
                                 const url = '../a-dtphome/main?activeTabIndex=1'
+                                this.$globalData.refresh = true;
                                 wx.navigateBack({
                                     delta: 1
                                 })

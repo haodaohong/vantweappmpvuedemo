@@ -171,8 +171,9 @@ export default {
                             title: '信息提示',
                             message: successMessage,
                         }).then(() => {
-                            const url = '../a-cochome/main'
-                            wx.navigateTo({ url: url })
+                            const url = '../a-cochome/main?r=1'
+                            this.$globalData.refresh = true;
+                            wx.navigateBack({ url: url })
                         })
                     } else {
                         const message = '入库操作失败'
@@ -180,8 +181,9 @@ export default {
                             title: '信息提示',
                             message: errorMessage,
                         }).then(() => {
-                            const url = '../a-cochome/main'
-                            wx.navigateTo({ url: url })
+                            const url = '../a-cochome/main?r=1'
+                            this.$globalData.refresh = true;
+                            wx.navigateBack({ url: url })
                         })
                     }
                 })

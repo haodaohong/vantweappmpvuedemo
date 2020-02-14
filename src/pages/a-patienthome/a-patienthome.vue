@@ -84,8 +84,8 @@
                                 <td>预约日期：{{apply.ApplyOrderDateTimeFormat}}</td>
                             </tr>
                             <tr>
-                                <td>姓名：{{apply.Contact.Name}}</td>
-                                <td>性别：{{apply.Contact.Sex}}</td>
+                                <td>姓    名：{{apply.Contact.Name}}</td>
+                                <td>性    别：{{apply.Contact.Sex}}</td>
                             </tr>
                             <tr>
                                 <td>出生日期：{{apply.Contact.BirthDayFormat}}</td>
@@ -101,6 +101,7 @@
                             @click="onCancelAppointment(apply.Id,apply.Contact.Name)"
                             size="small"
                             type="danger"
+                            v-if="apply.ShowCancelApplyFooter"
                             >取消预约</van-button
                         >
                     </view>
@@ -159,6 +160,15 @@
                                 </tr>
                             </table>
                         </div>
+                        <div style="margin:10px;">
+                            <van-image  v-for="(url, indx2) in SignOrder.Urls" :key="indx2"
+                                width="5rem"
+                                height="5rem"
+                                fit="cover"
+                                @click="openImage(url, SignOrder.Urls)"
+                               :src="url"
+                            />
+                        </div>
                     </van-panel>
                     <van-panel title="产品信息">
                         <div>
@@ -211,6 +221,8 @@ export default {
                 { text: '广州', value: '广州' },
                 { text: '深圳', value: '深圳' },
             ],
+            fileList:[],
+            maxCount: 10,
             selectedCity: '',
             dtps: [],
             applys:[],
@@ -241,6 +253,16 @@ export default {
         onUpdateInfo(event) {
             const url = '../a-patientdetail/main'
             wx.navigateTo({ url: url })
+        },
+        openImage(curr,imglist){
+            var that = this;
+            console.log("openImage curr",curr)
+            console.log("openImage imglist",imglist)
+
+            wx.previewImage({
+            current: curr, // 当前显示图片的http链接  
+                urls: imglist // 需要预览的图片http链接列表  
+            })
         },
         onSelectTab(event){
             var that = this;
@@ -317,7 +339,7 @@ export default {
         },
         onLoadApplys(){
             var that = this;
-            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待确认';
+            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=待确认,已确认';
             that.$http.get({
                 url: url
             })
@@ -336,24 +358,20 @@ export default {
             });
         },
         onLoadConfirmApplys(){
-            var that = this;
-            var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=已确认';
-            that.$http.get({
-                url: url
-            })
-            .then(res => {
-                console.log("onLoadConfirmApplys", res);
-                that.ConfrimedApplyOrders = null;
-                if(res.data)
-               {
-                   that.ConfrimedApplyOrders = res.data;
-                //    for (var i=0;i<res.data.length;i++)
-                //     { 
-                //         that.applys.push(res.data[i]);
-                //     }
-               }
-               that.$forceUpdate();
-            });
+            // var that = this;
+            // var url = '/ApplyOrder/GetByStatus?mpopenid='+that.openid+'&status=已确认';
+            // that.$http.get({
+            //     url: url
+            // })
+            // .then(res => {
+            //     console.log("onLoadConfirmApplys", res);
+            //     that.ConfrimedApplyOrders = null;
+            //     if(res.data)
+            //    {
+            //        that.ConfrimedApplyOrders = res.data;
+            //    }
+            //    that.$forceUpdate();
+            // });
         },
         onLoadContact(){
             var that = this;
@@ -385,10 +403,6 @@ export default {
                 if(res.data)
                {
                    that.SignOrders = res.data;
-                //    for (var i=0;i<res.data.length;i++)
-                //     { 
-                //         that.applys.push(res.data[i]);
-                //     }
                }
                 that.onLoadConfirmApplys();
                that.$forceUpdate();
@@ -488,12 +502,15 @@ export default {
     mounted() {
         console.log("host",this.$http.host);
         console.log(new Date().toLocaleDateString());
-        // this.onGetOpenId();
+        this.onGetOpenId();
     },
     onShow(){
-        console.log("onShow");
         var that = this;
-        this.onGetOpenId();
+        console.log("onShow");
+        if(this.$globalData.refresh)
+        {
+            this.onSelectTab(this.active);
+        }
     }
 }
 </script>

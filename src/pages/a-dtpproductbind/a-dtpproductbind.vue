@@ -64,14 +64,14 @@
             >
         </div>
         <mybr />
-        <div class="footer-container">
+        <div class="footer-container" >
             <div class="confirmProductCount">
                 <text>出库件数：{{ productcount }} / {{SignOrder.ProductCount}}</text>
                 <view class="divLine"></view>
             </div>
-            <van-button type="primary" size="large" @click="onGoToConfirmStep"
-                >第三步-确认提交</van-button
-            >
+            <div style="text-align: center;">
+                <van-button type="primary" size="normal" @click="onGoToConfirmStep">确认绑定产品</van-button>
+            </div>
         </div>
         <van-dialog id="van-dialog" />
     </div>
@@ -104,7 +104,7 @@
                                 <span>名称：{{ product.ProductName }}</span>
                             </div>
                             <div class="van-cell__title">
-                                <span>类型：{{ product.ProductCategory }}</span>
+                                <span>类型：{{ product.ProductType.PartsName }}</span>
                             </div>
                         </div>
                         <div class="van-cell">
@@ -123,10 +123,10 @@
                 </van-panel>
             </div>
             <mybr />
-            <div class="footer-container">
+            <div class="footer-container" style="text-align: center;">
                 <van-button
                     type="primary"
-                    size="large"
+                    size="normal"
                     @click="onConfirmProductBind"
                     >确认提交</van-button
                 >
@@ -260,6 +260,7 @@ export default {
                             message,
                         }).then(() => {
                             //wx.navigateTo({ url: url })
+                            this.$globalData.refresh = true;
                             wx.navigateBack();
                         })
                     } else {

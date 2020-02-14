@@ -22,7 +22,7 @@
                 <div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>预约DTP：</span>
+                            <span>预约药店：</span>
                         </div>
                         <div class="van-cell__value">
                             <span>{{ApplyOrder.DTP.Name}}</span>
@@ -401,6 +401,7 @@ export default {
                         title: ' 提交成功',
                         message: '已经将您的申请发送至DTP药房,请等待确认通知.',
                     }).then(() => {
+                        this.$globalData.refresh = true;
                         wx.navigateBack({ url: url })
                     })
                 });

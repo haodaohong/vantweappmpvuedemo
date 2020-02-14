@@ -67,6 +67,68 @@
                 <view class="divLine"></view>
             </div>
         </div>
+        <div class="basicinfo">
+            <div>
+                <h2 class="van-doc-demo-block__title">当前状态</h2>
+            </div>
+            <div>
+                <div style="text-align:center;">
+                            <span>{{ product.CurrentStatus }}</span>
+                        </div>
+            </div>
+        </div>
+        <div class="basicinfo" style="text-align:center;display:none;">
+            <div>
+                <h2 class="van-doc-demo-block__title">执行操作</h2>
+            </div>
+            <div style="text-align:center;display:none;">
+                    <!-- 已入库状态，DTP操作 -->
+                    <!-- <van-button
+                    class="confirmBooking"
+                    @click="onCocOut(product.UDISN)"
+                    size="small"
+                    type="info"
+                    v-if="
+                    product.IsDTPCheckInFromRental |
+                    product.IsDTPCheckInFromUserForReturn |
+                    product.IsDTPCheckInFromUserForMaintenance
+                    "
+                    >维修出库</van-button> -->
+                    <!-- 已出库状态 -->
+                    <!-- <van-button
+                    class="confirmBooking"
+                    @click="onCocOut(product.UDISN)"
+                    size="small"
+                    type="info"
+                    v-if="
+                    product.IsDTPCheckOutToUser  |
+                    product.IsCOCCheckOutToVendor
+                    "
+                    >产品入库</van-button> -->
+                    <!-- 已出库状态 COC端操作-->
+                    <!-- <van-button
+                    class="confirmBooking"
+                    @click="onCocOut(product.UDISN)"
+                    size="small"
+                    type="info"
+                    v-if="
+                    product.IsDTPCheckOutToCOCFromUserReturn |
+                    product.IsDTPCheckOutToCOCFromUserMaintenance 
+                    "
+                    >维修入库（收到产品）</van-button> -->
+                    <!-- 维修部已入库状态 COC端操作-->
+                    <!-- <van-button
+                    class="confirmBooking"
+                    @click="onCocOut(product.UDISN)"
+                    size="small"
+                    type="info"
+                    v-if="
+                    product.IsCOCCheckInFromDTPForUserReturn |
+                    product.IsCOCCheckInFromDTPForUserMaintenance 
+                    "
+                    >维修出库（完成维修）</van-button> -->
+            </div>
+        </div>
         <mybr />
         <!--注意要配一个van-dialog,才会显示提示 ,默认id van-dialog-->
         <van-dialog id="van-dialog" />

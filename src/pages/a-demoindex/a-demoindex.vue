@@ -6,12 +6,19 @@
 <!-- html代码片段 -->
 <template>
     <div class="demoindex">
-        <h1>角色演示</h1>
-        <van-row class="user-links">
-            <van-col custom-class="dark" span="6">
+        <van-row>
+            <van-col custom-class="dark" span="12">
                 <van-icon name="friends-o" @click="goToPatient" size="36px" />
-                <br />病患用户
+                <br />租赁通道
             </van-col>
+            <van-col custom-class="dark" @click="goToRegisterUser" span="12">
+                <van-icon name="setting-o" size="36px" />
+                <br />管理通道<br />（DTP/COC）
+            </van-col>
+        </van-row>
+        <!-- <mybr />
+        <h1>开发使用</h1>
+        <van-row class="user-links">
             <van-col custom-class="dark" @click="goToDTP" span="6">
                 <van-icon name="shop-o" size="36px" />
                 <br />DTP用户
@@ -20,20 +27,12 @@
                 <van-icon name="setting-o" size="36px" />
                 <br />COC用户
             </van-col>
-            <van-col custom-class="dark" @click="goToRegisterUser" span="6">
-                <van-icon name="setting-o" size="36px" />
-                <br />角色注册
-            </van-col>
         </van-row>
-        <mybr />
-        <h1>开发使用</h1>
-        <van-row class="user-links">
-            <van-col custom-class="dark" span="6">
+                    <van-col custom-class="dark" span="6">
                 <a href="/pages/index/main" open-type="switchTab" class="home"
                     >开发组件</a
-                >
-            </van-col>
-        </van-row>
+                > 
+            </van-col>-->
     </div>
 </template>
 

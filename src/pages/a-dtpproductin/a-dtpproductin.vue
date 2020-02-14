@@ -87,24 +87,17 @@
                             <span>{{ product.ContactName }}</span>
                         </div>
                     </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>入库方式</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>{{ checkInStatusActiveValue }}</span>
+                        </div>
+                    </div>
                 </div>
-                <view class="divLine"></view>
             </div>
         </div>
-        <van-panel title="维护信息">
-            <div>
-                <div>
-                    <van-dropdown-menu>
-                        <van-dropdown-item
-                            :value="checkInStatusActiveValue"
-                            :options="checkInStatusOption"
-                            @change="onCheckInStatusChange"
-                        />
-                    </van-dropdown-menu>
-                </div>
-            </div>
-        </van-panel>
-        <mybr />
         <div class="confirmsignbtn">
             <van-button
                 square
@@ -134,13 +127,12 @@ export default {
     //数据模型
     data() {
         return {
-            checkInStatusActiveValueStr: '租赁入库',
             checkInStatusOption: [
-                { text: '租赁入库', value: 0 },
-                { text: '维修入库', value: 1 },
-                { text: '归还入库', value: 2 },
+                { text: '租赁入库', value: '租赁入库' },
+                { text: '维修入库', value: '维修入库' },
+                { text: '归还入库', value: '归还入库' },
             ],
-            checkInStatusActiveValue: 0,
+            checkInStatusActiveValue: '租赁入库',
             qrCode: '',
             snCode: '',
             product: {},
@@ -151,11 +143,7 @@ export default {
     methods: {
         onCheckInStatusChange(event) {
             this.checkInStatusActiveValue = event.mp.detail
-            this.checkInStatusActiveValueStr = this.checkInStatusOption[
-                this.checkInStatusActiveValue
-            ].text
             console.log(this.checkInStatusActiveValue)
-            console.log(this.checkInStatusActiveValueStr)
         },
         onProductCheckIn(event) {
             const successMessage = '已成功入库产品!'
@@ -168,7 +156,7 @@ export default {
                         '&departId=' +
                         this.$globalData.departId +
                         '&status=' +
-                        this.checkInStatusActiveValueStr,
+                        this.checkInStatusActiveValue,
                 })
                 .then(res => {
                     if (res.code == 200) {
@@ -177,8 +165,9 @@ export default {
                             title: '信息提示',
                             message: successMessage,
                         }).then(() => {
-                            const url = '../a-dtphome/main'
-                            wx.navigateTo({ url: url })
+                            const url = '../a-dtphome/main?r=1'
+                            this.$globalData.refresh = true;
+                            wx.navigateBack({ url: url })
                         })
                     } else {
                         if (res.message != '') {
@@ -201,7 +190,7 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        this.checkInStatusActiveValue = 0
+        this.checkInStatusActiveValue = '租赁入库'
         console.log('qrcode', this.$root.$mp.query.qrcode)
         console.log('departId', this.$globalData.departId)
         var qrCode = this.$root.$mp.query.qrcode
@@ -220,12 +209,16 @@ export default {
                     )
                     this.snCode = res.data.UDISN
                     this.isShowBindContact = res.data.ContactName != undefined
+                    this.checkInStatusActiveValue = res.data.checkInStatusActiveValue
                     this.product = res.data
                 } else {
-                    const message = '产品获取信息失败'
+                    this.snCode = res.data.UDISN
+                    this.isShowBindContact = res.data.ContactName != undefined
+                    this.checkInStatusActiveValue = res.data.checkInStatusActiveValue
+                    this.product = res.data
                     Dialog.alert({
                         title: '信息提示',
-                        message,
+                        message: res.message,
                     })
                 }
             })

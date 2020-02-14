@@ -25,7 +25,7 @@
                                 <span>名称：{{ product.ProductName }}</span>
                             </div>
                             <div class="van-cell__title">
-                                <span>类型：{{ product.ProductCategory }}</span>
+                                <span>类型：{{ product.ProductType.Name }}</span>
                             </div>
                         </div>
                         <div class="van-cell">
@@ -135,10 +135,10 @@ export default {
             console.log('onLoadNewProduct newSnCode', newSnCode)
             var that = this;
               that.$http.get({
-                    url: '/Product/GetByQRCode?qrCode=' + newSnCode,
+                    url: '/Product/GetBindingProductsByQRCode?qrCode=' + newSnCode,
                 })
                 .then(res => {
-                    console.log('/Product/GetByQRCode response', res)
+                    console.log('/Product/GetBindingProductsByQRCode response', res)
                     if (res.code == 200) {
                         that.products.push(res.data)
                         that.newProductSNCode = res.data.UDISN
@@ -183,7 +183,8 @@ export default {
                     })
                     .then(res => {
                         if (res.code == 200) {
-                            const url = '../a-dtphome/main?activeTabIndex=3'
+                            const url = '../a-dtphome/main?activeTabIndex=3&r=1'
+                            this.$globalData.refresh = true;
                             const message = '产品更换绑定成功！'
                             Dialog.alert({
                                 title: '信息提示',

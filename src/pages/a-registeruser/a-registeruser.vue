@@ -16,7 +16,7 @@
     <div>
         <div v-show="isShowLoading"></div>
         <div class="flex-container" v-show="isShowRegister">
-            <div class="selectRole">
+            <div class="selectRole" style="display:none;">
                 <van-button
                     type="default"
                     @click="onShowRoles"
@@ -110,7 +110,7 @@ export default {
             isShowRole: false,
             isBtnSmsCodeDisabled: true,
             BtnSendSmsCodeContent: '发送验证码',
-            countdownTime: 5,
+            countdownTime: 59,
             selectedRole: '未知',
             selectedDepartId: '99',
             Roles: [
@@ -170,24 +170,19 @@ export default {
             if (this.isBtnSmsCodeDisabled) {
                 return
             }
-            if (this.selectedRole == '未知') {
-                Dialog.alert({
-                    title: '信息提示',
-                    message: '请选择你的角色',
-                })
-                return
-            }
             this.$http
                 .post({
                     url:
                         '/Users/GetCodeByPhone?phone=' +
-                        this.phone +
-                        '&role=' +
-                        this.selectedRole,
+                        this.phone,
                 })
                 .then(res => {
                     console.log('/Users/GetCodeByPhone response:depart id', res)
                     if (res.code == 200) {
+                        Dialog.alert({
+                                        title: '信息提示',
+                                        message: '成功发送验证码'
+                        })
                         this.isDisabledSelectedRole = true
                         this.BtnSendSmsCodeContent =
                             this.countdownTime + 's后重新发送'
@@ -258,13 +253,6 @@ export default {
                 })
                 return
             }
-            if (this.selectedRole == '未知') {
-                Dialog.alert({
-                    title: '信息提示',
-                    message: '请选择用户类型',
-                })
-                return
-            }
             var that = this
             wx.login({
                 success(res) {
@@ -279,11 +267,7 @@ export default {
                                     '&smscode=' +
                                     that.smsCode +
                                     '&sessioncode=' +
-                                    res.code +
-                                    '&departid=' +
-                                    that.selectedDepartId +
-                                    '&role=' +
-                                    that.selectedRole,
+                                    res.code,
                             })
                             .then(res => {
                                 console.log(
@@ -300,14 +284,14 @@ export default {
                                         title: '信息提示',
                                         message,
                                     }).then(() => {
-                                        if (that.selectedRole == 'DTP') {
+                                        if (user.Role == 'DTP') {
                                             const url = '../a-dtphome/main'
                                             console.log(
                                                 'url',
                                                 that.selectedRole + url
                                             )
                                             wx.redirectTo({ url: url })
-                                        } else if (that.selectedRole == 'COC') {
+                                        } else if (user.Role == 'COC') {
                                             const url = '../a-cochome/main'
                                             wx.redirectTo({ url: url })
                                             console.log(
