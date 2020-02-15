@@ -81,34 +81,29 @@
                     </div>
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>维修单号</span>
+                            <span>顺丰单号</span>
                         </div>
                         <div class="van-cell__value">
-                            <span></span>
+                            <span>{{product.DTPCheckOutShipCode}}</span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>当前状态</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span>{{product.CurrentStatus}}</span>
                         </div>
                     </div>
                 </div>
                 <view class="divLine"></view>
             </div>
         </div>
-        <van-panel title="维护信息">
-            <div>
-                <div>
-                    <van-dropdown-menu>
-                        <van-dropdown-item
-                            :value="checkInStatusActiveValue"
-                            :options="checkInStatusOption"
-                            disabled
-                            @change="onCheckInStatusChange"
-                        />
-                    </van-dropdown-menu>
-                </div>
-            </div>
-        </van-panel>
+
         <mybr />
         <div class="confirmsignbtn">
             <van-button square size="normal" type="info" @click="productIn"
-                >提交入库</van-button
+                >确认入库</van-button
             >
         </div>
         <!--
@@ -162,7 +157,7 @@ export default {
                         '&departId=' +
                         this.$globalData.departId +
                         '&status=' +
-                        this.checkInStatusActiveValueStr,
+                        this.product.CurrentStatus,
                 })
                 .then(res => {
                     if (res.code == 200) {
@@ -176,14 +171,10 @@ export default {
                             wx.navigateBack({ url: url })
                         })
                     } else {
-                        const message = '入库操作失败'
+                        const message = res.message
                         Dialog.alert({
                             title: '信息提示',
-                            message: errorMessage,
-                        }).then(() => {
-                            const url = '../a-cochome/main?r=1'
-                            this.$globalData.refresh = true;
-                            wx.navigateBack({ url: url })
+                            message: message,
                         })
                     }
                 })

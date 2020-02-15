@@ -203,7 +203,7 @@ export default {
                         this.selectedDepartId = res.data
                         this.$globalData.departId = res.data
                     } else {
-                        var errorMessage = res.message
+                        var errorMessage = '请确认手机号是否正确'
                         Dialog.alert({
                             title: '信息提示',
                             message: errorMessage,
@@ -289,7 +289,7 @@ export default {
                                             console.log(
                                                 'url',
                                                 that.selectedRole + url
-                                            )
+                                            ) 
                                             wx.redirectTo({ url: url })
                                         } else if (user.Role == 'COC') {
                                             const url = '../a-cochome/main'

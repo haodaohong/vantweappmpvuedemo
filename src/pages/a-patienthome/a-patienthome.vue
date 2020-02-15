@@ -54,7 +54,7 @@
 
                 <van-card v-for="(dtp, index) in dtps" :key="index"
                     :desc="dtp.Address"
-                    :title="dtp.Name"
+                    :title="dtp.Name + dtp.Signed"
                     :thumb="imageURL"
                 >
                     <view class="gosubmit" slot="footer">
@@ -323,7 +323,7 @@ export default {
             var that = this;
             console.log('dtps url', '/DTP/GetByCity?city='+that.selectedCity);
             that.$http.get({
-                url:'/DTP/GetByCity?city='+that.selectedCity
+                url:'/DTP/GetByCity?mpOpenId='+that.openid+'&city='+that.selectedCity
             })
             .then(res => {
                 console.log('result: /DTP/GetByCity?city='+that.selectedCity, res);
@@ -405,7 +405,7 @@ export default {
                    that.SignOrders = res.data;
                }
                 that.onLoadConfirmApplys();
-               that.$forceUpdate();
+                that.$forceUpdate();
             });
         },
         onCreateContactInfo(){

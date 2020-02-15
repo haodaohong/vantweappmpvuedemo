@@ -67,7 +67,7 @@
                 size="normal"
                 type="info"
                 @click="onConfirmOut(product.Id)"
-                >提交出库</van-button
+                >提交出库至租赁商</van-button
             >
         </div>
         <!--
@@ -92,7 +92,9 @@ export default {
         return {
             trackingNumber: '',
             snCode: '',
-            product: {},
+            product: {
+                ProductType:{PartsName:''}
+            },
         }
     },
     //方法
@@ -102,13 +104,19 @@ export default {
             console.log('product data is', this.product)
             console.log('trackingNumber is', this.trackingNumber)
             var url =
-                '/Product/CheckOut?role=DTP&pruductId=' +
+                '/Product/CheckOut?role=COC&pruductId=' +
                 this.product.Id +
                 '&currentStatus=' +
                 this.product.CurrentStatus +
                 '&trackingNumber=' +
                 this.trackingNumber
-            //console.log('url is', url)
+             if(this.trackingNumber.length == 0){
+                Dialog.alert({
+                            title: '信息提示',
+                            message: '请输入物流单号',
+                        });
+                return;
+            }
             this.$http
                 .post({
                     url:
@@ -127,7 +135,8 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-cochome/main'
-                            wx.navigateTo({ url: url })
+                            this.$globalData.refresh = true;
+                            wx.navigateBack({ url: url })
                         })
                     } else {
                         const message = res.message
@@ -159,14 +168,14 @@ export default {
         this.snCode = snCode
         console.log('snCode:', this.snCode)
         var that = this
-        this.$http
+        that.$http
             .get({
-                url: '/Product/GetBySN?snCode=' + this.snCode,
+                url: '/Product/GetBySN?snCode=' + that.snCode,
             })
             .then(res => {
                 if (res.code == 200) {
                     console.log('/Product/GetBySN response', res)
-                    this.product = res.data
+                    that.product = res.data
                 } else {
                     const message = res.message
                     Dialog.alert({
