@@ -25,7 +25,7 @@
                             <span>预约药店：</span>
                         </div>
                         <div class="van-cell__value">
-                            <span>{{ApplyOrder.DTP.Name}}</span>
+                            <span>{{ ApplyOrder.DTP.Name }}</span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -36,12 +36,39 @@
                             <span>医疗产品</span>
                         </div>
                     </div>
-                    <div class="van-cell">
+                    <!-- <div class="van-cell">
                         <div class="van-cell__title">
                             <span>预约数量：</span>
                         </div>
                         <div class="van-cell__value">
                             <span><van-stepper :value="ProductCount" integer @change="onSelectProductCount"/></span>
+                        </div>
+                    </div> -->
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>设备数量：</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span
+                                ><van-stepper
+                                    :disabled="IsDisabledProductSetCount"
+                                    :value="ProductSetCount"
+                                    integer
+                                    @change="onSelectProductSetCount"
+                            /></span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>贴片数量：</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span
+                                ><van-stepper
+                                    :value="PasterSetCount"
+                                    integer
+                                    @change="onSelectPasterSetCount"
+                            /></span>
                         </div>
                     </div>
                     <div class="van-cell">
@@ -204,29 +231,32 @@
                 <view class="divLine"></view>
             </div>
         </div>
-        <div class="basicinfo" v-for="(SignOrder, index) in SignOrders" :key="index">
+        <div
+            class="basicinfo"
+            v-for="(SignOrder, index) in SignOrders"
+            :key="index"
+        >
             <div>
                 <h2 class="van-doc-demo-block__title">签约信息</h2>
             </div>
             <div>
                 <div>
                     <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>签约药店</span>
-                </div>
-                <div class="van-cell__value signed">
-                    {{SignOrder.SignDTPName}}
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>签约编号</span>
-                </div>
-                <div class="van-cell__value">
-                    {{SignOrder.SignNo}}
-                </div>
-            </div>
-
+                        <div class="van-cell__title">
+                            <span>签约药店</span>
+                        </div>
+                        <div class="van-cell__value signed">
+                            {{ SignOrder.SignDTPName }}
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>签约编号</span>
+                        </div>
+                        <div class="van-cell__value">
+                            {{ SignOrder.SignNo }}
+                        </div>
+                    </div>
                 </div>
                 <view class="divLine"></view>
             </div>
@@ -300,46 +330,49 @@ export default {
             ApplyOrder: {
                 DTP: {
                     Id: 0,
-                    Code: "",
-                    Name: "",
-                    Address: "",
-                    Phone: "",
-                    PhoneText: "",
-                    City: "",
-                    Note: ""
+                    Code: '',
+                    Name: '',
+                    Address: '',
+                    Phone: '',
+                    PhoneText: '',
+                    City: '',
+                    Note: '',
                 },
                 Contact: {
                     Id: 0,
-                    Name: "",
-                    Sex: "",
-                    Province: "",
-                    City: "",
-                    Address: "",
-                    IDType: "",
-                    IDNum: "",
-                    Birthday: "0001-01-01T00:00:00",
-                    Phone: "",
-                    PhoneText: "",
-                    OAOpenId: "",
-                    MPOpenId: "",
-                    UnionId: ""
+                    Name: '',
+                    Sex: '',
+                    Province: '',
+                    City: '',
+                    Address: '',
+                    IDType: '',
+                    IDNum: '',
+                    Birthday: '0001-01-01T00:00:00',
+                    Phone: '',
+                    PhoneText: '',
+                    OAOpenId: '',
+                    MPOpenId: '',
+                    UnionId: '',
                 },
                 Id: 0,
                 ContactId: 0,
-                OrderType: "",
+                OrderType: '',
                 DTPId: 0,
                 LastDTPId: 0,
-                ProductCount: 0,
-                ApplyStatus: "",
-                ApplyDate: "0001-01-01T00:00:00",
+                ProductSetCount: 0,
+                PasterSetCount: 0,
+                ApplyStatus: '',
+                ApplyDate: '0001-01-01T00:00:00',
                 IsConfirmedWithVendor: false,
-                CreateTime: "0001-01-01T00:00:00",
+                CreateTime: '0001-01-01T00:00:00',
                 ComfirmBy: 0,
-                ComfirmTime: "0001-01-01T00:00:00"
+                ComfirmTime: '0001-01-01T00:00:00',
             },
             SignOrders: [],
             Phone: '',
-            ProductCount: 1,
+            ProductSetCount: 1,
+            PasterSetCount: 1,
+            IsDisabledProductSetCount: false,
         }
     },
     //方法
@@ -376,140 +409,148 @@ export default {
                 ':00'
             return result
         },
-      onSelectIDType(event) {
-            this.IDindex = parseInt(event.mp.detail.value);
-            this.ApplyOrder.Contact.IDType = this.IDOptions[this.IDindex];
-            console.log('ApplyOrder.Contact.IDType', this.ApplyOrder.Contact.IDType);
-        }, 
-      onChangeIDNum ( event ) {
-            var that = this;
-            that.ApplyOrder.Contact.IDNum =  event.mp.detail.value;
-            console.log('ApplyOrder.Contact.IDNum', that.ApplyOrder.Contact.IDNum)
-        } ,
-      onChangePhone ( event ) {
-        var that = this;
-        that.ApplyOrder.Contact.Phone =  event.mp.detail;
-        that.ApplyOrder.Contact.PhoneText =  event.mp.detail;
-        console.log('that.Phone', that.ApplyOrder.Contact.Phone)
-      } ,
-      onChangeName ( event ) {
-        var that = this;
-        that.ApplyOrder.Contact.Name =  event.mp.detail.value;
-        console.log('that.ApplyOrder.Contact.Name', that.ApplyOrder.Contact.Name)
-      } ,
-      onSelectProductCount ( event ) {
-        var that = this;
-        that.ProductCount =  parseInt(event.mp.detail);
-        console.log('event.mp.detail', event.mp.detail)
-      } ,
-      onChangeSex ( event ) {
-        var that = this;
-        // that.ApplyOrder.Contact.Sex =  event.mp.detail;
-        // console.log('that.Sex', that.ApplyOrder.Contact.Sex)
-
-        that.genderindex = parseInt(event.mp.detail.value);
-        that.ApplyOrder.Contact.Sex = that.gender[that.genderindex];
-        console.log('this.Contact.Sex', that.ApplyOrder.Contact.Sex)
-      } ,
-      onChangeType ( event ) {
-        var that = this;
-        that.ApplyOrder.OrderType =  event.mp.detail;
-        that.CurrApplyOrder =  event.mp.detail;
-        console.log('that.ApplyOrder.OrderType', that.ApplyOrder.OrderType)
-      } ,
+        onChangePhone(event) {
+            var that = this
+            that.ApplyOrder.Contact.Phone = event.mp.detail
+            that.ApplyOrder.Contact.PhoneText = event.mp.detail
+            console.log('that.Phone', that.ApplyOrder.Contact.Phone)
+        },
+        onChangeName(event) {
+            var that = this
+            that.ApplyOrder.Contact.Name = event.mp.detail.value
+            console.log(
+                'that.ApplyOrder.Contact.Name',
+                that.ApplyOrder.Contact.Name
+            )
+        },
+        onSelectProductSetCount(event) {
+            var that = this
+            that.ProductSetCount = parseInt(event.mp.detail)
+            console.log('event.mp.detail', event.mp.detail)
+        },
+        onSelectPasterSetCount(event) {
+            var that = this
+            that.PasterSetCount = parseInt(event.mp.detail)
+            console.log('event.mp.detail', event.mp.detail)
+        },
+        onChangeSex(event) {
+            var that = this
+            that.ApplyOrder.Contact.Sex = event.mp.detail
+            console.log('that.Sex', that.ApplyOrder.Contact.Sex)
+        },
+        onChangeType(event) {
+            var that = this
+            that.ApplyOrder.OrderType = event.mp.detail
+            that.CurrApplyOrder = event.mp.detail
+            that.IsDisabledProductSetCount = false
+            if (that.CurrApplyOrder == '购买贴片预约') {
+                that.ProductSetCount = parseInt(0)
+                that.IsDisabledProductSetCount = true
+            }
+            console.log('that.ApplyOrder.OrderType', that.ApplyOrder.OrderType)
+        },
         onConfirmAppointment(event) {
-            var that = this;
-            console.log('that.event', event);
-            that.ApplyOrder.OrderType =  that.CurrApplyOrder;
-            if(that.ApplyOrder.Contact.PhoneText.length < 11){
-                 Dialog.alert({
-                        title: ' 提交失败',
-                        message: '请填写合法的手机号码.',
-                    });
-                    return;
+            var that = this
+            console.log('that.event', event)
+            that.ApplyOrder.OrderType = that.CurrApplyOrder
+            if (that.ApplyOrder.Contact.PhoneText.length < 11) {
+                Dialog.alert({
+                    title: ' 提交失败',
+                    message: '请填写合法的手机号码.',
+                })
+                return
             }
-            if(that.ApplyOrder.Contact.Name.length <= 0){
-                 Dialog.alert({
-                        title: ' 提交失败',
-                        message: '请填写您的姓名.',
-                    });
-                    return;
+            if (that.ApplyOrder.Contact.Name.length <= 0) {
+                Dialog.alert({
+                    title: ' 提交失败',
+                    message: '请填写您的姓名.',
+                })
+                return
             }
-            that.ApplyOrder.ProductCount =  that.ProductCount;
-            var newDTP = "";
-            if(that.SignOrders.length > 0 && that.SignOrders[0].SignDTPName != that.ApplyOrder.DTP.Name)
-            {
-                newDTP = "签约药店：" + that.SignOrders[0].SignDTPName + "\n";
-                that.ApplyOrder.LastDTPId = that.SignOrders[0].DTP.Id;
+            that.ApplyOrder.ProductCount = that.ProductCount
+            var newDTP = ''
+            if (
+                that.SignOrders.length > 0 &&
+                that.SignOrders[0].SignDTPName != that.ApplyOrder.DTP.Name
+            ) {
+                newDTP = '签约药店：' + that.SignOrders[0].SignDTPName + '\n'
+                that.ApplyOrder.LastDTPId = that.SignOrders[0].DTP.Id
             }
             console.log('that.ApplyOrder request', that.ApplyOrder)
             const message =
                 '您将提交如下预约信息:\n' +
                 '预约药店：' +
                 that.ApplyOrder.DTP.Name +
-                '\n' + newDTP +
+                '\n' +
+                newDTP +
                 '预约类型：' +
                 that.ApplyOrder.OrderType +
                 '\n' +
                 '预约时间：' +
                 that.currentDateStr +
-                '\n';
+                '\n'
             Dialog.confirm({
                 messageAlign: 'left',
                 title: '提交确认',
                 message,
             })
-            .then(() => {
-                that.$http.post({
-                    url:'/ApplyOrder/Add',
-                    data:that.ApplyOrder
+                .then(() => {
+                    that.$http
+                        .post({
+                            url: '/ApplyOrder/Add',
+                            data: that.ApplyOrder,
+                        })
+                        .then(res => {
+                            console.log('/ApplyOrder/Add response', res)
+                            const url = '../a-patienthome/main'
+                            Dialog.alert({
+                                title: ' 提交成功',
+                                message:
+                                    '已经将您的申请发送至DTP药房,请等待确认通知.',
+                            }).then(() => {
+                                this.$globalData.refresh = true
+                                wx.navigateBack({ url: url })
+                            })
+                        })
                 })
-                .then(res => {
-                    console.log('/ApplyOrder/Add response', res)
-                    const url = '../a-patienthome/main'
-                    Dialog.alert({
-                        title: ' 提交成功',
-                        message: '已经将您的申请发送至DTP药房,请等待确认通知.',
-                    }).then(() => {
-                        this.$globalData.refresh = true;
-                        wx.navigateBack({ url: url })
-                    })
-                });
-            })
-            .catch(() => {
-                Dialog.close()
-            });
-
+                .catch(() => {
+                    Dialog.close()
+                })
         },
         showApplyDatePicker(event) {
             console.log('isShowApplyDatePicker event', event)
             this.isShowApplyDatePicker = true
-            console.log('this.isShowApplyDatePicker', this.isShowApplyDatePicker)
+            console.log(
+                'this.isShowApplyDatePicker',
+                this.isShowApplyDatePicker
+            )
         },
-        selectBirthdayPicker(event){
+        selectBirthdayPicker(event) {
             const { detail, currentTarget } = event.mp
             // console.log( detail )
             // console.log( currentTarget )
             const date = new Date(detail)
 
-            this.ApplyOrder.Contact.Birthday = this.dateFormat(date);
-            this.isShowBirthdayPicker = false;
-            this.currentBirthDateStr = date.toLocaleDateString();
-            this.currentBirthDate = detail;
+            this.ApplyOrder.Contact.Birthday = this.dateFormat(date)
+            this.isShowBirthdayPicker = false
+            this.currentBirthDateStr = date.toLocaleDateString()
+            this.currentBirthDate = detail
         },
-        showBirthdayPicker(event){
-            this.isShowBirthdayPicker = true;
+        showBirthdayPicker(event) {
+            this.isShowBirthdayPicker = true
         },
         cancelBirthdayPicker(event) {
             this.isShowBirthdayPicker = false
         },
-        getSignOrders(){
-            var that = this;
-            var openId = that.$globalData.openId;
+        getSignOrders() {
+            var that = this
+            var openId = that.$globalData.openId
             that.$http
                 .get({
                     url:
-                        '/SignOrder/GetByFilterStatusAndContact?contactMPOpenId=' + openId + '&filterStatus=已签约',
+                        '/SignOrder/GetByFilterStatusAndContact?contactMPOpenId=' +
+                        openId +
+                        '&filterStatus=已签约',
                 })
                 .then(res => {
                     if (res.code == 200) {
@@ -517,7 +558,7 @@ export default {
                         console.log(
                             '/SignOrder/GetByFilterStatus response',
                             res
-                        );
+                        )
                     }
                 })
         },
@@ -527,47 +568,66 @@ export default {
             // console.log( detail )
             // console.log( currentTarget )
             const date = new Date(detail)
-            console.log('event.mp.detail', detail);
-            console.log('this.currentDate old', this.currentDate);
+            console.log('event.mp.detail', detail)
+            console.log('this.currentDate old', this.currentDate)
 
-            this.ApplyOrder.ApplyDate = this.dateFormat(date);
-            this.currentDate = detail;
-            this.currentDateStr = date.toLocaleDateString();
-            console.log('this.currentDate new', this.currentDate);
+            this.ApplyOrder.ApplyDate = this.dateFormat(date)
+            this.currentDate = detail
+            this.currentDateStr = date.toLocaleDateString()
+            console.log('this.currentDate new', this.currentDate)
             console.log('this.ApplyOrder', this.ApplyOrder)
-            this.isShowApplyDatePicker = false;
+            this.isShowApplyDatePicker = false
         },
         cancelApplyDatePicker(event) {
             this.isShowApplyDatePicker = false
         },
-        onCreate(){
-            var that = this;
+        onCreate() {
+            var that = this
             //ApplyOrder/Create
-            console.log("url",'https://oostest.zailaboratory.com/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.$globalData.openId)
-            that.$http.get({
-                            url:'/ApplyOrder/Create?dtpid='+ that.dtpid +'&openid=' + that.$globalData.openId
-                        })
-                        .then(res => {
-                            console.log('/ApplyOrder/Create response', res)
-                            that.ApplyOrder = res.data;
-                            that.Phone = that.ApplyOrder.Contact.PhoneText;
-                            that.ApplyOrder.Contact.Phone =  that.Phone;
-                            that.ApplyOrder.Contact.PhoneText =  that.Phone;
-                            that.ApplyOrder.ApplyDate = that.currentDateStr;
-                            console.log('that.Phone', that.Phone)
-                            console.log('that.ApplyOrder.Contact.Birthday', that.ApplyOrder.Contact.Birthday)
+            console.log(
+                'url',
+                'https://oostest.zailaboratory.com/ApplyOrder/Create?dtpid=' +
+                    that.dtpid +
+                    '&openid=' +
+                    that.$globalData.openId
+            )
+            that.$http
+                .get({
+                    url:
+                        '/ApplyOrder/Create?dtpid=' +
+                        that.dtpid +
+                        '&openid=' +
+                        that.$globalData.openId,
+                })
+                .then(res => {
+                    console.log('/ApplyOrder/Create response', res)
+                    that.ApplyOrder = res.data
+                    that.Phone = that.ApplyOrder.Contact.PhoneText
+                    that.ApplyOrder.Contact.Phone = that.Phone
+                    that.ApplyOrder.Contact.PhoneText = that.Phone
+                    that.ApplyOrder.ApplyDate = that.currentDateStr
+                    console.log('that.Phone', that.Phone)
+                    console.log(
+                        'that.ApplyOrder.Contact.Birthday',
+                        that.ApplyOrder.Contact.Birthday
+                    )
 
-                            if(that.ApplyOrder.Contact.Birthday.length > 0){
-                                that.currentBirthDateStr = that.ApplyOrder.Contact.Birthday.replace(" 00:00:00","");
-                                // console.log('currentBirthDateStr', that.currentBirthDateStr);
-                                // console.log('Date.parse(that.ApplyOrder.Contact.Birthday)', new Date(Date.parse(that.ApplyOrder.Contact.Birthday)));
-                                // console.log('new Date(that.ApplyOrder.Contact.Birthday)', new Date(that.ApplyOrder.Contact.Birthday));
-                                that.currentBirthDate = new Date(that.ApplyOrder.Contact.Birthday).getTime();
-                                console.log('currentBirthDate', that.currentBirthDate);
-                            }
-                            that.getSignOrders();
-                        });
-        }
+                    if (that.ApplyOrder.Contact.Birthday.length > 0) {
+                        that.currentBirthDateStr = that.ApplyOrder.Contact.Birthday.replace(
+                            ' 00:00:00',
+                            ''
+                        )
+                        // console.log('currentBirthDateStr', that.currentBirthDateStr);
+                        // console.log('Date.parse(that.ApplyOrder.Contact.Birthday)', new Date(Date.parse(that.ApplyOrder.Contact.Birthday)));
+                        // console.log('new Date(that.ApplyOrder.Contact.Birthday)', new Date(that.ApplyOrder.Contact.Birthday));
+                        that.currentBirthDate = new Date(
+                            that.ApplyOrder.Contact.Birthday
+                        ).getTime()
+                        console.log('currentBirthDate', that.currentBirthDate)
+                    }
+                    that.getSignOrders()
+                })
+        },
     },
     //计算属性
     computed: {
@@ -578,14 +638,17 @@ export default {
     },
     //生命周期(mounted)
     mounted() {
-        var that = this;
-        that.ApplyOrder.OrderType =  that.CurrApplyOrder;
-        this.dtpid = this.$root.$mp.query.dtpid;
+        var that = this
+        that.ApplyOrder.OrderType = that.CurrApplyOrder
+        this.dtpid = this.$root.$mp.query.dtpid
         console.log('mounted this.dtpid', this.dtpid)
-        console.log("that.globalData.openid",that.$globalData.openId)
-        that.onCreate();
-        console.log("minDate:",that.minDate);
-        console.log("minDate:",new Date(new Date().getTime() + 70*60*60*1000));
+        console.log('that.globalData.openid', that.$globalData.openId)
+        that.onCreate()
+        console.log('minDate:', that.minDate)
+        console.log(
+            'minDate:',
+            new Date(new Date().getTime() + 70 * 60 * 60 * 1000)
+        )
     },
 }
 </script>
