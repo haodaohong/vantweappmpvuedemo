@@ -20,7 +20,7 @@
                     <span>姓名</span>
                 </div>
                 <div class="van-cell__value">
-                    <input type="text" class="van-field__input" :value="Contact.Name" @change="onChangeName"/>
+                    <input type="text" class="van-field__input" :value="Contact.Name" placeholder="输入姓名" @change="onChangeName"/>
                 </div>
             </div>
             <div class="van-cell">
@@ -28,9 +28,14 @@
                     <span>性别</span>
                 </div>
                 <div>
-                    <van-dropdown-menu>
+                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="selectSex" :value="genderindex" :range="gender">
+                        <view class="label-right">
+                            {{gender[genderindex]}}
+                        </view>
+                    </picker>
+                    <!-- <van-dropdown-menu>
                         <van-dropdown-item :value="Contact.Sex" :options="optionSex" @change="selectSex"/>
-                    </van-dropdown-menu>
+                    </van-dropdown-menu> -->
                 </div>
             </div>
             <div class="van-cell">
@@ -38,6 +43,11 @@
                     <span>出生日期</span>
                 </div>
                 <div>
+                    <!-- <picker mode="date" value="{{currentDate}}" :start="minBirthDate" :end="maxBirthDate" @change="userselectdate" bindchange="bindViewEvent" data-model="component" data-method="bindSelect" date-mode="date" data-name="date">
+                        <view class="picker">
+                        {{currentDate}}
+                        </view>
+                    </picker> -->
                     <van-popup :show="isshowdatetimepicker" position="bottom">
                         <van-datetime-picker
                             type="date"
@@ -52,7 +62,7 @@
                         :value="selectedDate"
                         icon="calender-o"
                         icon-class="icon"
-                        required
+                        
                         @clickicon="showdatetimepicker"
                     />
                 </div>
@@ -65,6 +75,7 @@
                     <input
                         type="text"
                         class="van-field__input"
+                        placeholder="输入手机号码"
                          @change="onChangePhone"
                         :value="Contact.PhoneText"
                     />
@@ -75,9 +86,14 @@
                     <span>证件类型</span>
                 </div>
                 <div>
-                    <van-dropdown-menu>
+                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="onSelectIDType" :value="IDindex" :range="IDOptions">
+                        <view class="label-right">
+                            {{IDOptions[IDindex]}}
+                        </view>
+                    </picker>
+                    <!-- <van-dropdown-menu>
                         <van-dropdown-item :value="Contact.IDType" :options="optionID" @change="onSelectIDType"/>
-                    </van-dropdown-menu>
+                    </van-dropdown-menu> -->
                 </div>
             </div>
             <div class="van-cell">
@@ -87,6 +103,7 @@
                 <div class="van-cell__value">
                     <input
                         type="text"
+                        placeholder="输入证件号码"
                         class="van-field__input"
                         @change="onChangeIDNum"
                         :value="Contact.IDNum"
@@ -123,6 +140,8 @@ export default {
                 { text: '男', value: '男' },
                 { text: '女', value: '女' },
             ],
+            gender:['男','女'],
+            genderindex: 0,
             value1: 0,
             optionID: [
                 { text: '身份证', value: '身份证' },
@@ -132,6 +151,8 @@ export default {
                 { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
                 { text: '港澳台居民居住证', value: '港澳台居民居住证' },
             ],
+            IDindex: 0,
+            IDOptions: ['身份证','护照','回乡证','台胞证','外国人永久居留身份证','港澳台居民居住证'],
             minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
             maxBirthDate: new Date(new Date().getTime()).getTime(),
             value2: 0,
@@ -182,11 +203,13 @@ export default {
             this.isshowdatetimepicker = false
         },
         onSelectIDType(event) {
-            this.Contact.IDType = event.mp.detail;
+            this.IDindex = parseInt(event.mp.detail.value);
+            this.Contact.IDType = this.IDOptions[this.IDindex];
             console.log('this.Contact.IDType', this.Contact.IDType)
         }, 
         selectSex(event) {
-            this.Contact.Sex = event.mp.detail;
+            this.genderindex = parseInt(event.mp.detail.value);
+            this.Contact.Sex = this.gender[this.genderindex];
             console.log('this.Contact.Sex', this.Contact.Sex)
         },
         onChangePhone ( event ) {

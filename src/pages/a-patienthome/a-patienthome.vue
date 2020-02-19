@@ -422,6 +422,10 @@ export default {
                         .then(res => {
                             console.log('/Contact/UpdateBySessionCode response', res)
                             var user = res.data;
+                            that.Contact = user;
+                            that.openid = user.MPOpenId;
+                            that.$globalData.openId = user.MPOpenId;
+                            console.log("that.$globalData.openId",that.$globalData.openId)
                         });
                     }
                 }
@@ -452,6 +456,8 @@ export default {
       } ,
         onGetOpenId(){
             var that = this;
+            that.onCreateContactInfo();
+            return;
             //登陆验证用户是否已经绑定过，绑定过则直接跳转
             wx.login({
                 success (res) {

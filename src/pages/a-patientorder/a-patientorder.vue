@@ -98,15 +98,31 @@
             </div>
             <div>
                 <div>
-                    <div class="van-cell">
+                
+             <div class="van-cell">
                 <div class="van-cell__title">
                     <span>姓名</span>
                 </div>
                 <div class="van-cell__value">
-                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" @change="onChangeName"/>
+                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" placeholder="输入姓名" @change="onChangeName"/>
                 </div>
             </div>
             <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>性别</span>
+                </div>
+                <div>
+                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="onChangeSex" :value="genderindex" :range="gender">
+                        <view class="label-right">
+                            {{gender[genderindex]}}
+                        </view>
+                    </picker>
+                    <!-- <van-dropdown-menu>
+                        <van-dropdown-item :value="Contact.Sex" :options="optionSex" @change="selectSex"/>
+                    </van-dropdown-menu> -->
+                </div>
+            </div>
+            <!-- <div class="van-cell">
                 <div class="van-cell__title">
                     <span>性别</span>
                 </div>
@@ -114,6 +130,49 @@
                     <van-dropdown-menu>
                         <van-dropdown-item :value="ApplyOrder.Contact.Sex" @change="onChangeSex" :options="Sexs" />
                     </van-dropdown-menu>
+                </div>
+            </div> -->
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>手机号码</span>
+                </div>
+                <div class="van-cell__value">
+                    <input
+                        type="text"
+                        class="van-field__input"
+                        placeholder="输入手机号码"
+                         @change="onChangePhone"
+                        :value="Phone"
+                    />
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>证件类型</span>
+                </div>
+                <div>
+                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="onSelectIDType" :value="IDindex" :range="IDOptions">
+                        <view class="label-right">
+                            {{IDOptions[IDindex]}}
+                        </view>
+                    </picker>
+                    <!-- <van-dropdown-menu>
+                        <van-dropdown-item :value="Contact.IDType" :options="optionID" @change="onSelectIDType"/>
+                    </van-dropdown-menu> -->
+                </div>
+            </div>
+            <div class="van-cell">
+                <div class="van-cell__title">
+                    <span>证件号码</span>
+                </div>
+                <div class="van-cell__value">
+                    <input
+                        type="text"
+                        placeholder="输入证件号码"
+                        class="van-field__input"
+                        @change="onChangeIDNum"
+                        :value="ApplyOrder.Contact.IDNum"
+                    />
                 </div>
             </div>
             <div class="van-cell">
@@ -140,13 +199,6 @@
                     />
                 </div>
             </div>
-                <van-field
-                    :value="Phone"
-                    label="手机号"
-                    placeholder="请输入手机号"
-                    @change="onChangePhone"
-                    required
-                />
 
                 </div>
                 <view class="divLine"></view>
@@ -212,17 +264,21 @@ export default {
             hour: new Date().getHours().toString,
             isShowBirthdayPicker: false,
             isShowApplyDatePicker: false,
+            IDindex: 0,
+            IDOptions: ['身份证','护照','回乡证','台胞证','外国人永久居留身份证','港澳台居民居住证'],
             selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
-            currentDateStr: new Date(new Date().getTime() + 24*60*60*1000*2).toLocaleDateString(),
+            currentDate: new Date(new Date().getTime() + 24*60*60*1000*1).getTime(),
+            currentDateStr: new Date(new Date().getTime() + 24*60*60*1000*1).toLocaleDateString(),
             currentBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).getTime(),
             currentBirthDateStr: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).toLocaleDateString(),
             minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
             maxBirthDate: new Date(new Date().getTime()).getTime(),
-            minDate: new Date(new Date().getTime() + 24*60*60*1000*2).getTime(),
-            minDateStr: new Date(new Date().getTime() + 24*60*60*1000*2).toLocaleDateString(),
+            minDate: new Date(new Date().getTime() + 24*60*60*1000*1).getTime(),
+            minDateStr: new Date(new Date().getTime() + 24*60*60*1000*1).toLocaleDateString(),
             maxDate: new Date(new Date().getTime() + 24*60*60*1000*3*30).getTime(),
             minHour: 9,
+            gender:['男','女'],
+            genderindex: 0,
             maxHour: 17,
             OrderTypes: [
                 { text: '设备预约', value: '设备预约' },
@@ -320,6 +376,16 @@ export default {
                 ':00'
             return result
         },
+      onSelectIDType(event) {
+            this.IDindex = parseInt(event.mp.detail.value);
+            this.ApplyOrder.Contact.IDType = this.IDOptions[this.IDindex];
+            console.log('ApplyOrder.Contact.IDType', this.ApplyOrder.Contact.IDType);
+        }, 
+      onChangeIDNum ( event ) {
+            var that = this;
+            that.ApplyOrder.Contact.IDNum =  event.mp.detail.value;
+            console.log('ApplyOrder.Contact.IDNum', that.ApplyOrder.Contact.IDNum)
+        } ,
       onChangePhone ( event ) {
         var that = this;
         that.ApplyOrder.Contact.Phone =  event.mp.detail;
@@ -338,8 +404,12 @@ export default {
       } ,
       onChangeSex ( event ) {
         var that = this;
-        that.ApplyOrder.Contact.Sex =  event.mp.detail;
-        console.log('that.Sex', that.ApplyOrder.Contact.Sex)
+        // that.ApplyOrder.Contact.Sex =  event.mp.detail;
+        // console.log('that.Sex', that.ApplyOrder.Contact.Sex)
+
+        that.genderindex = parseInt(event.mp.detail.value);
+        that.ApplyOrder.Contact.Sex = that.gender[that.genderindex];
+        console.log('this.Contact.Sex', that.ApplyOrder.Contact.Sex)
       } ,
       onChangeType ( event ) {
         var that = this;

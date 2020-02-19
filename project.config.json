@@ -82,6 +82,13 @@
 					"id": -1,
 					"name": "pages/a-patientorder/main",
 					"pathName": "pages/a-patientorder/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/a-patientdetail/main",
+					"pathName": "pages/a-patientdetail/main",
 					"scene": null
 				}
 			]

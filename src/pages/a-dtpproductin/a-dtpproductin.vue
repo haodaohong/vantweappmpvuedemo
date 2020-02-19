@@ -202,24 +202,27 @@ export default {
                     this.qrCode,
             })
             .then(res => {
+                console.log(
+                    '/Product/GetProductInfoFromDTPScanQrCode response',
+                    res
+                )
                 if (res.code == 200) {
-                    console.log(
-                        '/Product/GetProductInfoFromDTPScanQrCode response',
-                        res
-                    )
                     this.snCode = res.data.UDISN
                     this.isShowBindContact = res.data.ContactName != undefined
                     this.checkInStatusActiveValue = res.data.checkInStatusActiveValue
                     this.product = res.data
                 } else {
+                   Dialog.alert({
+                        title: '信息提示',
+                        message: res.message,
+                    }).then(() => {
+                             wx.navigateBack();
+                        })
                     this.snCode = res.data.UDISN
                     this.isShowBindContact = res.data.ContactName != undefined
                     this.checkInStatusActiveValue = res.data.checkInStatusActiveValue
                     this.product = res.data
-                    Dialog.alert({
-                        title: '信息提示',
-                        message: res.message,
-                    })
+
                 }
             })
     },

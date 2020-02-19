@@ -125,7 +125,7 @@
                             @click="scanProduct"
                             size="small"
                             type="info"
-                            >维修入库</van-button
+                            >扫码入库</van-button
                         >
                     </view>
                     <view
@@ -138,7 +138,7 @@
                             @click="scanProduct"
                             size="small"
                             type="info"
-                            >完成维修出库</van-button
+                            >完成出库</van-button
                         >
                     </view>
                 </van-panel>

@@ -130,6 +130,15 @@
             </div>
         </div>
         <mybr />
+        <div class="confirmsignbtn">
+            <van-button
+                square
+                size="normal"
+                type="info"
+                @click="onBack"
+                >返回主界面</van-button
+            >
+        </div>
         <!--注意要配一个van-dialog,才会显示提示 ,默认id van-dialog-->
         <van-dialog id="van-dialog" />
     </div>
@@ -157,7 +166,11 @@ export default {
         }
     },
     //方法
-    methods: {},
+    methods: {
+        onBack:function(){
+             wx.navigateBack();
+        }
+    },
     //计算属性
     computed: {
         //name() {

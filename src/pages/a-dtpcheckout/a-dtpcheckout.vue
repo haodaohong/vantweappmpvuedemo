@@ -133,6 +133,7 @@ export default {
                                 '../a-dtphome/main?activeTabIndex=' +
                                 this.returnDTPHomeTabIndex
                             //wx.navigateTo({ url: url })
+                            this.$globalData.refresh = true;
                              wx.navigateBack();
                         })
                     } else {

@@ -100,6 +100,7 @@ export default {
     //方法
     methods: {
         onConfirmOut() {
+            var that = this;
             const message = '已成功出库产品！'
             console.log('product data is', this.product)
             console.log('trackingNumber is', this.trackingNumber)
@@ -117,15 +118,15 @@ export default {
                         });
                 return;
             }
-            this.$http
+            that.$http
                 .post({
                     url:
                         '/Product/CheckOut?role=COC&productId=' +
-                        this.product.Id +
+                        that.product.Id +
                         '&currentStatus=' +
-                        this.product.CurrentStatus +
+                        that.product.CurrentStatus +
                         '&trackingNumber=' +
-                        this.trackingNumber,
+                        that.trackingNumber,
                 })
                 .then(res => {
                     if (res.code == 200) {
@@ -135,17 +136,14 @@ export default {
                             message,
                         }).then(() => {
                             const url = '../a-cochome/main'
-                            this.$globalData.refresh = true;
-                            wx.navigateBack({ url: url })
+                            that.$globalData.refresh = true;
+                            wx.navigateBack()
                         })
                     } else {
                         const message = res.message
                         Dialog.alert({
                             title: '信息提示',
                             message,
-                        }).then(() => {
-                            const url = '../a-cochome/main'
-                            wx.navigateTo({ url: url })
                         })
                     }
                 })
