@@ -269,6 +269,9 @@ export default {
              console.log(event)
             var tabIndex = event.mp.detail['index'];
             that.active = tabIndex;
+            that.onSelectFunction(tabIndex);
+        },
+        onSelectFunction(tabIndex){
              if (tabIndex == '0') {
                     that.onLoadDtps();
              }else if (tabIndex == '1') {

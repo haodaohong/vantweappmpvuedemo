@@ -428,8 +428,8 @@ export default {
 
         onChangePhone(event) {
             var that = this
-            that.ApplyOrder.Contact.Phone = event.mp.detail
-            that.ApplyOrder.Contact.PhoneText = event.mp.detail
+            that.ApplyOrder.Contact.Phone = event.mp.detail.value
+            that.ApplyOrder.Contact.PhoneText = event.mp.detail.value
             console.log('that.Phone', that.ApplyOrder.Contact.Phone)
         },
         onChangeName(event) {
@@ -452,7 +452,8 @@ export default {
         },
         onChangeSex(event) {
             var that = this
-            that.ApplyOrder.Contact.Sex = event.mp.detail
+            this.genderindex = parseInt(event.mp.detail.value);
+            that.ApplyOrder.Contact.Sex = this.gender[this.genderindex];
             console.log('that.Sex', that.ApplyOrder.Contact.Sex)
         },
         onChangeType(event) {
@@ -491,7 +492,8 @@ export default {
                 })
                 return
             }
-            that.ApplyOrder.ProductCount = that.ProductCount
+            that.ApplyOrder.PasterSetCount = that.PasterSetCount
+            that.ApplyOrder.ProductSetCount = that.ProductSetCount
             var newDTP = ''
             if (
                 that.SignOrders.length > 0 &&
@@ -527,14 +529,21 @@ export default {
                         .then(res => {
                             console.log('/ApplyOrder/Add response', res)
                             const url = '../a-patienthome/main'
-                            Dialog.alert({
-                                title: ' 提交成功',
-                                message:
-                                    '已经将您的申请发送至DTP药房,请等待确认通知.',
-                            }).then(() => {
-                                this.$globalData.refresh = true
-                                wx.navigateBack({ url: url })
-                            })
+                            if(res.code == 200){
+                                  Dialog.alert({
+                                        title: ' 提交成功',
+                                        message:
+                                            '已经将您的申请发送至DTP药房,请等待确认通知.',
+                                    }).then(() => {
+                                        this.$globalData.refresh = true
+                                        wx.navigateBack({ url: url })
+                                    })
+                            }else{
+                                  Dialog.alert({
+                                        title: ' 提交失败',
+                                        message: res.message,
+                                    })
+                            }
                         })
                 })
                 .catch(() => {
@@ -627,6 +636,14 @@ export default {
                         'that.ApplyOrder.Contact.Birthday',
                         that.ApplyOrder.Contact.Birthday
                     )
+
+                    if(that.ApplyOrder.Contact.Sex == ''){
+                        that.ApplyOrder.Contact.Sex = '男';
+                    }
+                    
+                    if(that.ApplyOrder.Contact.IDType == ''){
+                        that.ApplyOrder.Contact.IDType = '身份证';
+                    }
 
                     if (that.ApplyOrder.Contact.Birthday.length > 0) {
                         that.currentBirthDateStr = that.ApplyOrder.Contact.Birthday.replace(
