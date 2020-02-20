@@ -77,9 +77,6 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约产品：医疗仪器</td>
-                            </tr>
-                            <tr>
                                 <td>预约数量：{{apply.ProductCount}}</td>
                                 <td>预约日期：{{apply.ApplyOrderDateTimeFormat}}</td>
                             </tr>
@@ -93,6 +90,14 @@
                             </tr>
                             <tr>
                                 <td>身份证号：{{apply.Contact.IDNum}}</td>
+                            </tr>
+                        </table>
+                        <table class="content" v-show="apply.Products && apply.Products.length > 0">
+                            <tr>
+                                <td>待维修产品</td>
+                            </tr>
+                            <tr v-for="(prod, ind) in apply.Products" :key="ind">
+                                <td>产品名称：{{prod.ProductName}}（{{prod.UDISN}}）</td>
                             </tr>
                         </table>
                     </div>

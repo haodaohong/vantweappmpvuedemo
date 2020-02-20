@@ -109,6 +109,14 @@
                                     </td>
                                 </tr>
                             </table>
+                            <table class="content" v-show="applyOrder.Products && applyOrder.Products.length > 0">
+                                <tr>
+                                    <td>待申请产品</td>
+                                </tr>
+                                <tr v-for="(prod, ind) in applyOrder.Products" :key="ind">
+                                    <td>产品名称：{{prod.ProductName}}（{{prod.UDISN}}）</td>
+                                </tr>
+                            </table>
                         </div>
                         <view
                             style="text-align: right;"
@@ -332,8 +340,8 @@
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
                                     <td>
-                                        类别：{{
-                                            product.ProductType.PartsName
+                                        SN：{{
+                                            product.UDISN
                                         }}
                                     </td>
                                     <td>规格：{{ product.Specification }}</td>
