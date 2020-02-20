@@ -272,6 +272,7 @@ export default {
             that.onSelectFunction(tabIndex);
         },
         onSelectFunction(tabIndex){
+            var that = this;
              if (tabIndex == '0') {
                     that.onLoadDtps();
              }else if (tabIndex == '1') {
