@@ -46,33 +46,6 @@
                     </div> -->
                     <div class="van-cell">
                         <div class="van-cell__title">
-                            <span>设备数量：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span
-                                ><van-stepper
-                                    :disabled="IsDisabledProductSetCount"
-                                    :value="ProductSetCount"
-                                    integer
-                                    @change="onSelectProductSetCount"
-                            /></span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
-                            <span>贴片数量：</span>
-                        </div>
-                        <div class="van-cell__value">
-                            <span
-                                ><van-stepper
-                                    :value="PasterSetCount"
-                                    integer
-                                    @change="onSelectPasterSetCount"
-                            /></span>
-                        </div>
-                    </div>
-                    <div class="van-cell">
-                        <div class="van-cell__title">
                             <span>预约类型：</span>
                         </div>
                         <div class="van-cell__value">
@@ -87,6 +60,36 @@
                             ></span>
                         </div>
                     </div>
+                    <div class="van-cell" v-show="IsDisabledProductSetCount">
+                        <div class="van-cell__title">
+                            <span>设备套数：</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span
+                                ><van-stepper
+                                    :disabled="IsDisabledProductSetCount"
+                                    :min="ProductMinCount" max="100"
+                                    :value="ProductSetCount"
+                                    integer
+                                    @change="onSelectProductSetCount"
+                            /></span>
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>贴片套数：</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <span
+                                ><van-stepper
+                                    :value="PasterSetCount"
+                                    :min="PasterMinCount" max="100"
+                                    integer
+                                    @change="onSelectPasterSetCount"
+                            /></span>
+                        </div>
+                    </div>
+                    
                     <div class="van-cell">
                         <div class="van-cell__title">
                             <span>预约时间：</span>
@@ -309,6 +312,8 @@ export default {
             minHour: 9,
             gender:['男','女'],
             genderindex: 0,
+            PasterMinCount: 0,
+            ProductMinCount: 0,
             maxHour: 17,
             OrderTypes: [
                 { text: '设备预约', value: '设备预约' },
@@ -409,6 +414,18 @@ export default {
                 ':00'
             return result
         },
+        
+      onSelectIDType(event) {
+            this.IDindex = parseInt(event.mp.detail.value);
+            this.ApplyOrder.Contact.IDType = this.IDOptions[this.IDindex];
+            console.log('ApplyOrder.Contact.IDType', this.ApplyOrder.Contact.IDType);
+        }, 
+      onChangeIDNum ( event ) {
+            var that = this;
+            that.ApplyOrder.Contact.IDNum =  event.mp.detail.value;
+            console.log('ApplyOrder.Contact.IDNum', that.ApplyOrder.Contact.IDNum)
+        } ,
+
         onChangePhone(event) {
             var that = this
             that.ApplyOrder.Contact.Phone = event.mp.detail
@@ -443,11 +460,18 @@ export default {
             that.ApplyOrder.OrderType = event.mp.detail
             that.CurrApplyOrder = event.mp.detail
             that.IsDisabledProductSetCount = false
-            if (that.CurrApplyOrder == '购买贴片预约') {
-                that.ProductSetCount = parseInt(0)
+            that.ProductSetCount = 1
+            that.PasterMinCount = 0
+            that.ProductMinCount = 1
+            if (that.CurrApplyOrder === '购买贴片预约') {
+                that.ProductMinCount = 0
+                that.ProductSetCount = 0
                 that.IsDisabledProductSetCount = true
+                that.PasterSetCount = 1
+                that.PasterMinCount = 1
             }
             console.log('that.ApplyOrder.OrderType', that.ApplyOrder.OrderType)
+            console.log('that.ProductSetCount', that.ProductSetCount)
         },
         onConfirmAppointment(event) {
             var that = this
@@ -583,14 +607,6 @@ export default {
         },
         onCreate() {
             var that = this
-            //ApplyOrder/Create
-            console.log(
-                'url',
-                'https://oostest.zailaboratory.com/ApplyOrder/Create?dtpid=' +
-                    that.dtpid +
-                    '&openid=' +
-                    that.$globalData.openId
-            )
             that.$http
                 .get({
                     url:

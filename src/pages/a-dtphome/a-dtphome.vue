@@ -97,7 +97,10 @@
                                         }}
                                     </td>
                                     <td>
-                                        预约数量：{{ applyOrder.ProductCount }}
+                                        设备套数：{{ applyOrder.ProductSetCount }}
+                                    </td>
+                                    <td>
+                                        贴片套数：{{ applyOrder.PasterSetCount }}
                                     </td>
                                     <td>
                                         预约日期：{{
@@ -125,7 +128,7 @@
                                 @click="
                                     onConfirmAppointment(
                                         applyOrder.Id,
-                                        applyOrder.ProductCount,
+                                        applyOrder.ProductSetCount,applyOrder.PasterSetCount,
                                         applyOrder.Contact.Id,
                                         applyOrder.DTP.Id
                                     )
@@ -427,7 +430,8 @@ export default {
                 DTPId: 0,
                 ContactId: 0,
                 ApplyOrderId: 0,
-                ProductCount: 0,
+                PasterSetCount: 0,
+                ProductSetCount: 0,
             },
             signOrderTypeOption: [
                 { text: '所有类型', value: 0 },
@@ -458,7 +462,8 @@ export default {
             products: [],
             maintenanceProducts: [],
             checkinProductSnCode: '',
-            DTP: {}
+            DTP: {},
+           
         }
     },
     //方法
@@ -807,9 +812,10 @@ export default {
                 })
         },
         //确认预约
-        onConfirmAppointment(applyOrderId, productCount, contactId, dtpId) {
+        onConfirmAppointment(applyOrderId, productSetCount,pasterSetCount, contactId, dtpId) {
             console.log('applyOrderId:', applyOrderId)
-            console.log('productCount:', productCount)
+            console.log('productSetCount:', productSetCount)
+            console.log('pasterSetCount:', pasterSetCount)
             console.log('contactId:', contactId)
             console.log('dtpId:', dtpId)
             const confirmCancelAppointmentMessage = '是否确认该预约申请？'
@@ -822,7 +828,8 @@ export default {
                 this.signOrder.DTPId = dtpId
                 this.signOrder.ContactId = contactId
                 this.signOrder.ApplyOrderId = applyOrderId
-                this.signOrder.ProductCount = productCount
+                this.signOrder.ProductSetCount = productSetCount
+                this.signOrder.PasterSetCount = pasterSetCount
                 console.log('SignOrder data:', this.signOrder)
                 var index = this.applyOrders.findIndex(
                     x => x.Id == applyOrderId
@@ -833,8 +840,10 @@ export default {
                         url:
                             '/SignOrder/AddSignOrder?applyOrderId=' +
                             this.signOrder.ApplyOrderId +
-                            '&productCount=' +
-                            this.signOrder.ProductCount +
+                            '&productSetCount=' +
+                            this.signOrder.ProductSetCount +
+                            '&pasterSetCount=' +
+                            this.signOrder.PasterSetCount +
                             '&contactId=' +
                             this.signOrder.ContactId +
                             '&dtpId=' +
