@@ -508,7 +508,7 @@ export default {
             var that = this
             this.genderindex = parseInt(event.mp.detail.value)
             that.ApplyOrder.Contact.Sex = this.gender[this.genderindex]
-            console.log('that.Sex', that.ApplyOrder.Contact.Sex)
+            console.log('that.ApplyOrder.Contact.Sex', that.ApplyOrder.Contact.Sex)
         },
         onChangeType(event) {
             var that = this

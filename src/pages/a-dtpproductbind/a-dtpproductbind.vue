@@ -24,13 +24,13 @@
                             <div class="van-cell__title">
                                 <span>产品名称：{{ product.ProductName }}</span>
                             </div>
-                            <div class="van-cell__title">
+                            <!-- <div class="van-cell__title">
                                 <span
                                     >产品类型：{{
                                         product.ProductType.PartsName
                                     }}</span
                                 >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="van-cell">
                             <div class="van-cell__title">
@@ -111,13 +111,13 @@
                             <div class="van-cell__title">
                                 <span>产品名称：{{ product.ProductName }}</span>
                             </div>
-                            <div class="van-cell__title">
+                            <!-- <div class="van-cell__title">
                                 <span
                                     >产品类型：{{
                                         product.ProductType.PartsName
                                     }}</span
                                 >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="van-cell">
                             <div class="van-cell__title">
