@@ -11,7 +11,7 @@
     <div>
         <div class="basicinfo">
             <div>
-                <h2 class="van-doc-demo-block__title">产品出库</h2>
+                <h2 class="van-doc-demo-block__title">扫描产品出库</h2>
             </div>
             <div>
                 <div>
