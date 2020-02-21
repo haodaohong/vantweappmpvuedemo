@@ -77,12 +77,30 @@
                     <div>
                         <table class="content">
                             <tr>
-                                <td>预约数量：{{apply.ProductCount}}</td>
+                                 <td>
+                                        预约类型：<span
+                                            class="font-color-red"
+                                            >{{
+                                                apply
+                                                    .ApplyOrderTypeFormat
+                                            }}</span
+                                        >
+                                    </td>
                                 <td>预约日期：{{apply.ApplyOrderDateTimeFormat}}</td>
+                                <td>
+                                        设备套数：{{
+                                            apply.ProductSetCount
+                                        }} 套
+                                    </td>
+                                    <td>
+                                        贴片套数：{{
+                                            apply.PasterSetCount
+                                        }} 套
+                                    </td>
                             </tr>
                             <tr>
-                                <td>姓    名：{{apply.Contact.Name}}</td>
-                                <td>性    别：{{apply.Contact.Sex}}</td>
+                                <td>患者姓名：{{apply.Contact.Name}}</td>
+                                <td>患者性别：{{apply.Contact.Sex}}</td>
                             </tr>
                             <tr>
                                 <td>出生日期：{{apply.Contact.BirthDayFormat}}</td>
