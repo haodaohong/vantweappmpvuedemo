@@ -111,7 +111,7 @@
                             </table>
                             <table class="content" v-show="applyOrder.Products && applyOrder.Products.length > 0">
                                 <tr>
-                                    <td>待申请产品</td>
+                                    <td>待维修产品</td>
                                 </tr>
                                 <tr v-for="(prod, ind) in applyOrder.Products" :key="ind">
                                     <td>产品名称：{{prod.ProductName}}（{{prod.UDISN}}）</td>

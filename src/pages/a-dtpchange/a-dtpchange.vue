@@ -24,8 +24,18 @@
                     >
                 </van-row>
                 <van-row>
-                    <van-col span="50">
-                        租赁数量：{{ signOrder.ProductCount }}
+                    <van-col span="20">
+                        设备数量：{{ signOrder.ProductSetCount }}套（5个配件/套）
+                    </van-col>
+                </van-row>
+                <van-row>
+                    <van-col span="20">
+                        贴片数量：{{ signOrder.PasterSetCount }}套（黑白2个配件/套）
+                    </van-col>
+                </van-row>
+                <van-row>
+                    <van-col span="20">
+                        全部数量：{{ signOrder.ProductCount }}个配件
                     </van-col>
                 </van-row>
             </div>
