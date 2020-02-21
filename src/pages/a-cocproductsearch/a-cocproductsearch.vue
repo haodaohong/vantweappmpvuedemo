@@ -31,14 +31,14 @@
                             <span>{{ product.ProductName }}</span>
                         </div>
                     </div>
-                    <div class="van-cell">
+                    <!-- <div class="van-cell">
                         <div class="van-cell__title">
                             <span>产品类别</span>
                         </div>
                         <div class="van-cell__value">
                             <span>{{ product.ProductType.PartsName }}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="van-cell">
                         <div class="van-cell__title">
                             <span>生产规格</span>

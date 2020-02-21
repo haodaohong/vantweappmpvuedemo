@@ -145,11 +145,11 @@ export default {
             value1: 0,
             optionID: [
                 { text: '身份证', value: '身份证' },
-                { text: '护照', value: '护照' },
-                { text: '回乡证', value: '回乡证' },
-                { text: '台胞证', value: '台胞证' },
-                { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
-                { text: '港澳台居民居住证', value: '港澳台居民居住证' },
+                { text: '港澳居民来往内地通行证', value: '护照' },
+                { text: '台湾居民来往大陆通行证', value: '回乡证' },
+                { text: '护照', value: '台胞证' },
+                // { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
+                // { text: '港澳台居民居住证', value: '港澳台居民居住证' },
             ],
             IDindex: 0,
             IDOptions: ['身份证','护照','回乡证','台胞证','外国人永久居留身份证','港澳台居民居住证'],
@@ -247,6 +247,8 @@ export default {
                    {
                        that.Contact.IDType = '身份证'
                    }
+                    that.genderindex = that.gender.indexOf(that.Contact.Sex);
+                    that.IDindex = that.IDOptions.indexOf(that.Contact.IDType);
                     that.selectedDate = that.Contact.Birthday.replace(" 00:00:00","");
                     that.currentDate = new Date(that.Contact.Birthday).getTime();
                     console.log("that.selectedDate", that.selectedDate);

@@ -11,7 +11,7 @@
     <div v-if="showBind">
         <div class="basicinfo">
             <div>
-                <h2 class="van-doc-demo-block__title">第二步-添加产品</h2>
+                <h2 class="van-doc-demo-block__title">第二步-扫描添加产品</h2>
             </div>
             <div v-for="product in products" :key="product">
                 <van-panel
@@ -22,19 +22,19 @@
                     <div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>名称：{{ product.ProductName }}</span>
+                                <span>产品名称：{{ product.ProductName }}</span>
                             </div>
-                            <div class="van-cell__title">
+                            <!-- <div class="van-cell__title">
                                 <span
-                                    >类型：{{
+                                    >产品类型：{{
                                         product.ProductType.PartsName
                                     }}</span
                                 >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>规格：{{ product.Specification }}</span>
+                                <span>产品规格：{{ product.Specification }}</span>
                             </div>
                             <div class="van-cell__title">
                                 <span
@@ -67,7 +67,7 @@
         <div class="footer-container">
             <div class="confirmProductCount">
                 <text
-                    >出库件数：{{ productcount }} /
+                    >出库总件数：{{ productcount }} /
                     {{ SignOrder.ProductCount }}</text
                 >
                 <view class="divLine"></view>
@@ -91,7 +91,7 @@
             <div>
                 <div class="van-cell">
                     <div class="van-cell__title">
-                        <span>DTP药房：{{ dtpname }}</span>
+                        <span>药房名称：{{ dtpname }}</span>
                     </div>
                 </div>
                 <div class="van-cell">
@@ -109,19 +109,19 @@
                     <div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>名称：{{ product.ProductName }}</span>
+                                <span>产品名称：{{ product.ProductName }}</span>
                             </div>
-                            <div class="van-cell__title">
+                            <!-- <div class="van-cell__title">
                                 <span
-                                    >类型：{{
+                                    >产品类型：{{
                                         product.ProductType.PartsName
                                     }}</span
                                 >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>规格：{{ product.Specification }}</span>
+                                <span>产品规格：{{ product.Specification }}</span>
                             </div>
                             <div class="van-cell__title">
                                 <span

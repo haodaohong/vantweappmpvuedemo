@@ -85,7 +85,7 @@
                                             }}</span
                                         >
                                     </td>
-                                    <td>性别：{{ applyOrder.Contact.Sex }}</td>
+                                    <td>患者性别：{{ applyOrder.Contact.Sex }}</td>
                                     <td>
                                         出生日期：{{
                                             applyOrder.Contact.BirthDayFormat
@@ -99,12 +99,12 @@
                                     <td>
                                         设备套数：{{
                                             applyOrder.ProductSetCount
-                                        }}
+                                        }} 套
                                     </td>
                                     <td>
                                         贴片套数：{{
                                             applyOrder.PasterSetCount
-                                        }}
+                                        }} 套
                                     </td>
                                     <td>
                                         预约日期：{{
@@ -220,8 +220,18 @@
                                             signOrder.Contact.PhoneText
                                         }}
                                     </td>
+                                    <td>
+                                        设备套数：{{
+                                            signOrder.ApplyOrder.ProductSetCount
+                                        }} 套
+                                    </td>
+                                    <td>
+                                        贴片套数：{{
+                                            signOrder.ApplyOrder.PasterSetCount
+                                        }} 套
+                                    </td>
                                     <td v-if="signOrder.ShowSignDetail">
-                                        已签约DTP: {{ signOrder.SignDTPName }}
+                                        签约药店: {{ signOrder.SignDTPName }}
                                     </td>
                                 </tr>
                             </table>
@@ -247,7 +257,7 @@
                                 size="small"
                                 type="primary"
                                 v-if="signOrder.ShowChangeFooter"
-                                >DTP变更</van-button
+                                >提交变更药店协议</van-button
                             >
                         </view>
                     </van-panel>
@@ -296,13 +306,13 @@
                         <div>
                             <table class="content">
                                 <tr>
-                                    <td>名称：{{ product.ProductName }}</td>
-                                    <td>
+                                    <td>产品名称：{{ product.ProductName }}</td>
+                                    <!-- <td>
                                         类别：{{
                                             product.ProductType.PartsName
                                         }}
-                                    </td>
-                                    <td>规格：{{ product.Specification }}</td>
+                                    </td> -->
+                                    <td>产品规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
                                             product.ProductionDateFormat
@@ -354,15 +364,15 @@
                         <div>
                             <table class="content">
                                 <tr>
-                                    <td>名称：{{ product.ProductName }}</td>
-                                    <td>SN：{{ product.UDISN }}</td>
-                                    <td>规格：{{ product.Specification }}</td>
+                                    <td>产品名称：{{ product.ProductName }}</td>
+                                    <td>产品编号：{{ product.UDISN }}</td>
+                                    <td>产品规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
                                             product.ProductionDateFormat
                                         }}
                                     </td>
-                                    <td>绑定用户：{{ product.ContactName }}</td>
+                                    <td>绑定患者：{{ product.ContactName }}</td>
                                 </tr>
                             </table>
                         </div>

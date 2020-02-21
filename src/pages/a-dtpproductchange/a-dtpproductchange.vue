@@ -22,15 +22,18 @@
                     <div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>名称：{{ product.ProductName }}</span>
+                                <span>产品名称：{{ product.ProductName }}</span>
                             </div>
                             <div class="van-cell__title">
-                                <span>类型：{{ product.ProductType.Name }}</span>
+                                <span>产品名称：{{ product.ProductName }}</span>
                             </div>
+                            <!-- <div class="van-cell__title">
+                                <span>类型：{{ product.ProductType.Name }}</span>
+                            </div> -->
                         </div>
                         <div class="van-cell">
                             <div class="van-cell__title">
-                                <span>规格：{{ product.Specification }}</span>
+                                <span>生产规格：{{ product.Specification }}</span>
                             </div>
                             <div class="van-cell__title">
                                 <span
