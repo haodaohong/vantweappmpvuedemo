@@ -209,6 +209,15 @@ export default {
                                     })
                                     .then(res => {
                                         if (res.code == 200) {
+                                            if (res.data.CurrentOrderId != 0) {
+                                                const message =
+                                                    '该产品已绑定其他患者'
+                                                Dialog.alert({
+                                                    title: '信息提示',
+                                                    message,
+                                                })
+                                                return
+                                            }
                                             var findprod = that.products.find(
                                                 x => x.id === res.data.id
                                             )
