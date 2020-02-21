@@ -68,7 +68,8 @@
                             <span
                                 ><van-stepper
                                     :disabled="IsDisabledProductSetCount"
-                                    :min="ProductMinCount" max="100"
+                                    :min="ProductMinCount"
+                                    max="100"
                                     :value="ProductSetCount"
                                     integer
                                     @change="onSelectProductSetCount"
@@ -83,13 +84,14 @@
                             <span
                                 ><van-stepper
                                     :value="PasterSetCount"
-                                    :min="PasterMinCount" max="100"
+                                    :min="PasterMinCount"
+                                    max="100"
                                     integer
                                     @change="onSelectPasterSetCount"
                             /></span>
                         </div>
                     </div>
-                    
+
                     <div class="van-cell">
                         <div class="van-cell__title">
                             <span>预约时间：</span>
@@ -128,31 +130,44 @@
             </div>
             <div>
                 <div>
-                
-             <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>姓名</span>
-                </div>
-                <div class="van-cell__value">
-                    <input type="text" class="van-field__input" :value="ApplyOrder.Contact.Name" placeholder="输入姓名" @change="onChangeName"/>
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>性别</span>
-                </div>
-                <div>
-                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="onChangeSex" :value="genderindex" :range="gender">
-                        <view class="label-right">
-                            {{gender[genderindex]}}
-                        </view>
-                    </picker>
-                    <!-- <van-dropdown-menu>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>姓名</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <input
+                                type="text"
+                                class="van-field__input"
+                                :value="ApplyOrder.Contact.Name"
+                                placeholder="输入姓名"
+                                @change="onChangeName"
+                            />
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>性别</span>
+                        </div>
+                        <div>
+                            <picker
+                                bindchange="bindViewEvent"
+                                data-model="component"
+                                data-method="selectSex"
+                                data-name="index"
+                                @change="onChangeSex"
+                                :value="genderindex"
+                                :range="gender"
+                            >
+                                <view class="label-right">
+                                    {{ gender[genderindex] }}
+                                </view>
+                            </picker>
+                            <!-- <van-dropdown-menu>
                         <van-dropdown-item :value="Contact.Sex" :options="optionSex" @change="selectSex"/>
                     </van-dropdown-menu> -->
-                </div>
-            </div>
-            <!-- <div class="van-cell">
+                        </div>
+                    </div>
+                    <!-- <div class="van-cell">
                 <div class="van-cell__title">
                     <span>性别</span>
                 </div>
@@ -162,74 +177,84 @@
                     </van-dropdown-menu>
                 </div>
             </div> -->
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>手机号码</span>
-                </div>
-                <div class="van-cell__value">
-                    <input
-                        type="text"
-                        class="van-field__input"
-                        placeholder="输入手机号码"
-                         @change="onChangePhone"
-                        :value="Phone"
-                    />
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>证件类型</span>
-                </div>
-                <div>
-                    <picker bindchange="bindViewEvent" data-model="component" data-method="selectSex" data-name="index" @change="onSelectIDType" :value="IDindex" :range="IDOptions">
-                        <view class="label-right">
-                            {{IDOptions[IDindex]}}
-                        </view>
-                    </picker>
-                    <!-- <van-dropdown-menu>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>手机号码</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <input
+                                type="text"
+                                class="van-field__input"
+                                placeholder="输入手机号码"
+                                @change="onChangePhone"
+                                :value="Phone"
+                            />
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>证件类型</span>
+                        </div>
+                        <div>
+                            <picker
+                                bindchange="bindViewEvent"
+                                data-model="component"
+                                data-method="selectSex"
+                                data-name="index"
+                                @change="onSelectIDType"
+                                :value="IDindex"
+                                :range="IDOptions"
+                            >
+                                <view class="label-right">
+                                    {{ IDOptions[IDindex] }}
+                                </view>
+                            </picker>
+                            <!-- <van-dropdown-menu>
                         <van-dropdown-item :value="Contact.IDType" :options="optionID" @change="onSelectIDType"/>
                     </van-dropdown-menu> -->
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>证件号码</span>
-                </div>
-                <div class="van-cell__value">
-                    <input
-                        type="text"
-                        placeholder="输入证件号码"
-                        class="van-field__input"
-                        @change="onChangeIDNum"
-                        :value="ApplyOrder.Contact.IDNum"
-                    />
-                </div>
-            </div>
-            <div class="van-cell">
-                <div class="van-cell__title">
-                    <span>出生日期</span>
-                </div>
-                <div  class="van-cell__value">
-                    <van-popup :show="isShowBirthdayPicker" position="bottom">
-                        <van-datetime-picker
-                            type="date"
-                            :value="currentBirthDate"
-                            :min-date="minBirthDate"
-                            :max-date="maxBirthDate"
-                            @confirm="selectBirthdayPicker"
-                            @cancel="cancelBirthdayPicker"
-                        />
-                    </van-popup>
-                    <van-field
-                        :value="currentBirthDateStr"
-                        icon="calender-o"
-                        icon-class="icon"
-                        required
-                        @clickicon="showBirthdayPicker"
-                    />
-                </div>
-            </div>
-
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>证件号码</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <input
+                                type="text"
+                                placeholder="输入证件号码"
+                                class="van-field__input"
+                                @change="onChangeIDNum"
+                                :value="ApplyOrder.Contact.IDNum"
+                            />
+                        </div>
+                    </div>
+                    <div class="van-cell">
+                        <div class="van-cell__title">
+                            <span>出生日期</span>
+                        </div>
+                        <div class="van-cell__value">
+                            <van-popup
+                                :show="isShowBirthdayPicker"
+                                position="bottom"
+                            >
+                                <van-datetime-picker
+                                    type="date"
+                                    :value="currentBirthDate"
+                                    :min-date="minBirthDate"
+                                    :max-date="maxBirthDate"
+                                    @confirm="selectBirthdayPicker"
+                                    @cancel="cancelBirthdayPicker"
+                                />
+                            </van-popup>
+                            <van-field
+                                :value="currentBirthDateStr"
+                                icon="calender-o"
+                                icon-class="icon"
+                                required
+                                @clickicon="showBirthdayPicker"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <view class="divLine"></view>
             </div>
@@ -298,19 +323,42 @@ export default {
             isShowBirthdayPicker: false,
             isShowApplyDatePicker: false,
             IDindex: 0,
-            IDOptions: ['身份证','护照','回乡证','台胞证','外国人永久居留身份证','港澳台居民居住证'],
+            IDOptions: [
+                '身份证',
+                '护照',
+                '回乡证',
+                '台胞证',
+                '外国人永久居留身份证',
+                '港澳台居民居住证',
+            ],
             selectedDate: new Date().toLocaleDateString(),
-            currentDate: new Date(new Date().getTime() + 24*60*60*1000*1).getTime(),
-            currentDateStr: new Date(new Date().getTime() + 24*60*60*1000*1).toLocaleDateString(),
-            currentBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).getTime(),
-            currentBirthDateStr: new Date(new Date().getTime() - 24*60*60*1000*30*12*40).toLocaleDateString(),
-            minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
+            currentDate: new Date(
+                new Date().getTime() + 24 * 60 * 60 * 1000 * 1
+            ).getTime(),
+            currentDateStr: new Date(
+                new Date().getTime() + 24 * 60 * 60 * 1000 * 1
+            ).toLocaleDateString(),
+            currentBirthDate: new Date(
+                new Date().getTime() - 24 * 60 * 60 * 1000 * 30 * 12 * 40
+            ).getTime(),
+            currentBirthDateStr: new Date(
+                new Date().getTime() - 24 * 60 * 60 * 1000 * 30 * 12 * 40
+            ).toLocaleDateString(),
+            minBirthDate: new Date(
+                new Date().getTime() - 24 * 60 * 60 * 1000 * 30 * 12 * 90
+            ).getTime(),
             maxBirthDate: new Date(new Date().getTime()).getTime(),
-            minDate: new Date(new Date().getTime() + 24*60*60*1000*1).getTime(),
-            minDateStr: new Date(new Date().getTime() + 24*60*60*1000*1).toLocaleDateString(),
-            maxDate: new Date(new Date().getTime() + 24*60*60*1000*3*30).getTime(),
+            minDate: new Date(
+                new Date().getTime() + 24 * 60 * 60 * 1000 * 1
+            ).getTime(),
+            minDateStr: new Date(
+                new Date().getTime() + 24 * 60 * 60 * 1000 * 1
+            ).toLocaleDateString(),
+            maxDate: new Date(
+                new Date().getTime() + 24 * 60 * 60 * 1000 * 3 * 30
+            ).getTime(),
             minHour: 9,
-            gender:['男','女'],
+            gender: ['男', '女'],
             genderindex: 0,
             PasterMinCount: 0,
             ProductMinCount: 0,
@@ -414,17 +462,23 @@ export default {
                 ':00'
             return result
         },
-        
-      onSelectIDType(event) {
-            this.IDindex = parseInt(event.mp.detail.value);
-            this.ApplyOrder.Contact.IDType = this.IDOptions[this.IDindex];
-            console.log('ApplyOrder.Contact.IDType', this.ApplyOrder.Contact.IDType);
-        }, 
-      onChangeIDNum ( event ) {
-            var that = this;
-            that.ApplyOrder.Contact.IDNum =  event.mp.detail.value;
-            console.log('ApplyOrder.Contact.IDNum', that.ApplyOrder.Contact.IDNum)
-        } ,
+
+        onSelectIDType(event) {
+            this.IDindex = parseInt(event.mp.detail.value)
+            this.ApplyOrder.Contact.IDType = this.IDOptions[this.IDindex]
+            console.log(
+                'ApplyOrder.Contact.IDType',
+                this.ApplyOrder.Contact.IDType
+            )
+        },
+        onChangeIDNum(event) {
+            var that = this
+            that.ApplyOrder.Contact.IDNum = event.mp.detail.value
+            console.log(
+                'ApplyOrder.Contact.IDNum',
+                that.ApplyOrder.Contact.IDNum
+            )
+        },
 
         onChangePhone(event) {
             var that = this
@@ -452,8 +506,8 @@ export default {
         },
         onChangeSex(event) {
             var that = this
-            this.genderindex = parseInt(event.mp.detail.value);
-            that.ApplyOrder.Contact.Sex = this.gender[this.genderindex];
+            this.genderindex = parseInt(event.mp.detail.value)
+            that.ApplyOrder.Contact.Sex = this.gender[this.genderindex]
             console.log('that.Sex', that.ApplyOrder.Contact.Sex)
         },
         onChangeType(event) {
@@ -529,20 +583,20 @@ export default {
                         .then(res => {
                             console.log('/ApplyOrder/Add response', res)
                             const url = '../a-patienthome/main'
-                            if(res.code == 200){
-                                  Dialog.alert({
-                                        title: ' 提交成功',
-                                        message:
-                                            '已经将您的申请发送至DTP药房,请等待确认通知.',
-                                    }).then(() => {
-                                        this.$globalData.refresh = true
-                                        wx.navigateBack({ url: url })
-                                    })
-                            }else{
-                                  Dialog.alert({
-                                        title: ' 提交失败',
-                                        message: res.message,
-                                    })
+                            if (res.code == 200) {
+                                Dialog.alert({
+                                    title: ' 提交成功',
+                                    message:
+                                        '已经将您的申请发送至DTP药房,请等待确认通知.',
+                                }).then(() => {
+                                    this.$globalData.refresh = true
+                                    wx.navigateBack({ url: url })
+                                })
+                            } else {
+                                Dialog.alert({
+                                    title: ' 提交失败',
+                                    message: res.message,
+                                })
                             }
                         })
                 })
@@ -637,12 +691,20 @@ export default {
                         that.ApplyOrder.Contact.Birthday
                     )
 
-                    if(that.ApplyOrder.Contact.Sex == ''){
-                        that.ApplyOrder.Contact.Sex = '男';
+                    if (that.ApplyOrder.Contact.Sex == '') {
+                        that.ApplyOrder.Contact.Sex = '男'
                     }
-                    
-                    if(that.ApplyOrder.Contact.IDType == ''){
-                        that.ApplyOrder.Contact.IDType = '身份证';
+
+                    if (that.ApplyOrder.Contact.Sex == '男') {
+                        that.genderindex = 0
+                    }
+
+                    if (that.ApplyOrder.Contact.Sex == '女') {
+                        that.genderindex = 1
+                    }
+
+                    if (that.ApplyOrder.Contact.IDType == '') {
+                        that.ApplyOrder.Contact.IDType = '身份证'
                     }
 
                     if (that.ApplyOrder.Contact.Birthday.length > 0) {

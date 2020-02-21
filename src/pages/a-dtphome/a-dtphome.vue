@@ -97,10 +97,14 @@
                                         }}
                                     </td>
                                     <td>
-                                        设备套数：{{ applyOrder.ProductSetCount }}
+                                        设备套数：{{
+                                            applyOrder.ProductSetCount
+                                        }}
                                     </td>
                                     <td>
-                                        贴片套数：{{ applyOrder.PasterSetCount }}
+                                        贴片套数：{{
+                                            applyOrder.PasterSetCount
+                                        }}
                                     </td>
                                     <td>
                                         预约日期：{{
@@ -109,12 +113,23 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table class="content" v-show="applyOrder.Products && applyOrder.Products.length > 0">
+
+                            <table
+                                class="content"
+                                v-show="applyOrder.Products && applyOrder.Products.length > 0"
+                            >
                                 <tr>
-                                    <td>待申请产品</td>
+                                    <td>待维修产品</td>
                                 </tr>
-                                <tr v-for="(prod, ind) in applyOrder.Products" :key="ind">
-                                    <td>产品名称：{{prod.ProductName}}（{{prod.UDISN}}）</td>
+                                <tr
+                                    v-for="(prod, ind) in applyOrder.Products"
+                                    :key="ind"
+                                >
+                                    <td>
+                                        产品名称：{{ prod.ProductName }}（{{
+                                            prod.UDISN
+                                        }}）
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -136,7 +151,8 @@
                                 @click="
                                     onConfirmAppointment(
                                         applyOrder.Id,
-                                        applyOrder.ProductSetCount,applyOrder.PasterSetCount,
+                                        applyOrder.ProductSetCount,
+                                        applyOrder.PasterSetCount,
                                         applyOrder.Contact.Id,
                                         applyOrder.DTP.Id
                                     )
@@ -339,11 +355,7 @@
                             <table class="content">
                                 <tr>
                                     <td>名称：{{ product.ProductName }}</td>
-                                    <td>
-                                        SN：{{
-                                            product.UDISN
-                                        }}
-                                    </td>
+                                    <td>SN：{{ product.UDISN }}</td>
                                     <td>规格：{{ product.Specification }}</td>
                                     <td>
                                         生产日期：{{
@@ -361,14 +373,10 @@
                         >
                             <van-button
                                 class="confirmBooking"
-                                @click="
-                                    onProductChange(
-                                        product
-                                    )
-                                "
+                                @click="onProductChange(product)"
                                 size="small"
                                 type="primary"
-                                >{{product.TitleStatus}}</van-button
+                                >{{ product.TitleStatus }}</van-button
                             >
                         </view>
                         <view
@@ -378,14 +386,10 @@
                         >
                             <van-button
                                 class="confirmBooking"
-                                @click="
-                                    onProductChange(
-                                        product
-                                    )
-                                "
+                                @click="onProductChange(product)"
                                 size="small"
                                 type="primary"
-                                >{{product.TitleStatus}}</van-button
+                                >{{ product.TitleStatus }}</van-button
                             >
                         </view>
                         <view style="text-align: right;" slot="footer" v-else>
@@ -471,7 +475,6 @@ export default {
             maintenanceProducts: [],
             checkinProductSnCode: '',
             DTP: {},
-           
         }
     },
     //方法
@@ -553,7 +556,9 @@ export default {
                 this.maintenanceProducts = []
                 this.$http
                     .get({
-                        url: '/Product/GetMaintenanceProducts?dtpid='+this.DTP.id,
+                        url:
+                            '/Product/GetMaintenanceProducts?dtpid=' +
+                            this.DTP.id,
                     })
                     .then(res => {
                         this.maintenanceProducts = res.data
@@ -672,11 +677,10 @@ export default {
                 scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
                 success(res) {
                     var qrCode = String(res.result)
-                    console.log('qrcode is: ', qrCode);
+                    console.log('qrcode is: ', qrCode)
                     that.$http
                         .get({
-                            url:
-                                '/Product/GetByQRCode?qrCode=' + qrCode,
+                            url: '/Product/GetByQRCode?qrCode=' + qrCode,
                         })
                         .then(res => {
                             console.log(
@@ -684,14 +688,19 @@ export default {
                                 res
                             )
                             if (res.code === 200) {
-                                if(event.UDISN){
-                                    if(event.UDISN != res.data.UDISN){
-                                          const message = '待入库的产品' + event.UDISN + '和已扫描的产品' + res.data.UDISN + '不一致，请检查'
-                                            Dialog.alert({
-                                                title: '信息提示',
-                                                message,
-                                            })      
-                                            return;                        
+                                if (event.UDISN) {
+                                    if (event.UDISN != res.data.UDISN) {
+                                        const message =
+                                            '待入库的产品' +
+                                            event.UDISN +
+                                            '和已扫描的产品' +
+                                            res.data.UDISN +
+                                            '不一致，请检查'
+                                        Dialog.alert({
+                                            title: '信息提示',
+                                            message,
+                                        })
+                                        return
                                     }
                                 }
                             }
@@ -703,10 +712,11 @@ export default {
                             //                 return;
                             // }
                             if (qrCode) {
-                                    console.log(qrCode)
-                                    const url = '../a-dtpproductin/main?qrcode=' + qrCode
-                                    console.log(url)
-                                    wx.navigateTo({ url: url })
+                                console.log(qrCode)
+                                const url =
+                                    '../a-dtpproductin/main?qrcode=' + qrCode
+                                console.log(url)
+                                wx.navigateTo({ url: url })
                             }
                         })
                 },
@@ -721,9 +731,15 @@ export default {
                     console.log('qrcode is: ', res.result)
                     var qrCode = res.result
                     that.$http
-                        .get({url:'/Product/GetSnCodeFromQrCode?qrCode=' + qrCode})
+                        .get({
+                            url:
+                                '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
+                        })
                         .then(res => {
-                            console.log('/Product/GetSnCodeFromQrCode response data is',res);
+                            console.log(
+                                '/Product/GetSnCodeFromQrCode response data is',
+                                res
+                            )
                             if (res.code === 200) {
                                 that.checkinProductSnCode = res.data
                                 const url =
@@ -767,7 +783,7 @@ export default {
                                     '../a-dtpproductsearch/main?sncode=' +
                                     that.checkinProductSnCode
                                 console.log(url)
-                                wx.navigateBack();
+                                wx.navigateBack()
                             } else {
                                 const message = '产品获取信息失败'
                                 Dialog.alert({
@@ -820,7 +836,13 @@ export default {
                 })
         },
         //确认预约
-        onConfirmAppointment(applyOrderId, productSetCount,pasterSetCount, contactId, dtpId) {
+        onConfirmAppointment(
+            applyOrderId,
+            productSetCount,
+            pasterSetCount,
+            contactId,
+            dtpId
+        ) {
             console.log('applyOrderId:', applyOrderId)
             console.log('productSetCount:', productSetCount)
             console.log('pasterSetCount:', pasterSetCount)
@@ -998,18 +1020,18 @@ export default {
         },
         //用户维修归还后DTP员工操作更换产品
         onProductChange(product) {
-            var oldProductid =  product.id;
-            var oldSignOrderid = product.CurrentOrderId;
-            var SignOrderId = product.SignOrderId;
-            var IsSameDTP = product.IsSameDTP;
+            var oldProductid = product.id
+            var oldSignOrderid = product.CurrentOrderId
+            var SignOrderId = product.SignOrderId
+            var IsSameDTP = product.IsSameDTP
             console.log('oldProductid is:', oldProductid)
             console.log('oldSignOrderid is:', oldSignOrderid)
             //如果是待维修入库，则显示扫描入库按钮，然后进行产品更换
-            if(product.ShowChecInForRepairFooter){
-                this.scanProduct(product);
-                return;
+            if (product.ShowChecInForRepairFooter) {
+                this.scanProduct(product)
+                return
             }
-            if(IsSameDTP){
+            if (IsSameDTP) {
                 // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
                 wx.scanCode({
                     scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
@@ -1018,7 +1040,7 @@ export default {
                         const url =
                             '../a-dtpproductchange/main?oldProductid=' +
                             oldProductid +
-                            '&newSnCode=' + 
+                            '&newSnCode=' +
                             res.result +
                             '&oldSignOrderid=' +
                             oldSignOrderid
@@ -1026,7 +1048,7 @@ export default {
                         wx.navigateTo({ url: url })
                     },
                 })
-            }else{
+            } else {
                 const signurl = '../a-dtpsign/main?signOrderId=' + signOrderId
                 wx.navigateTo({ url: signurl })
             }
@@ -1047,7 +1069,7 @@ export default {
                 .then(res => {
                     console.log('/DTP/GetById response', res)
                     if (res.code === 200) {
-                        that.DTP = res.data;
+                        that.DTP = res.data
                         wx.setNavigationBarTitle({
                             title: res.data.Name + '-产品管理',
                         })
@@ -1064,16 +1086,15 @@ export default {
     },
     onShow: function() {
         console.log('refresh:', this.$globalData.refresh)
-        if(this.$globalData.refresh)
-        {
+        if (this.$globalData.refresh) {
             console.log('refresh this.rebind();')
-            this.onLoadTabData(this.activeTab )
-            this.$globalData.refresh = false;
+            this.onLoadTabData(this.activeTab)
+            this.$globalData.refresh = false
         }
     },
     onLoad: function(options) {
-        var that = this;
-        this.$globalData.refresh = false;
+        var that = this
+        this.$globalData.refresh = false
         console.log(this.$globalData.departId)
         console.log(this.$globalData.openId)
         var userOpenId = this.$globalData.openId
