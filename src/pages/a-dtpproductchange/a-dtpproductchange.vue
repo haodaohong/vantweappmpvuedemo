@@ -74,7 +74,7 @@
             >
         </div>
         <mybr />
-        <div class="footer-container">
+        <div>
             <!-- <div>
                 <text>出库件数：2</text>
                 <view class="divLine"></view>
