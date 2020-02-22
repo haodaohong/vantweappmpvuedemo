@@ -111,6 +111,7 @@
                                             applyOrder.ApplyOrderDateTimeFormat
                                         }}
                                     </td>
+                                    <td v-if="applyOrder.ShowLastDTP" style="color:red;">历史签约：{{ applyOrder.LastDTP.Name }}</td>
                                 </tr>
                             </table>
 
@@ -126,9 +127,12 @@
                                     :key="ind"
                                 >
                                     <td>
-                                        产品名称：{{ prod.ProductName }}（{{
+                                        产品名称：{{ prod.ProductName }}
+                                    </td>
+                                    <td>
+                                        产品编号：{{
                                             prod.UDISN
-                                        }}）
+                                        }}
                                     </td>
                                 </tr>
                             </table>
@@ -209,7 +213,7 @@
                                             }}</span
                                         >
                                     </td>
-                                    <td>性别：{{ signOrder.Contact.Sex }}</td>
+                                    <td>患者性别：{{ signOrder.Contact.Sex }}</td>
                                     <td>
                                         出生日期：{{
                                             signOrder.Contact.BirthDayFormat
@@ -232,6 +236,9 @@
                                     </td>
                                     <td v-if="signOrder.ShowSignDetail">
                                         签约药店: {{ signOrder.SignDTPName }}
+                                    </td>
+                                    <td v-if="signOrder.ShowLastDTP">
+                                        历史签约: <span style="color:red;">{{ signOrder.LastDTP.Name }}</span>
                                     </td>
                                 </tr>
                             </table>
@@ -496,10 +503,11 @@ export default {
         },
         onLoadTabData(tabIndex) {
             console.log('curr tab', tabIndex)
+            this.onLoadDTP();
+            var openId = this.$globalData.openId
             if (tabIndex == '0') {
                 this.activeTab = 0
                 this.applyOrders = []
-                var openId = this.activeUser.openId
                 this.$http
                     .get({
                         url:
@@ -509,19 +517,22 @@ export default {
                             this.applyOrderTypeActiveValueStr,
                     })
                     .then(res => {
-                        if (res.code == 200) {
-                            this.applyOrders = res.data
-                            console.log(
-                                '/ApplyOrder/GetByFilterStatus response',
+                        console.log(
+                                '/ApplyOrder/GetByFilterStatus?mpOpenId=' +
+                            openId +
+                            '&filterStatus=' +
+                            this.applyOrderTypeActiveValueStr,
                                 res
                             )
+                        if (res.code == 200) {
+                            this.applyOrders = res.data
+                            
                         }
                     })
             }
             if (tabIndex == '1') {
                 this.activeTab = 1
                 this.signOrders = []
-                var openId = this.activeUser.openId
                 this.$http
                     .get({
                         url:
@@ -998,7 +1009,7 @@ export default {
         },
         rebind() {
             this.onLoadDTP()
-            console.log('this globalData departId', this.$globalData.departId)
+            console.log('this globalData departId/activeTab', this.$globalData.departId+'/'+this.activeTab)
             this.activeUser.role = 'DTP'
             this.activeUser.departId = this.$globalData.departId
             this.activeUser.openId = this.$globalData.openId
@@ -1008,7 +1019,7 @@ export default {
                 this.activeTab = activeTabIndex
                 this.onLoadTabData(activeTabIndex)
             } else {
-                this.activeTab = 0
+                // this.activeTab = 0
                 this.$http
                     .get({
                         url:
@@ -1081,7 +1092,7 @@ export default {
                     if (res.code === 200) {
                         that.DTP = res.data
                         wx.setNavigationBarTitle({
-                            title: res.data.Name + '-产品管理',
+                            title: res.data.Name,
                         })
                     }
                 })
@@ -1104,10 +1115,10 @@ export default {
     },
     onLoad: function(options) {
         var that = this
-        this.$globalData.refresh = false
-        console.log(this.$globalData.departId)
-        console.log(this.$globalData.openId)
-        var userOpenId = this.$globalData.openId
+        that.$globalData.refresh = false
+        console.log('departId',that.$globalData.departId)
+        console.log('openId',that.$globalData.openId)
+        var userOpenId = that.$globalData.openId
         if (!userOpenId) {
             wx.login({
                 success: res => {
@@ -1125,7 +1136,8 @@ export default {
                                 that.$globalData.departId = user.DepartId
                                 that.$globalData.openId = user.MPOpenId
                                 that.$globalData.unionId = user.UnionId
-
+                                that.activeUser.openId = that.$globalData.openId
+                                that.onLoadTabData(this.activeTab)
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
                                     //wx.navigateTo({ url: url })
@@ -1137,13 +1149,11 @@ export default {
                                 const url = '../a-registeruser/main'
                                 //wx.navigateTo({ url: url })
                             }
-                            that.rebind()
                         })
                 },
             })
         } else {
-            that.rebind()
-            //this.onLoadDTP();
+             that.onLoadTabData(this.activeTab)
         }
     },
 

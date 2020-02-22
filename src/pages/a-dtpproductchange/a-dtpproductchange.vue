@@ -25,7 +25,7 @@
                                 <span>产品名称：{{ product.ProductName }}</span>
                             </div>
                             <div class="van-cell__title">
-                                <span>产品名称：{{ product.ProductName }}</span>
+                                <span>使用年限：{{ product.ExpiredYearFormat }}</span>
                             </div>
                             <!-- <div class="van-cell__title">
                                 <span>类型：{{ product.ProductType.Name }}</span>
@@ -42,6 +42,7 @@
                                     }}</span
                                 >
                             </div>
+                            
                         </div>
                     </div>
                     <!--加个样式把按钮搞右边去-->

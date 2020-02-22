@@ -325,11 +325,9 @@ export default {
             IDindex: 0,
             IDOptions: [
                 '身份证',
+                '港澳居民来往内地通行证',
+                '台湾居民来往大陆通行证',
                 '护照',
-                '回乡证',
-                '台胞证',
-                '外国人永久居留身份证',
-                '港澳台居民居住证',
             ],
             selectedDate: new Date().toLocaleDateString(),
             currentDate: new Date(
@@ -587,7 +585,7 @@ export default {
                                 Dialog.alert({
                                     title: ' 提交成功',
                                     message:
-                                        '已经将您的申请发送至DTP药房,请等待确认通知.',
+                                        '已发送申请至药房'+ that.ApplyOrder.DTP.Name +',请等待确认。',
                                 }).then(() => {
                                     this.$globalData.refresh = true
                                     wx.navigateBack({ url: url })

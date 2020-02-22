@@ -147,12 +147,17 @@ export default {
                 { text: '身份证', value: '身份证' },
                 { text: '港澳居民来往内地通行证', value: '护照' },
                 { text: '台湾居民来往大陆通行证', value: '回乡证' },
-                { text: '护照', value: '台胞证' },
+                { text: '护照', value: '台胞证' }
                 // { text: '外国人永久居留身份证', value: '外国人永久居留身份证' },
                 // { text: '港澳台居民居住证', value: '港澳台居民居住证' },
             ],
             IDindex: 0,
-            IDOptions: ['身份证','护照','回乡证','台胞证','外国人永久居留身份证','港澳台居民居住证'],
+            IDOptions: [
+                '身份证',
+                '港澳居民来往内地通行证',
+                '台湾居民来往大陆通行证',
+                '护照'
+            ],
             minBirthDate: new Date(new Date().getTime() - 24*60*60*1000*30*12*90).getTime(),
             maxBirthDate: new Date(new Date().getTime()).getTime(),
             value2: 0,
@@ -293,6 +298,9 @@ export default {
         //代码搞这里
         //return this.data;
         //}
+    },
+    onUnload(){
+        this.$globalData.refresh = true;
     },
     //生命周期(mounted)
     mounted() {

@@ -542,7 +542,8 @@ export default {
         console.log("onShow");
         if(this.$globalData.refresh)
         {
-            this.onSelectTab(this.active);
+            this.onSelectFunction(this.active);
+            this.onLoadContact();
         }
     }
 }
