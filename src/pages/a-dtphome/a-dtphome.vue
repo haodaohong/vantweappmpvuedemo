@@ -526,7 +526,6 @@ export default {
                             )
                         if (res.code == 200) {
                             this.applyOrders = res.data
-                            
                         }
                     })
             }
@@ -724,20 +723,12 @@ export default {
                                         return
                                     }
                                 }
-                            }
-                            // else{
-                            //     Dialog.alert({
-                            //                     title: '信息提示',
-                            //                     message: res.message,
-                            //                 })
-                            //                 return;
-                            // }
-                            if (qrCode) {
-                                console.log(qrCode)
-                                const url =
-                                    '../a-dtpproductin/main?qrcode=' + qrCode
-                                console.log(url)
-                                wx.navigateTo({ url: url })
+                                if (qrCode) {
+                                    console.log(qrCode)
+                                    const url = '../a-dtpproductin/main?qrcode=' + qrCode
+                                    console.log(url)
+                                    wx.navigateTo({ url: url })
+                                }
                             }
                         })
                 },
@@ -768,43 +759,6 @@ export default {
                                     that.checkinProductSnCode
                                 console.log(url)
                                 wx.navigateTo({ url: url })
-                            } else {
-                                const message = '产品获取信息失败'
-                                Dialog.alert({
-                                    title: '信息提示',
-                                    message,
-                                })
-                            }
-                        })
-                },
-            })
-        },
-        //扫码查询产品
-        scanSearchProduct2(event) {
-            // 允许从相机和相册扫码
-            var that = this
-            wx.scanCode({
-                scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
-                success(res) {
-                    console.log('qrcode is: ', res.result)
-                    var qrCode = res.result
-                    that.$http
-                        .get({
-                            url:
-                                '/Product/GetSnCodeFromQrCode?qrCode=' + qrCode,
-                        })
-                        .then(res => {
-                            console.log(
-                                '/Product/GetSnCodeFromQrCode response data is',
-                                res
-                            )
-                            if (res.code === 200) {
-                                that.checkinProductSnCode = res.data
-                                const url =
-                                    '../a-dtpproductsearch/main?sncode=' +
-                                    that.checkinProductSnCode
-                                console.log(url)
-                                wx.navigateBack()
                             } else {
                                 const message = '产品获取信息失败'
                                 Dialog.alert({

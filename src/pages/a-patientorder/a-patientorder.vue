@@ -148,7 +148,7 @@
                         <div class="van-cell__title">
                             <span>性别</span>
                         </div>
-                        <div>
+                        <div class="van-cell__title">
                             <picker
                                 bindchange="bindViewEvent"
                                 data-model="component"
@@ -195,7 +195,7 @@
                         <div class="van-cell__title">
                             <span>证件类型</span>
                         </div>
-                        <div>
+                        <div class="van-cell__title">
                             <picker
                                 bindchange="bindViewEvent"
                                 data-model="component"
