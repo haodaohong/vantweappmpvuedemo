@@ -47,14 +47,15 @@
                 label="原租赁药房"
                 placeholder="请输入原租赁药房"
                 clearable
-                required
+                disabled
+                
             />
             <van-field
                 :value="signOrder.SignDTPName"
                 label="现租赁药房"
                 placeholder="请输入现租赁药房"
                 clearable
-                required
+                disabled
             />
             <van-field
                 :value="newcontractnumber"
