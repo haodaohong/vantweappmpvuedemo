@@ -1091,6 +1091,7 @@ export default {
                                 that.$globalData.openId = user.MPOpenId
                                 that.$globalData.unionId = user.UnionId
                                 that.activeUser.openId = that.$globalData.openId
+                                console.log('onload active user:', that.activeUser)
                                 that.onLoadTabData(this.activeTab)
                                 if (user.Role == 'DTP') {
                                     const url = '../a-dtphome/main'
@@ -1107,7 +1108,11 @@ export default {
                 },
             })
         } else {
-             that.onLoadTabData(this.activeTab)
+            that.activeUser.openId = that.$globalData.openId
+            that.activeUser.departId = that.$globalData.departId
+            that.activeUser.unionId = that.$globalData.unionId
+            console.log('onload else active user:', that.activeUser)
+            that.onLoadTabData(this.activeTab)
         }
     },
 
