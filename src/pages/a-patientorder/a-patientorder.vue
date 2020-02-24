@@ -705,7 +705,7 @@ export default {
                         that.ApplyOrder.Contact.IDType = '身份证'
                     }
 
-                    that.IDindex = that.IDOptions.indexOf(that.Contact.IDType);
+                    that.IDindex = that.IDOptions.indexOf(that.ApplyOrder.Contact.IDType);
 
                     if (that.ApplyOrder.Contact.Birthday.length > 0) {
                         that.currentBirthDateStr = that.ApplyOrder.Contact.Birthday.replace(
