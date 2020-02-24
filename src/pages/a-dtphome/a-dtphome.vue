@@ -1006,7 +1006,7 @@ export default {
                 this.scanProduct(product)
                 return
             }
-            if (IsSameDTP) {
+            // if (IsSameDTP) {
                 // 扫码获得待维修的产品的信息和传到后台的sncode比对，比对正确后方可进行更换，否则弹框报错
                 wx.scanCode({
                     scanType: ['qrCode', 'barCode', 'datamatrix', 'pdf417'],
@@ -1023,10 +1023,10 @@ export default {
                         wx.navigateTo({ url: url })
                     },
                 })
-            } else {
-                const signurl = '../a-dtpsign/main?signOrderId=' + signOrderId
-                wx.navigateTo({ url: signurl })
-            }
+            // } else {
+            //     const signurl = '../a-dtpsign/main?signOrderId=' + signOrderId
+            //     wx.navigateTo({ url: signurl })
+            // }
         },
         //维修更换完后原产品进行出库到COC维修操作
         onUserMaintenanceCheckOut(productSNCode) {
