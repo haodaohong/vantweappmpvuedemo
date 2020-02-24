@@ -997,7 +997,7 @@ export default {
         onProductChange(product) {
             var oldProductid = product.id
             var oldSignOrderid = product.CurrentOrderId
-            var SignOrderId = product.SignOrderId
+            var signOrderId = product.SignOrderId
             var IsSameDTP = product.IsSameDTP
             console.log('oldProductid is:', oldProductid)
             console.log('oldSignOrderid is:', oldSignOrderid)

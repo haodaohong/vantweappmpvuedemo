@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\src"
+    "\\src",
+    "\\src\\pages",
+    "\\src\\pages\\a-patientorder"
   ],
-  "SelectedNode": "\\src\\global.js",
   "PreviewInSolutionExplorer": false
 }
