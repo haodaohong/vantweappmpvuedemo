@@ -723,12 +723,12 @@ export default {
                                         return
                                     }
                                 }
-                                if (qrCode) {
-                                    console.log(qrCode)
-                                    const url = '../a-dtpproductin/main?qrcode=' + qrCode
-                                    console.log(url)
-                                    wx.navigateTo({ url: url })
-                                }
+                            }
+                            if (qrCode) {
+                                console.log(qrCode)
+                                const url = '../a-dtpproductin/main?qrcode=' + qrCode
+                                console.log(url)
+                                wx.navigateTo({ url: url })
                             }
                         })
                 },
